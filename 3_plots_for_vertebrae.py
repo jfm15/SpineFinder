@@ -2,9 +2,9 @@ import SimpleITK as sitk
 import numpy as np
 import matplotlib.pyplot as plt
 
-patient1_1_fn = './patient0001/2804506/2804506.nii'
+patient1_1_fn = './spine-1/patient0013/4511471/4511471.nii'
 
-centroids_file = open('./patient0001/2804506/2804506.lml', 'r')
+centroids_file = open('./spine-1/patient0013/4511471/4511471.lml', 'r')
 iter_centroids_file = iter(centroids_file)
 next(iter_centroids_file)
 

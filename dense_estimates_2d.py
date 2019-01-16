@@ -37,8 +37,6 @@ info = np.zeros(t1_sagittal.shape[0:2])
 
 radii = 13
 
-print(info.shape)
-
 for idx, real_centroid in enumerate(real_centroids):
     # we want to check every pixel inside the square where the lengths of the sides are 2 * radii
     real_lower_bound_x = real_centroid[1] - radii
@@ -57,32 +55,6 @@ for idx, real_centroid in enumerate(real_centroids):
             real_point = image_point * scales
             if np.linalg.norm(real_point-real_centroid) < radii:
                 info[y, x] = idx + 1
-
-    """
-    for x in range(-radii, radii):
-        for y in range(-radii, radii):
-
-
-            real_x = real_centroid[0] + x
-            real_y = real_centroid[1] + y
-            image_point = [int(round(best_sagittal_cut)), real_y, real_x]
-            real_point = image_point * scales
-            if np.linalg.norm(real_point-real_centroid) < radii:
-                print(idx + 1)
-                info[real_x, real_y] = idx + 1
-    """
-
-
-"""
-for x in range(info.shape[0]):
-    for y in range(info.shape[1]):
-        for v in range(0, len(centroids)):
-            #image_point = [int(round(scaled_centroids[v][0])), y, x]
-            image_point = [int(round(best_sagittal_cut)), y, x]
-            real_point = image_point * scales
-            if np.linalg.norm(real_point-real_centroids[v]) < 13:
-                info[x, y] = v + 1
-"""
 
 masked_data = np.ma.masked_where(info==0, info)
 
