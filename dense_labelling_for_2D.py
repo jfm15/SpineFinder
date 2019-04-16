@@ -4,7 +4,7 @@ import matplotlib.cm as cm
 from utility_functions import dense_labelling as dl, opening_files as of
 
 """EXTRACT INFORMATION FROM FILES"""
-dir = './spine-1/patient0013/4511471/4511471'
+dir = '/vol/bitbucket2/jfm15/spine-1/patient0013/4511471/4511471'
 scan = of.read_nii(dir + '.nii')
 labels, centroids = of.extract_centroid_info_from_lml(dir + '.lml')
 
