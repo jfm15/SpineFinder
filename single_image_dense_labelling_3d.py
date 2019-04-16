@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-from utility_functions import dense_labelling as dl, opening_files as of
+from utility_functions import opening_files as of, dense_labelling as dl
 
 """EXTRACT INFORMATION FROM FILES"""
 dir = './spine-1/patient0013/4511471/4511471'
