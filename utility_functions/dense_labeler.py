@@ -29,7 +29,7 @@ def generate_dense_labelling_3D(volume, real_centroids, radii, scales):
 
     return dense_labelling
 
-def generate_dense_labelling_2D(volume, cut, real_centroids, radii, scales):
+def generate_dense_labelling_2D(volume, cut, real_centroids, radii, scales, differentiate=True):
 
     volume_cut = volume[cut, :, :]
 
@@ -51,6 +51,9 @@ def generate_dense_labelling_2D(volume, cut, real_centroids, radii, scales):
                 image_point = [cut, s, v]
                 real_point = hf.indexes_to_real(image_point, scales)
                 if np.linalg.norm(real_point-real_centroid) < radii:
-                    dense_labelling[s, v] = idx + 1
+                    if differentiate:
+                        dense_labelling[s, v] = idx + 1
+                    else:
+                        dense_labelling[s, v] = 1
 
     return dense_labelling
