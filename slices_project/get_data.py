@@ -3,14 +3,14 @@
 import os
 import numpy as np
 
-base_directory = '/homes/jfm15/SpineFinder/'
+base_directory = '/Users/James/PycharmProjects/SpineFinder/'
 mask_directory = base_directory + 'masks/'
 
 import sys
 sys.path.append(base_directory)
 
 import global_variables
-from utility_functions import opening_files, dense_labeler, labels_to_file
+from utility_functions import opening_files, dense_labeler
 
 """EXTRACT INFORMATION FROM FILES"""
 scans_directory = global_variables.spine_dataset_path
@@ -19,9 +19,9 @@ scans_directory = global_variables.spine_dataset_path
 scales = np.array([0.3125, 0.3125, 2.5])
 radii = 13
 
-limit = 1
+#limit = 10
 
-for patient_file in (next(os.walk(scans_directory))[1])[:limit]:
+for patient_file in (next(os.walk(scans_directory))[1]):
     for scan_number in next(os.walk(scans_directory + '/' + patient_file))[1]:
         full_directory = scans_directory + '/' + patient_file + '/' + scan_number + '/' + scan_number
 
@@ -53,5 +53,8 @@ for patient_file in (next(os.walk(scans_directory))[1])[:limit]:
         if not os.path.exists(scan_folder_path):
             os.mkdir(scan_folder_path)
 
-        file_path = scan_folder_path + "/" + str(scan_number) + "-sagittal-slices"
-        labels_to_file.save_2d_dense_labelling(file_path, cut_indices, dense_labels)
+        indices_file_path = scan_folder_path + "/" + str(scan_number) + "-sagittal-indices"
+        slices_file_path = scan_folder_path + "/" + str(scan_number) + "-sagittal-slices"
+        #labels_to_file.save_2d_dense_labelling(file_path, cut_indices, dense_labels)
+        np.save(indices_file_path, cut_indices)
+        np.save(slices_file_path, dense_labels)
