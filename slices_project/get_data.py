@@ -3,6 +3,8 @@
 import os
 import numpy as np
 
+print("hello")
+
 base_directory = '/homes/jfm15/SpineFinder/'
 mask_directory = base_directory + 'masks/'
 
