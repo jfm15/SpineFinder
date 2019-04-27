@@ -3,12 +3,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-base_directory = '/homes/jfm15/SpineFinder/'
+base_directory = '/Users/James/SpineFinder/'
 mask_directory = base_directory + 'masks'
-spine_directory = '/vol/bitbucket2/jfm15/spine-1'
+spine_directory = base_directory + 'spine-1'
+
+
+import sys
+sys.path.append(base_directory)
 
 from utility_functions import opening_files
-
 
 def get_slices():
 
@@ -30,7 +33,7 @@ def get_slices():
             scan_directory = '/'.join([spine_directory, patient_file, scan_number])
             scan_file_loc = scan_directory + '/' + scan_number + '.nii'
 
-            scan = utility_functions.opening_files.read_nii(scan_file_loc)
+            scan = opening_files.read_nii(scan_file_loc)
 
             for i in range(0, cut_indices.shape[0]):
                 slices.append(scan[cut_indices[i], :, :])

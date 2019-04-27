@@ -38,7 +38,7 @@ model = Sequential()
 
 # add model layers
 model.add(Conv2D(64, kernel_size=5, activation='relu', input_shape=(320, 40, 1), padding='same'))
-#model.add(Conv2D(64, kernel_size=5, activation='relu', padding='same'))
+model.add(Conv2D(64, kernel_size=5, activation='relu', padding='same'))
 #model.add(Conv2D(64, kernel_size=5, activation='relu', padding='same'))
 model.add(Conv2D(1, kernel_size=1, activation='sigmoid', padding='same'))
 

@@ -3,9 +3,7 @@
 import os
 import numpy as np
 
-print("hello")
-
-base_directory = '/homes/jfm15/SpineFinder/'
+base_directory = '/Users/James/SpineFinder/'
 mask_directory = base_directory + 'masks/'
 
 import sys
