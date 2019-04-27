@@ -3,17 +3,17 @@ _, load_existing = sys.argv
 
 from keras.datasets import mnist
 
+# download mnist data and split into train and test sets
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
+
+# reshape data to fit model
+X_train = X_train.reshape(60000, 28, 28, 1)
+X_test = X_test.reshape(10000, 28, 28, 1)
+
+X_train = X_train / 256.0
+X_test = X_test / 256.0
+
 if not load_existing:
-
-    # download mnist data and split into train and test sets
-    (X_train, y_train), (X_test, y_test) = mnist.load_data()
-
-    # reshape data to fit model
-    X_train = X_train.reshape(60000, 28, 28, 1)
-    X_test = X_test.reshape(10000, 28, 28, 1)
-
-    X_train = X_train / 256.0
-    X_test = X_test / 256.0
 
     from keras.utils import to_categorical
     # one-hot encode target column
