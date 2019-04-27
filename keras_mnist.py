@@ -32,5 +32,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 # train the model
 model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3)
 
+model.save('keras_mnist.h5')
+
 print(model.predict(X_test[:4]))
 print(y_test[:4])
