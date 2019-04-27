@@ -1,7 +1,10 @@
-import sys
-_, load_existing = sys.argv
-
 from keras.datasets import mnist
+from keras.utils import to_categorical
+from keras.models import Sequential, load_model
+from keras.layers import Dense, Conv2D, Flatten
+import sys
+
+_, load_existing = sys.argv
 
 # download mnist data and split into train and test sets
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -13,15 +16,12 @@ X_test = X_test.reshape(10000, 28, 28, 1)
 X_train = X_train / 256.0
 X_test = X_test / 256.0
 
+# one-hot encode target column
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
+
 if not load_existing:
 
-    from keras.utils import to_categorical
-    # one-hot encode target column
-    y_train = to_categorical(y_train)
-    y_test = to_categorical(y_test)
-
-    from keras.models import Sequential
-    from keras.layers import Dense, Conv2D, Flatten
     # create model
     model = Sequential()
     # add model layers
@@ -39,8 +39,6 @@ if not load_existing:
     model.save('keras_mnist.h5')
 
 else:
-
-    from keras.models import load_model
 
     model = load_model('keras_mnist.h5')
 
