@@ -1,17 +1,8 @@
 
 from keras.datasets import mnist
 
-print("hello")
-
 # download mnist data and split into train and test sets
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
-
-# import matplotlib.pyplot as plt
-#plot the first image in the dataset
-#plt.imshow(X_train[0])
-
-# check image shape
-print (X_train[0].shape)
 
 # reshape data to fit model
 X_train = X_train.reshape(60000, 28, 28, 1)
@@ -41,4 +32,5 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 # train the model
 model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3)
 
-
+print(model.predict(X_test[:4]))
+print(y_test[:4])

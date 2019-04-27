@@ -1,7 +1,6 @@
 import SimpleITK as sitk
 import numpy as np
 
-
 def read_nii(dir):
     sitk_dir = sitk.ReadImage(dir)
     return sitk.GetArrayFromImage(sitk_dir).T

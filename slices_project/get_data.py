@@ -9,7 +9,7 @@ mask_directory = base_directory + 'masks/'
 import sys
 sys.path.append(base_directory)
 
-import global_variables
+from legacy import global_variables
 from utility_functions import opening_files, dense_labeler
 
 """EXTRACT INFORMATION FROM FILES"""
