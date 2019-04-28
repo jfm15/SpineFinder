@@ -1,15 +1,21 @@
-import sys
-import os
+# https://stanford.edu/~shervine/blog/keras-how-to-generate-data-on-the-fly
+
+import sys, os
 from keras.models import Sequential
 from keras.layers import Dense, Conv3D, Flatten, MaxPooling3D
 from utility_functions import opening_files
+from create_partition import create_partition_and_labels
 
 # get arguments
-_, predict = sys.argv
+# _, generate_samples = sys.argv
 root_path = os.getcwd()
+sample_dir = "/".join([root_path, "samples"])
 
-# get datasets
+# create partition
 dataset = []
+partition, labels = create_partition_and_labels(sample_dir, 0.8, randomise=True)
+print(partition)
+input()
 
 # get samples with training labels
 X_train = []
@@ -44,7 +50,9 @@ model.add(Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1), padding="same"))
 model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
 
 # train the model
-model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3)
+model.fit_generator(X_train, y_train, validation_data=(X_test, y_test), epochs=3)
+
+model.save('main-model.h5')
 
 # show predictions
 
