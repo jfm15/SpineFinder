@@ -15,7 +15,7 @@ partition, labels = create_partition_and_labels(sample_dir, 0.8, randomise=True)
 
 # generators
 # Parameters
-params = {'dim': (256, 256, 32),
+params = {'dim': (128, 128, 32),
           'batch_size': 16,
           'n_channels': 1,
           'shuffle': True}
@@ -42,7 +42,7 @@ model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu'
 
 model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
 
-model.add(Conv3D(1024, kernel_size=(16, 16, 1), strides=(1, 1, 1), activation='relu'))
+model.add(Conv3D(1024, kernel_size=(8, 8, 1), strides=(1, 1, 1), activation='relu'))
 
 model.add(Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1)))
 # output_shape=(1, 1, 1, 3)

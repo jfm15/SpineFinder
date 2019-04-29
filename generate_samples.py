@@ -8,7 +8,7 @@ root_path = os.getcwd()
 dataset_dir = "/".join([root_path, "datasets", "spine-1"])
 sample_dir = "/".join([root_path, "samples"])
 scales = np.array([0.3125, 0.3125, 2.5])
-sample_size = np.array([256, 256, 32])
+sample_size = np.array([128, 128, 32])
 
 
 def generate_samples(dataset_dir, sample_dir, scales, sample_size, no_of_samples):
@@ -39,24 +39,28 @@ def generate_samples(dataset_dir, sample_dir, scales, sample_size, no_of_samples
 
         for label, scaled_centroid in zip(labels, scaled_centroids):
 
-            # random element
-            random_component = np.round(np.random.rand(3) * sample_size * 0.5 - half_sample_size * 0.5).astype(int)
+            for i in range (0, no_of_samples):
 
-            # remember this takes into account padding
-            corner_a = scaled_centroid + half_sample_size + random_component
-            corner_b = scaled_centroid + half_sample_size + sample_size + random_component
+                # random element
+                random_component = np.round(np.random.rand(3) * sample_size * 0.5 - half_sample_size * 0.5).astype(int)
 
-            centroid_position = half_sample_size - random_component
+                # remember this takes into account padding
+                corner_a = scaled_centroid + half_sample_size + random_component
+                corner_b = scaled_centroid + half_sample_size + sample_size + random_component
 
-            sample = padded_volume[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
+                centroid_position = half_sample_size - random_component
 
-            sample_id = volume_path_suffix.rsplit('/', 1)[1] + '-' + label
-            sample_path = "/".join([sample_dir, sample_id])
-            np.save(sample_path, sample)
+                sample = padded_volume[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
 
-            annotation_file = open(sample_path + ".txt", "w+")
-            annotation_file.write(" ".join([label] + list(map(str, centroid_position))))
-            annotation_file.close()
+                sample_id = volume_path_suffix.rsplit('/', 1)[1] + '-' + str(i) + "-" + label
+                sample_path = "/".join([sample_dir, sample_id])
+                np.save(sample_path, sample)
+
+                annotation_file = open(sample_path + ".txt", "w+")
+                annotation_file.write(" ".join([label] + list(map(str, centroid_position))))
+                annotation_file.close()
+
+                print(sample_id)
 
             """
             fig, ax = plt.subplots(1)
@@ -82,4 +86,4 @@ def generate_samples(dataset_dir, sample_dir, scales, sample_size, no_of_samples
             """
 
 
-generate_samples(dataset_dir, sample_dir, scales, sample_size, 5)
+generate_samples(dataset_dir, sample_dir, scales, sample_size, 4)
