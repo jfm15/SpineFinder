@@ -15,9 +15,9 @@ collect = volume_size - patch_size
 histogram = np.zeros(volume.shape)
 
 print(collect)
-for i in range(0, collect[0], 32):
-    for j in range(0, collect[1], 32):
-        for k in range(0, collect[2], 8):
+for i in range(0, collect[0], 16):
+    for j in range(0, collect[1], 16):
+        for k in range(0, collect[2], 4):
             corner_a = np.array([i, j, k])
             corner_b = corner_a + patch_size
             sample = volume[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
