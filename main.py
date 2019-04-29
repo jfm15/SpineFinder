@@ -40,7 +40,7 @@ model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
 
 model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same"))
 
-model.add(Conv3D(1024, kernel_size=(8, 8, 2), strides=(8, 8, 2), activation='relu'))
+model.add(Conv3D(1024, kernel_size=(8, 8, 2), strides=(1, 1, 1), activation='relu'))
 
 model.add(Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1)))
 # output_shape=(1, 1, 1, 3)
@@ -59,7 +59,7 @@ model.fit_generator(generator=training_generator,
                     validation_data=validation_generator,
                     use_multiprocessing=True,
                     workers=6,
-                    epochs=3)
+                    epochs=6)
 
 model.save('main-model.h5')
 
