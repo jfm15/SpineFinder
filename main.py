@@ -25,7 +25,7 @@ validation_generator = DataGenerator(partition['validation'], labels, **params)
 
 # train model
 model = Sequential()
-model.add(Conv3D(64, kernel_size=(3, 5, 5), strides=(2, 2, 2), activation='relu', padding="same",
+model.add(Conv3D(64, kernel_size=(5, 5, 3), strides=(1, 1, 1), activation='relu', padding="same",
                  input_shape=(None, None, None, 1)))
 
 model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
@@ -42,7 +42,7 @@ model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu'
 
 model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
 
-model.add(Conv3D(1024, kernel_size=(8, 8, 1), strides=(1, 1, 1), activation='relu'))
+model.add(Conv3D(1024, kernel_size=(16, 16, 1), strides=(1, 1, 1), activation='relu'))
 
 model.add(Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1)))
 # output_shape=(1, 1, 1, 3)
