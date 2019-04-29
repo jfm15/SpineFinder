@@ -16,7 +16,7 @@ def generate_samples(dataset_dir, sample_dir, scales, sample_size, no_of_samples
     ext_len = len(".nii.gz")
     prefix_len = len(dataset_dir)
     # get paths of all volumes
-    for volume_path in glob.glob(dataset_dir + "/**/*.nii.gz", recursive=True)[:no_of_samples]:
+    for volume_path in glob.glob(dataset_dir + "/**/*.nii.gz", recursive=True):
 
         # get path to corresponding metadata
         volume_path_without_ext = volume_path[:-ext_len]
