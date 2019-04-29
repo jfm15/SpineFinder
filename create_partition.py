@@ -32,6 +32,6 @@ def create_partition_and_labels(samples_dir, training_percentage, randomise=True
         centroid_coords = list(map(int, metadata_split[1:]))
         labels[label] = centroid_coords
 
-    partition["training"] = training_labels
+    partition["train"] = training_labels
     partition["validation"] = validation_labels
     return partition, labels

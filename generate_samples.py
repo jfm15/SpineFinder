@@ -34,8 +34,8 @@ def generate_samples(dataset_dir, sample_dir, scales, sample_size, no_of_samples
 
         # make directory to put samples in
         volume_path_suffix = volume_path_without_ext[prefix_len:]
-        volume_in_samples_dir = (sample_dir + volume_path_suffix).rsplit('/', 1)[0]
-        os.makedirs(volume_in_samples_dir)
+        # volume_in_samples_dir = (sample_dir + volume_path_suffix).rsplit('/', 1)[0]
+        # os.makedirs(volume_in_samples_dir)
 
         for label, scaled_centroid in zip(labels, scaled_centroids):
 
@@ -50,7 +50,8 @@ def generate_samples(dataset_dir, sample_dir, scales, sample_size, no_of_samples
 
             sample = padded_volume[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
 
-            sample_path = sample_dir + volume_path_suffix + '-' + label
+            sample_id = volume_path_suffix.rsplit('/', 1)[1] + '-' + label
+            sample_path = "/".join([sample_dir, sample_id])
             np.save(sample_path, sample)
 
             annotation_file = open(sample_path + ".txt", "w+")
