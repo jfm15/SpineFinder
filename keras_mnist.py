@@ -20,7 +20,7 @@ X_test = X_test / 256.0
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
 
-if not load_existing:
+if load_existing == 'False':
 
     # create model
     model = Sequential()
