@@ -26,36 +26,33 @@ validation_generator = DataGenerator(partition['validation'], labels, **params)
 # train model
 model = Sequential()
 model.add(Conv3D(64, kernel_size=(3, 5, 5), strides=(2, 2, 2), activation='relu', padding="same",
-                 input_shape=(256, 256, 32, 1)))
+                 input_shape=(None, None, None, 1)))
 
 model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
 
-model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same",
-                 input_shape=(64, 64, 8, 64)))
+model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same"))
 
 model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
 
-model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same",
-                 input_shape=(32, 32, 4, 64)))
+model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same"))
 
 model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
 
-model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same",
-                 input_shape=(16, 16, 2, 64)))
+model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same"))
 
 model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
 
-model.add(Conv3D(1024, kernel_size=(8, 8, 1), strides=(1, 1, 1), activation='relu',
-                 input_shape=(8, 8, 1, 64)))
+model.add(Conv3D(1024, kernel_size=(8, 8, 1), strides=(1, 1, 1), activation='relu'))
 
-model.add(Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1),
-                 input_shape=(1, 1, 1, 1024)))
+model.add(Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1)))
 # output_shape=(1, 1, 1, 3)
 
+"""
 for layer in model.layers:
     print(layer.name)
     print(layer.input_shape)
     print(layer.output_shape)
+"""
 
 model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
 
