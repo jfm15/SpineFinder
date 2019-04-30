@@ -43,11 +43,15 @@ x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padd
 
 x = Conv3D(1024, kernel_size=(8, 8, 2), strides=(1, 1, 1), activation='relu')(x)
 
-position_predictions = Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1), name="position_predictions")(x)
-
-label_predictions = Conv3D(27, kernel_size=(1, 1, 1), strides=(1, 1, 1), name="label_predictions")(x)
-label_predictions = Flatten()(label_predictions)
+position_predictions = Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1))(x)
 # output_shape=(1, 1, 1, 3)
+
+position_predictions = Flatten(name="position_predictions")(position_predictions)
+
+label_predictions = Conv3D(27, kernel_size=(1, 1, 1), strides=(1, 1, 1))(x)
+
+label_predictions = Flatten(name="label_predictions")(label_predictions)
+
 
 """
 for layer in model.layers:
