@@ -54,6 +54,6 @@ class DataGenerator(keras.utils.Sequence):
             X[i, ] = np.load('samples/' + ID + '.npy').reshape(128, 128, 32, 1)
 
             # Store values
-            y[i] = np.array(self.labels[ID]).reshape(1, 1, 1, 3)
+            y[i] = [np.array(self.labels[ID]).reshape(1, 1, 1, 3)]
 
         return X, y

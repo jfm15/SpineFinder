@@ -43,7 +43,9 @@ x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padd
 
 x = Conv3D(1024, kernel_size=(8, 8, 2), strides=(1, 1, 1), activation='relu')(x)
 
-predictions = Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1))(x)
+position_predictions = Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1), name="position_predictions")(x)
+
+label_predictions = Conv3D(27, kernel_size=(1, 1, 1), strides=(1, 1, 1), name="label_predictions")(x)
 # output_shape=(1, 1, 1, 3)
 
 """
@@ -53,9 +55,9 @@ for layer in model.layers:
     print(layer.output_shape)
 """
 
-model = Model(inputs=main_input, outputs=predictions)
+model = Model(inputs=main_input, outputs=[position_predictions])
 
-model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
+model.compile(optimizer='adam', loss={"position_predictions": 'mean_absolute_error'}, metrics=['accuracy'])
 
 # train the model
 model.fit_generator(generator=training_generator,
