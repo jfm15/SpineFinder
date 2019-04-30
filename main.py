@@ -55,9 +55,12 @@ for layer in model.layers:
     print(layer.output_shape)
 """
 
-model = Model(inputs=main_input, outputs=[position_predictions])
+model = Model(inputs=main_input, outputs=[position_predictions, label_predictions])
 
-model.compile(optimizer='adam', loss={"position_predictions": 'mean_absolute_error'}, metrics=['accuracy'])
+model.compile(optimizer='adam',
+              loss={"position_predictions": 'mean_absolute_error',
+                    "label_predictions": "categorical_crossentropy"},
+              metrics=['accuracy'])
 
 # train the model
 model.fit_generator(generator=training_generator,

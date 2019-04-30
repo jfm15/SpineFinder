@@ -3,6 +3,8 @@ import numpy as np
 
 def create_partition_and_labels(samples_dir, training_percentage, randomise=True):
 
+
+
     partition = {}
     training_labels = []
     validation_labels = []
@@ -30,7 +32,7 @@ def create_partition_and_labels(samples_dir, training_percentage, randomise=True
         metadata_string = open(sample_path, "r").read()
         metadata_split = metadata_string.split(" ")
         centroid_coords = list(map(int, metadata_split[1:]))
-        labels[label] = centroid_coords
+        labels[label] = [centroid_coords, metadata_split[0]]
 
     partition["train"] = training_labels
     partition["validation"] = validation_labels
