@@ -1,6 +1,6 @@
 import sys, os
-from keras.models import Sequential
-from keras.layers import Dense, Conv3D, Flatten, MaxPooling3D
+from keras.models import Model
+from keras.layers import Input, Conv3D, MaxPooling3D
 from utility_functions import opening_files
 from create_partition import create_partition_and_labels
 from DataGenerator import DataGenerator
@@ -23,26 +23,27 @@ params = {'dim': (128, 128, 32),
 training_generator = DataGenerator(partition['train'], labels, **params)
 validation_generator = DataGenerator(partition['validation'], labels, **params)
 
-# train model
-model = Sequential()
-model.add(Conv3D(64, kernel_size=(5, 5, 3), strides=(2, 2, 2), activation='relu', padding="same",
-                 input_shape=(None, None, None, 1)))
+# Input
+main_input = Input(shape=(128, 128, 32, 1))
 
-model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
+x = Conv3D(64, kernel_size=(5, 5, 3), strides=(2, 2, 2), activation='relu', padding="same",
+                 input_shape=(None, None, None, 1))(main_input)
 
-model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same"))
+x = MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2))(x)
 
-model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
+x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same")(x)
 
-model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same"))
+x = MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2))(x)
 
-model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2)))
+x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same")(x)
 
-model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same"))
+x = MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2))(x)
 
-model.add(Conv3D(1024, kernel_size=(8, 8, 2), strides=(1, 1, 1), activation='relu'))
+x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same")(x)
 
-model.add(Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1)))
+x = Conv3D(1024, kernel_size=(8, 8, 2), strides=(1, 1, 1), activation='relu')(x)
+
+predictions = Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1))(x)
 # output_shape=(1, 1, 1, 3)
 
 """
@@ -51,6 +52,8 @@ for layer in model.layers:
     print(layer.input_shape)
     print(layer.output_shape)
 """
+
+model = Model(inputs=main_input, outputs=predictions)
 
 model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
 
