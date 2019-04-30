@@ -1,6 +1,6 @@
 import sys, os
 from keras.models import Model
-from keras.layers import Input, Conv3D, MaxPooling3D
+from keras.layers import Input, Flatten, Conv3D, MaxPooling3D
 from utility_functions import opening_files
 from create_partition import create_partition_and_labels
 from DataGenerator import DataGenerator
@@ -46,6 +46,7 @@ x = Conv3D(1024, kernel_size=(8, 8, 2), strides=(1, 1, 1), activation='relu')(x)
 position_predictions = Conv3D(3, kernel_size=(1, 1, 1), strides=(1, 1, 1), name="position_predictions")(x)
 
 label_predictions = Conv3D(27, kernel_size=(1, 1, 1), strides=(1, 1, 1), name="label_predictions")(x)
+label_predictions = Flatten()(label_predictions)
 # output_shape=(1, 1, 1, 3)
 
 """
