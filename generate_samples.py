@@ -42,7 +42,7 @@ def generate_samples(dataset_dir, sample_dir, scales, sample_size, no_of_samples
             for i in range (0, no_of_samples):
 
                 # random element
-                random_component = np.round(np.random.rand(3) * sample_size * 0.5 - half_sample_size * 0.5).astype(int)
+                random_component = np.round(np.random.rand(3) * sample_size - half_sample_size).astype(int)
 
                 # remember this takes into account padding
                 corner_a = scaled_centroid + half_sample_size + random_component
