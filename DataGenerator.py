@@ -47,7 +47,7 @@ class DataGenerator(keras.utils.Sequence):
         # Initialization
         X = np.empty((self.batch_size, *self.dim, 1))
         y1 = np.empty((self.batch_size, 3), dtype=int)
-        y2 = np.empty(self.batch_size, dtype=int)
+        y2 = np.empty((self.batch_size, 27), dtype=int)
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
@@ -57,6 +57,6 @@ class DataGenerator(keras.utils.Sequence):
             # Store values
             position, label = self.labels[ID]
             y1[i] = np.array(position)
-            y2[i] = 0
+            y2[i] = keras.utils.to_categorical(label, num_classes=27)
 
         return X, [y1, y2]

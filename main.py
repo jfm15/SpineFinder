@@ -52,14 +52,6 @@ label_predictions = Conv3D(27, kernel_size=(1, 1, 1), strides=(1, 1, 1))(x)
 
 label_predictions = Flatten(name="label_predictions")(label_predictions)
 
-
-"""
-for layer in model.layers:
-    print(layer.name)
-    print(layer.input_shape)
-    print(layer.output_shape)
-"""
-
 model = Model(inputs=main_input, outputs=[position_predictions, label_predictions])
 
 model.compile(optimizer='adam',
