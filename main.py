@@ -1,6 +1,7 @@
 import sys, os
 from keras.models import Model
 from keras.layers import Input, Flatten, Conv3D, MaxPooling3D
+from keras import regularizers
 from utility_functions import opening_files
 from create_partition import create_partition_and_labels
 from DataGenerator import DataGenerator
@@ -27,19 +28,22 @@ validation_generator = DataGenerator(partition['validation'], labels, **params)
 main_input = Input(shape=(128, 128, 32, 1))
 
 x = Conv3D(64, kernel_size=(5, 5, 3), strides=(2, 2, 2), activation='relu', padding="same",
-                 input_shape=(None, None, None, 1))(main_input)
+    kernel_regularizer=regularizers.l2(0.01), input_shape=(None, None, None, 1))(main_input)
 
 x = MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2))(x)
 
-x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same")(x)
+x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same",
+    kernel_regularizer=regularizers.l2(0.01))(x)
 
 x = MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2))(x)
 
-x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same")(x)
+x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same",
+    kernel_regularizer=regularizers.l2(0.01))(x)
 
 x = MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2))(x)
 
-x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same")(x)
+x = Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same",
+    kernel_regularizer=regularizers.l2(0.01))(x)
 
 x = Conv3D(1024, kernel_size=(8, 8, 2), strides=(1, 1, 1), activation='relu')(x)
 
