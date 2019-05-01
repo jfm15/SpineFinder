@@ -50,7 +50,7 @@ position_predictions = Flatten(name="position_predictions")(position_predictions
 
 label_predictions = Conv3D(27, kernel_size=(1, 1, 1), strides=(1, 1, 1))(x)
 
-label_predictions = Flatten(name="label_predictions")(label_predictions)
+label_predictions = Flatten(name="label_predictions", activation='softmax')(label_predictions)
 
 model = Model(inputs=main_input, outputs=[position_predictions, label_predictions])
 
