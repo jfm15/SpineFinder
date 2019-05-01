@@ -57,6 +57,7 @@ model = Model(inputs=main_input, outputs=[position_predictions, label_prediction
 model.compile(optimizer='adam',
               loss={"position_predictions": 'mean_absolute_error',
                     "label_predictions": "categorical_crossentropy"},
+              loss_weights=[1, 4],
               metrics=['accuracy'])
 
 # train the model
