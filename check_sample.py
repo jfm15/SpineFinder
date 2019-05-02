@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-sample_path = "samples/2551924-0-T1"
+sample_path = "samples/2551924-3-T3"
 
 sample = np.load(sample_path + ".npy")
 
