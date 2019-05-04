@@ -25,7 +25,7 @@ def generate_dense_labelling_3D(volume, real_centroids, radii, scales):
                     if np.linalg.norm(real_point-real_centroid) < radii:
                         dense_labelling[t, s, v] = idx + 1
 
-        print(idx)
+        #print(idx)
 
     return dense_labelling
 

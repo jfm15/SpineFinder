@@ -1,19 +1,18 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
-sample_path = "samples/2551924-3-T3"
+sample_path = "samples/2665969-3-"
 
-sample = np.load(sample_path + ".npy")
+sample = np.load(sample_path + "sample.npy")
+dense_labelling = np.load(sample_path + "labelling.npy")
 
-metadata_string = open(sample_path + ".txt", "r").read()
-metadata_split = metadata_string.split(" ")
-label = metadata_split[0]
-centroid_coords = list(map(int, metadata_split[1:]))
+slice = sample[10, :, :]
+labelling = dense_labelling[10, :, :]
 
-slice = sample[centroid_coords[0], :, :]
+masked_data = np.ma.masked_where(labelling == 0, labelling)
 
 fig, ax = plt.subplots(1)
 ax.imshow(slice.T, interpolation="none", aspect=8, origin='lower')
-ax.annotate(label, centroid_coords[1:3], color="red")
-ax.scatter(centroid_coords[1], centroid_coords[2], color="red")
+plt.imshow(masked_data.T, interpolation="none", aspect=8, origin='lower', cmap=cm.jet, alpha=0.5)
 plt.show()

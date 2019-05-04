@@ -13,16 +13,16 @@ def create_partition_and_labels(samples_dir, training_percentage, randomise=True
     validation_labels = []
     labels = {}
 
-    ext_len = len(".npy")
-    paths = glob.glob(samples_dir + "/**/*.txt", recursive=True)
+    ext_len = len("-labelling.npy")
+    paths = glob.glob(samples_dir + "/**/*labelling.npy", recursive=True)
     no_of_training = round(len(paths) * training_percentage)
 
     if randomise:
         np.random.shuffle(paths)
 
-    for i, sample_path in enumerate(paths):
+    for i, label_path in enumerate(paths):
 
-        sample_path_without_ext = sample_path[:-ext_len]
+        sample_path_without_ext = label_path[:-ext_len]
         label = sample_path_without_ext.rsplit('/', 1)[1]
 
         # assign to lists for partition
@@ -32,12 +32,7 @@ def create_partition_and_labels(samples_dir, training_percentage, randomise=True
             validation_labels.append(label)
 
         # read file and assign to labels
-        metadata_string = open(sample_path, "r").read()
-        metadata_split = metadata_string.split(" ")
-        centroid_coords = list(map(int, metadata_split[1:]))
-        label_name = metadata_split[0]
-        label_index = label_translation.index(label_name)
-        labels[label] = [centroid_coords, label_index]
+        labels[label] = label + "-labelling"
 
     partition["train"] = training_labels
     partition["validation"] = validation_labels

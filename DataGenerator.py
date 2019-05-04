@@ -45,18 +45,16 @@ class DataGenerator(keras.utils.Sequence):
     def __data_generation(self, ids_in_set_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
         # Initialization
-        X = np.empty((self.batch_size, *self.dim, 1))
-        y1 = np.empty((self.batch_size, 3), dtype=int)
-        y2 = np.empty((self.batch_size, 27), dtype=int)
+        X = np.empty((self.batch_size, 1, *self.dim))
+        y = np.empty((self.batch_size, 1, *self.dim), dtype=int)
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
             # Store sample
-            X[i, ] = np.load('samples/' + ID + '.npy').reshape(128, 128, 32, 1)
+            X[i, ] = np.load('samples/' + ID + '-sample.npy').reshape(1, 128, 128, 32)
 
             # Store values
-            position, label = self.labels[ID]
-            y1[i] = np.array(position)
-            y2[i] = keras.utils.to_categorical(label, num_classes=27)
+            label_id = self.labels[ID]
+            y[i, ] = np.load('samples/' + label_id + '.npy').reshape(1, 128, 128, 32)
 
-        return X, [y1, y2]
+        return X, y
