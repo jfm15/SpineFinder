@@ -10,6 +10,8 @@ def weighted_cross_entropy(y_true, y_pred):
     weights[0] = 0.01
     weights = weights / np.sum(weights)
     weights = K.variable(weights)
+    # clip to prevent NaN's and Inf's
+    y_pred = K.clip(y_pred, K.epsilon(), 1 - K.epsilon())
     loss = y_true * K.log(y_pred)
     loss = -K.sum(loss, 1)
     return loss
