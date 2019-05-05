@@ -11,12 +11,11 @@ def weighted_cross_entropy(y_true, y_pred):
     weights = weights / np.sum(weights)
     weights = K.variable(weights)
     loss = y_true * K.log(y_pred)
-    loss = -K.sum(loss, -1)
+    loss = -K.sum(loss, 1)
     return loss
 
 
 def dice_coefficient(y_true, y_pred, smooth=1.):
-    print(y_true.shape, y_pred.shape)
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
     intersection = K.sum(y_true_f * y_pred_f)
