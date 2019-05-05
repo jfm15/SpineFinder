@@ -1,11 +1,12 @@
 from functools import partial
+import numpy as np
 
 from keras import backend as K
 
 
 # my custom loss function
 def weighted_cross_entropy(y_true, y_pred):
-    return 1
+    return np.ones(y_true.shape[0])
 
 
 def dice_coefficient(y_true, y_pred, smooth=1.):
