@@ -5,16 +5,20 @@ from keras import backend as K
 
 
 # my custom loss function
+# https://gist.github.com/wassname/ce364fddfc8a025bfab4348cf5de852d
 def weighted_cross_entropy(y_true, y_pred):
+    # permute dimensions to make consistent
+    y_true_perm = K.permute_dimensions(y_true, (0, 2, 3, 4, 1))
+    y_pred_perm = K.permute_dimensions(y_pred, (0, 2, 3, 4, 1))
+
     weights = np.ones(27)
     weights[0] = 0.01
     weights = weights / np.sum(weights)
     weights = K.variable(weights)
     # clip to prevent NaN's and Inf's
-    y_pred = K.clip(y_pred, K.epsilon(), 1 - K.epsilon())
-    loss = y_true * K.log(y_pred)
-    loss = -K.sum(loss, 1)
-    print(loss.eval().shape)
+    y_pred_perm = K.clip(y_pred_perm, K.epsilon(), 1 - K.epsilon())
+    loss = y_true_perm * K.log(y_pred_perm) * weights
+    loss = -K.sum(loss, -1)
     return loss
 
 
