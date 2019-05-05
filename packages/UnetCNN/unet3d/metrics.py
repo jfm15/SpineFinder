@@ -12,14 +12,14 @@ def weighted_cross_entropy(y_true, y_pred):
     y_pred_perm = K.permute_dimensions(y_pred, (0, 2, 3, 4, 1))
 
     weights = np.ones(27)
-    weights[0] = 0.01
+    weights[0] = 0.0001
     weights = weights / np.sum(weights)
     weights = K.variable(weights)
     # clip to prevent NaN's and Inf's
     y_pred_perm = K.clip(y_pred_perm, K.epsilon(), 1 - K.epsilon())
     loss = y_true_perm * K.log(y_pred_perm) * weights
     loss = -K.sum(loss, -1)
-    return loss
+    return loss * 100
 
 
 def dice_coefficient(y_true, y_pred, smooth=1.):
