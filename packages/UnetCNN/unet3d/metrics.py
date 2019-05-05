@@ -14,6 +14,7 @@ def weighted_cross_entropy(y_true, y_pred):
     y_pred = K.clip(y_pred, K.epsilon(), 1 - K.epsilon())
     loss = y_true * K.log(y_pred)
     loss = -K.sum(loss, 1)
+    print(K.shape(loss))
     return loss
 
 
