@@ -6,7 +6,13 @@ from keras import backend as K
 
 # my custom loss function
 def weighted_cross_entropy(y_true, y_pred):
-    return np.ones(y_true.shape[0])
+    weights = np.ones(27)
+    weights[0] = 0.01
+    weights = weights / np.sum(weights)
+    weights = K.variable(weights)
+    loss = y_true * K.log(y_pred) * weights
+    loss = -K.sum(loss, 1)
+    return loss
 
 
 def dice_coefficient(y_true, y_pred, smooth=1.):
