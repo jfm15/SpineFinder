@@ -36,7 +36,7 @@ model.fit_generator(generator=training_generator,
                     validation_data=validation_generator,
                     use_multiprocessing=True,
                     workers=6,
-                    epochs=1)
+                    epochs=5)
 
 model.save('main-model.h5')
 
