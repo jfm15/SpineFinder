@@ -26,7 +26,7 @@ training_generator = DataGenerator(partition['train'], labels, **params)
 validation_generator = DataGenerator(partition['validation'], labels, **params)
 
 # Input
-model = unet_model_3d(input_shape=(1, 128, 128, 32))
+model = unet_model_3d(input_shape=(1, 28, 28, 28), n_labels=27)
 
 # train the model
 model.fit_generator(generator=training_generator,

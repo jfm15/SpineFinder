@@ -25,7 +25,7 @@ def generate_samples(dataset_dir, sample_dir, scales, sample_size, no_of_samples
         volume_metadata_path = volume_path_without_ext + ".lml"
 
         # get real data from paths
-        volume = opening_files.read_nii(volume_path)
+        volume = opening_files.read_nii(volume_path, spacing=(2.0, 2.0, 2.0))
         labels, centroids = opening_files.extract_centroid_info_from_lml(volume_metadata_path)
 
         dense_labels = dense_labeler.generate_dense_labelling_3D(volume, centroids, radii, scales)

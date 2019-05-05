@@ -1,8 +1,10 @@
 import SimpleITK as sitk
 import numpy as np
+from utility_functions import processing
 
-def read_nii(dir):
+def read_nii(dir, spacing=(2.0, 2.0, 2.0)):
     sitk_dir = sitk.ReadImage(dir)
+    sitk_dir = processing.resample_image(sitk_dir, out_spacing=spacing)
     return sitk.GetArrayFromImage(sitk_dir).T
 
 
