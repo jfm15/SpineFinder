@@ -3,6 +3,11 @@ from functools import partial
 from keras import backend as K
 
 
+# my custom loss function
+def weighted_cross_entropy(y_true, y_pred):
+    return 1
+
+
 def dice_coefficient(y_true, y_pred, smooth=1.):
     print(y_true.shape, y_pred.shape)
     y_true_f = K.flatten(y_true)
