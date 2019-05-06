@@ -29,10 +29,10 @@ validation_generator = DataGenerator(partition['validation'], labels, **params)
 
 # Input
 model = Sequential()
-model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same",
+model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmoid', padding="same",
                  input_shape=(28, 28, 28, 1)))
-model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
-model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
+model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmoid', padding="same"))
+model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmoid', padding="same"))
 model.add(Conv3D(2, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))
 
 weights = np.array([0.01, 0.99])

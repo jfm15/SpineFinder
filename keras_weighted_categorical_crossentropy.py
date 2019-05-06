@@ -22,8 +22,9 @@ def weighted_categorical_crossentropy(weights):
     weights = K.variable(weights)
 
     def loss(y_true, y_pred):
-        y_true = K.print_tensor(y_true, message='y_true = ')
-        y_pred = K.print_tensor(y_pred, message='y_pred = ')
+        y_true_np = K.eval(y_true)
+        y_pred_np = K.eval(y_pred)
+        print(y_true_np, y_pred_np)
         # scale predictions so that the class probas of each sample sum to 1
         y_pred /= K.sum(y_pred, axis=-1, keepdims=True)
         # clip to prevent NaN's and Inf's
