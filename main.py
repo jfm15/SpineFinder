@@ -1,9 +1,11 @@
 import sys, os
+import numpy as np
 from keras.models import Model, Sequential
 from keras.layers import Input, Flatten, Conv3D, MaxPooling3D
 from utility_functions import opening_files
 from create_partition import create_partition_and_labels
 from DataGenerator import DataGenerator
+from keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 
 
 # get arguments
@@ -32,7 +34,12 @@ model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu'
 #model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
 model.add(Conv3D(27, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))
 
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
+weights = np.ones(27)
+weights[0] = 0.001
+weights /= np.sum(weights)
+print(weights)
+
+model.compile(optimizer='adam', loss=weighted_categorical_crossentropy(weights), metrics=['categorical_accuracy'])
 
 for layer in model.layers:
     print(layer.name)
