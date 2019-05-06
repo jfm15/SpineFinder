@@ -26,10 +26,10 @@ validation_generator = DataGenerator(partition['validation'], labels, **params)
 
 # Input
 model = Sequential()
-model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same",
+model.add(Conv3D(64, kernel_size=(3, 3, 3), strides=(1, 1, 1), activation='relu', padding="same",
                  input_shape=(None, None, None, 1)))
-model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
-model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
+#model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
+#model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
 model.add(Conv3D(27, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
