@@ -31,7 +31,8 @@ model = unet_model_3d(input_shape=(1, 28, 28, 28),
                       depth=2,
                       pool_size=(2, 2, 2),
                       include_label_wise_dice_coefficients=True,
-                      initial_learning_rate=0.0001)
+                      initial_learning_rate=0.01,
+                      n_base_filters=8)
 
 for layer in model.layers:
     print(layer.name)
