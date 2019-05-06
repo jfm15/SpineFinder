@@ -19,7 +19,7 @@ partition, labels = create_partition_and_labels(sample_dir, 0.8, randomise=True)
 
 # generators
 # Parameters
-params = {'dim': (28, 28, 28),
+params = {'dim': (48, 48, 48),
           'batch_size': 16,
           'n_channels': 1,
           'shuffle': True}
