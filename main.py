@@ -1,5 +1,6 @@
 import sys, os
 import numpy as np
+from keras import optimizers
 from keras.models import Model, Sequential
 from keras.layers import Input, Flatten, Conv3D, MaxPooling3D
 from utility_functions import opening_files
@@ -38,7 +39,8 @@ weights = np.ones(27)
 weights[0] = 0.001
 weights /= np.sum(weights)
 
-model.compile(optimizer='adam', loss=weighted_categorical_crossentropy(weights), metrics=['categorical_accuracy'])
+sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+model.compile(optimizer=sgd, loss=weighted_categorical_crossentropy(weights), metrics=['categorical_accuracy'])
 
 for layer in model.layers:
     print(layer.name)
