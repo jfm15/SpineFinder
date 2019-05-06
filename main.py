@@ -33,6 +33,11 @@ model = unet_model_3d(input_shape=(1, 28, 28, 28),
                       include_label_wise_dice_coefficients=True,
                       initial_learning_rate=0.0001)
 
+for layer in model.layers:
+    print(layer.name)
+    print(layer.input_shape)
+    print(layer.output_shape)
+
 # train the model
 model.fit_generator(generator=training_generator,
                     validation_data=validation_generator,
