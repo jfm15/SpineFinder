@@ -1,10 +1,9 @@
 import sys, os
-from keras.models import Model
+from keras.models import Model, Sequential
 from keras.layers import Input, Flatten, Conv3D, MaxPooling3D
 from utility_functions import opening_files
 from create_partition import create_partition_and_labels
 from DataGenerator import DataGenerator
-from packages.UnetCNN.unet3d.model import unet_model_3d
 
 
 # get arguments
@@ -26,12 +25,14 @@ training_generator = DataGenerator(partition['train'], labels, **params)
 validation_generator = DataGenerator(partition['validation'], labels, **params)
 
 # Input
-model = unet_model_3d(input_shape=(1, 28, 28, 28),
-                      n_labels=27,
-                      depth=2,
-                      pool_size=(2, 2, 2),
-                      initial_learning_rate=0.01,
-                      n_base_filters=8)
+model = Sequential()
+model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same",
+                 input_shape=(None, None, None, 1)))
+model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
+model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
+model.add(Conv3D(27, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))
+
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
 for layer in model.layers:
     print(layer.name)

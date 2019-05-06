@@ -51,12 +51,12 @@ class DataGenerator(keras.utils.Sequence):
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
             # Store sample
-            X[i, ] = np.load('samples/' + ID + '-sample.npy').reshape(1, 28, 28, 28)
+            X[i, ] = np.load('samples/' + ID + '-sample.npy').reshape(28, 28, 28, 1)
 
             # Store values
             label_id = self.labels[ID]
             labelling = np.load('samples/' + label_id + '.npy')
             categorical_labelling = keras.utils.to_categorical(labelling, 27)
-            y[i, ] = np.transpose(categorical_labelling, [3, 0, 1, 2])
+            y[i, ] = categorical_labelling
 
         return X, y
