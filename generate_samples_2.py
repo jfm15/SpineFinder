@@ -21,7 +21,7 @@ def densely_label(labels, label_translation, volume_shape, centroid_indexes, spa
         corner_a = np.clip(corner_a, a_min=np.zeros(3), a_max=upper_clip).astype(int)
         corner_b = centroid_idx + radius_in_pixels
         corner_b = np.clip(corner_b, a_min=np.zeros(3), a_max=upper_clip).astype(int)
-        dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = label_value
+        dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = 1
 
     return dense_labelling
 
@@ -61,6 +61,7 @@ def generate_samples(dataset_dir, sample_dir, label_translation,
         random_area = volume.shape - sample_size_in_pixels
 
         name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
+        print(name)
         i = 0
         while i < no_of_samples:
 
@@ -93,5 +94,5 @@ generate_samples(dataset_dir="datasets/spine-1",
                  label_translation=label_translation,
                  spacing=(2.0, 2.0, 2.0),
                  radius=(28.0, 28.0, 28.0),
-                 sample_size=(56.0, 56.0, 56.0),
+                 sample_size=(78.0, 78.0, 78.0),
                  no_of_samples=100)

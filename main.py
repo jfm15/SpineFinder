@@ -33,11 +33,9 @@ model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu'
                  input_shape=(None, None, None, 1)))
 model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
 model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
-model.add(Conv3D(27, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))
+model.add(Conv3D(2, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))
 
-weights = np.ones(27)
-weights[0] = 0.001
-weights /= np.sum(weights)
+weights = np.array([0.01, 0.99])
 
 sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(optimizer=sgd, loss=weighted_categorical_crossentropy(weights), metrics=['categorical_accuracy'])
