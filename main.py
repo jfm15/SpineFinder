@@ -36,6 +36,7 @@ model.add(Conv3D(27, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softm
 
 weights = np.ones(27)
 weights[0] = 0.001
+weights /= np.sum(weights)
 
 model.compile(optimizer='adam', loss=weighted_categorical_crossentropy(weights), metrics=['categorical_accuracy'])
 
@@ -49,7 +50,7 @@ model.fit_generator(generator=training_generator,
                     validation_data=validation_generator,
                     use_multiprocessing=True,
                     workers=6,
-                    epochs=20)
+                    epochs=5)
 
 model.save('main-model.h5')
 
