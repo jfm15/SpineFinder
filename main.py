@@ -19,7 +19,7 @@ partition, labels = create_partition_and_labels(sample_dir, 0.8, randomise=True)
 
 # generators
 # Parameters
-params = {'dim': (48, 48, 48),
+params = {'dim': (28, 28, 28),
           'batch_size': 16,
           'n_channels': 1,
           'shuffle': True}
@@ -30,7 +30,7 @@ validation_generator = DataGenerator(partition['validation'], labels, **params)
 # Input
 model = Sequential()
 model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same",
-                 input_shape=(None, None, None, 1)))
+                 input_shape=(28, 28, 28, 1)))
 model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
 model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='relu', padding="same"))
 model.add(Conv3D(2, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))

@@ -94,5 +94,5 @@ generate_samples(dataset_dir="datasets/spine-1",
                  label_translation=label_translation,
                  spacing=(2.0, 2.0, 2.0),
                  radius=(28.0, 28.0, 28.0),
-                 sample_size=(96.0, 96.0, 96.0),
+                 sample_size=(56.0, 56.0, 56.0),
                  no_of_samples=100)
