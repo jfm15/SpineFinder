@@ -1,6 +1,6 @@
 import numpy as np
 from keras.models import load_model
-from keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
+from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 

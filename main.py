@@ -1,12 +1,11 @@
-import sys, os
+import os
 import numpy as np
 from keras import optimizers
-from keras.models import Model, Sequential
-from keras.layers import Input, Flatten, Conv3D, MaxPooling3D
-from utility_functions import opening_files
+from keras.models import Sequential
+from keras.layers import Conv3D
 from create_partition import create_partition_and_labels
 from DataGenerator import DataGenerator
-from keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
+from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 
 
 # get arguments

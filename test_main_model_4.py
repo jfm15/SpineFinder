@@ -1,6 +1,6 @@
 import numpy as np
 from keras.models import load_model
-from keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
+from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from utility_functions import opening_files
@@ -9,7 +9,7 @@ volume = opening_files.read_nii("datasets/spine-1/patient0088/2684937/2684937.ni
 
 weights = np.array([0.1, 0.9])
 
-model = load_model('main-model.h5', custom_objects={'loss': weighted_categorical_crossentropy(weights)})
+model = load_model('model_files/main-model.h5', custom_objects={'loss': weighted_categorical_crossentropy(weights)})
 
 output = np.zeros(volume.shape)
 

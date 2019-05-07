@@ -3,6 +3,7 @@
 import numpy as np
 import keras
 
+
 class DataGenerator(keras.utils.Sequence):
 
     def __init__(self, ids_in_set, labels, batch_size=32, dim=(32, 32, 32), n_channels=1
