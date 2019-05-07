@@ -2,7 +2,7 @@ import os
 import numpy as np
 from create_partition import create_partition_and_labels
 from data_generator import DataGenerator
-from models.unet import unet
+from models.six_conv_two_classes import six_conv_two_classes
 
 # get arguments
 # _, generate_samples = sys.argv
@@ -22,10 +22,15 @@ params = {'dim': (28, 28, 28),
 training_generator = DataGenerator(partition['train'], labels, **params)
 validation_generator = DataGenerator(partition['validation'], labels, **params)
 
+'''
 model = unet(input_shape=(28, 28, 28),
              kernel_size=(3, 3, 3),
              weights=np.array([0.05, 0.95]),
              learning_rate=0.05)
+'''
+model = six_conv_two_classes(input_shape=(28, 28, 28),
+                             kernel_size=(5, 5, 5),
+                             weights=np.array([0.1, 0.9]))
 
 for layer in model.layers:
     print(layer.name)

@@ -26,7 +26,7 @@ def densely_label(labels, label_translation, volume_shape, centroid_indexes, spa
 
 
 def generate_samples(dataset_dir, sample_dir, label_translation,
-                     spacing, radius, sample_size, no_of_samples, file_ext=".nii.gz"):
+                     spacing, radius, sample_size, no_of_samples, no_of_zero_samples, file_ext=".nii.gz"):
 
     # numpy these so they can be divided later on
     radius = np.array(radius)
@@ -62,6 +62,7 @@ def generate_samples(dataset_dir, sample_dir, label_translation,
         name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
         print(name)
         i = 0
+        j = 0
         while i < no_of_samples:
 
             random_factor = np.random.rand(3)
@@ -73,7 +74,10 @@ def generate_samples(dataset_dir, sample_dir, label_translation,
             labelling = dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
 
             # if a centroid is contained
-            if np.unique(labelling).shape[0] > 1:
+            unique_labels = np.unique(labelling).shape[0]
+            if unique_labels > 1 or j < no_of_zero_samples:
+                if unique_labels == 1:
+                    j += 1
                 i += 1
                 name_plus_id = name + "-" + str(i)
                 path = '/'.join([sample_dir, name_plus_id])
@@ -94,4 +98,5 @@ generate_samples(dataset_dir="datasets/spine-1",
                  spacing=(2.0, 2.0, 2.0),
                  radius=(28.0, 28.0, 28.0),
                  sample_size=(56.0, 56.0, 56.0),
-                 no_of_samples=100)
+                 no_of_samples=120,
+                 no_of_zero_samples=20)
