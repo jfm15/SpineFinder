@@ -2,7 +2,6 @@ import numpy as np
 from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
 from utility_functions import opening_files
 
 volume = opening_files.read_nii("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
@@ -33,7 +32,7 @@ predict_slice = output[35, :, :]
 masked_data = np.ma.masked_where(predict_slice == 0, predict_slice)
 
 plt.imshow(volume_slice.T, interpolation="none", origin='lower')
-plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, alpha=0.5)
+plt.imshow(masked_data.T, interpolation="none", origin='lower', alpha=0.5)
 plt.show()
 
 
