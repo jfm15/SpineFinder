@@ -6,14 +6,15 @@ import keras
 
 class DataGenerator(keras.utils.Sequence):
 
-    def __init__(self, ids_in_set, labels, batch_size=32, dim=(32, 32, 32), n_channels=1
-                 , shuffle=True):
+    def __init__(self, ids_in_set, labels, dim, batch_size=32, n_channels=1, n_classes=2,
+                 shuffle=True):
 
         self.dim = dim
         self.batch_size = batch_size
         self.labels = labels
         self.ids_in_set = ids_in_set
         self.n_channels = n_channels
+        self.n_classes = n_classes
         self.shuffle = shuffle
         self.on_epoch_end()
 
@@ -46,8 +47,8 @@ class DataGenerator(keras.utils.Sequence):
     def __data_generation(self, ids_in_set_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
         # Initialization
-        X = np.empty((self.batch_size, *self.dim, 1))
-        y = np.empty((self.batch_size, *self.dim, 2), dtype=int)
+        X = np.empty((self.batch_size, *self.dim, self.n_channels))
+        y = np.empty((self.batch_size, *self.dim, self.n_classes), dtype=int)
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
@@ -58,7 +59,7 @@ class DataGenerator(keras.utils.Sequence):
             # Store values
             label_id = self.labels[ID]
             labelling = np.load('samples/' + label_id + '.npy')
-            categorical_labelling = keras.utils.to_categorical(labelling, 2)
+            categorical_labelling = keras.utils.to_categorical(labelling, self.n_classes)
             y[i, ] = categorical_labelling
 
         return X, y
