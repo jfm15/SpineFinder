@@ -1,9 +1,8 @@
-import glob, os
+import glob
 from utility_functions import opening_files, processing
 import SimpleITK as sitk
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
 import numpy as np
+
 
 def densely_label(labels, label_translation, volume_shape, centroid_indexes, spacing, radius):
 
