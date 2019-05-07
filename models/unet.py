@@ -9,7 +9,7 @@ from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_
 
 def unet(input_shape, kernel_size, weights):
 
-    main_input = Input(shape=np.expand_dims(input_shape, axis=3))
+    main_input = Input(shape=(28, 28, 28, 1))
 
     # 28^2
     step_down_1 = Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
