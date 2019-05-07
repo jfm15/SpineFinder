@@ -33,7 +33,7 @@ def unet(input_shape, kernel_size, weights):
 
     # 14^2
     step_up_2 = UpSampling3D(size=(2, 2, 2))(floor)
-    step_up_2 = Concatenate([step_down_2, step_up_2], axis=-1)
+    step_up_2 = Concatenate([step_down_2, step_up_2], axis=3)
     step_up_2 = Conv3D(128, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
                          activation='relu')(step_up_2)
     step_up_2 = Conv3D(128, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
@@ -41,7 +41,7 @@ def unet(input_shape, kernel_size, weights):
 
     # 28^2
     step_up_1 = UpSampling3D(size=(2, 2, 2))(step_up_2)
-    step_up_1 = Concatenate([step_down_1, step_up_1], axis=-1)
+    step_up_1 = Concatenate([step_down_1, step_up_1], axis=3)
     step_up_1 = Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
                        activation='relu')(step_up_1)
     step_up_1 = Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
