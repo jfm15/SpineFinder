@@ -1,5 +1,11 @@
 .idea/
+datasets/
 samples/
+predictions/
+plots/
+model_files/
+spine-env/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
