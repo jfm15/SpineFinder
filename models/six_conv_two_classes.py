@@ -11,7 +11,7 @@ def six_conv_two_classes(input_shape, kernel_size, weights):
     # Input
     model = Sequential()
     model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same",
-                     input_shape=np.expand_dims(input_shape, axis=3)))
+                     input_shape=input_shape))
     model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same"))
     model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same"))
     model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same"))
