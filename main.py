@@ -35,7 +35,7 @@ model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmo
 model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmoid', padding="same"))
 model.add(Conv3D(2, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))
 
-weights = np.array([0.5, 0.5])
+weights = np.array([0.1, 0.9])
 
 sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(optimizer=sgd, loss=weighted_categorical_crossentropy(weights), metrics=['categorical_accuracy'])
