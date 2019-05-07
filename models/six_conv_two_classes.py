@@ -1,5 +1,6 @@
 import numpy as np
 import keras_metrics as km
+import keras.metrics as metrics
 from keras import optimizers
 from keras.models import Sequential
 from keras.layers import Conv3D
@@ -27,7 +28,8 @@ def six_conv_two_classes():
     # define metrics
     recall_background = km.binary_recall(label=0)
     recall_vertebrae = km.binary_recall(label=1)
+    cat_accuracy = metrics.categorical_accuracy
 
-    model.compile(optimizer=sgd, loss=loss_function, metrics=[recall_background, recall_vertebrae])
+    model.compile(optimizer=sgd, loss=loss_function, metrics=[recall_background, recall_vertebrae, cat_accuracy])
 
     return model
