@@ -33,6 +33,8 @@ model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmo
                  input_shape=(28, 28, 28, 1)))
 model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmoid', padding="same"))
 model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmoid', padding="same"))
+model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmoid', padding="same"))
+model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmoid', padding="same"))
 model.add(Conv3D(2, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))
 
 weights = np.array([0.1, 0.9])
@@ -50,7 +52,7 @@ model.fit_generator(generator=training_generator,
                     validation_data=validation_generator,
                     use_multiprocessing=True,
                     workers=6,
-                    epochs=5)
+                    epochs=20)
 
 model.save('main-model.h5')
 
