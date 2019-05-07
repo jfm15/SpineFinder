@@ -53,7 +53,7 @@ def unet(input_shape, kernel_size, weights):
     model = Model(inputs=main_input, outputs=main_output)
 
     # define optimizer
-    sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = optimizers.SGD(lr=0.05, decay=1e-6, momentum=0.9, nesterov=True)
 
     # define loss function
     loss_function = weighted_categorical_crossentropy(weights)
