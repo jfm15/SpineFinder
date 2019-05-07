@@ -1,4 +1,5 @@
 import numpy as np
+import keras_metrics as km
 from keras import optimizers
 from keras.models import Sequential
 from keras.layers import Conv3D
@@ -16,9 +17,17 @@ def six_conv_two_classes():
     model.add(Conv3D(64, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='sigmoid', padding="same"))
     model.add(Conv3D(2, kernel_size=(5, 5, 5), strides=(1, 1, 1), activation='softmax', padding="same"))
 
-    weights = np.array([0.1, 0.9])
-
+    # define optimizer
     sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(optimizer=sgd, loss=weighted_categorical_crossentropy(weights), metrics=['categorical_accuracy'])
+
+    # define loss function
+    weights = np.array([0.1, 0.9])
+    loss_function = weighted_categorical_crossentropy(weights)
+
+    # define metrics
+    recall_background = km.binary_recall(label=0)
+    recall_vertebrae = km.binary_recall(label=1)
+
+    model.compile(optimizer=sgd, loss=loss_function, metrics=[recall_background, recall_vertebrae])
 
     return model
