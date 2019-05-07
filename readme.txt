@@ -6,6 +6,12 @@ ssh into the graphics machine by doing
 ssh jfm15@shell1.doc.ic.ac.uk
 ssh jfm15@graphic10.doc.ic.ac.uk
 
+Useful commands:
+ssh jfm15@spine-finder.westeurope.cloudapp.azure.com
+scp -r jfm15@spine-finder.westeurope.cloudapp.azure.com:SpineFinder/main-model.h5 /Users/James/SpineFinder
+nohup python main.py &> main-output.txt &
+(top and kill)
+
 File Structure
 |- main.py
 |-
