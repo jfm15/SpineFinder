@@ -7,7 +7,7 @@ from keras.layers import Input, Conv3D, MaxPooling3D, UpSampling3D, concatenate
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 
 
-def unet(input_shape, kernel_size, weights):
+def unet(input_shape, kernel_size, weights, learning_rate=0.05):
 
     main_input = Input(shape=(28, 28, 28, 1))
 
@@ -53,7 +53,7 @@ def unet(input_shape, kernel_size, weights):
     model = Model(inputs=main_input, outputs=main_output)
 
     # define optimizer
-    sgd = optimizers.SGD(lr=0.05, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = optimizers.SGD(lr=learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
 
     # define loss function
     loss_function = weighted_categorical_crossentropy(weights)

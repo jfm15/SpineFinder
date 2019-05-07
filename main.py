@@ -24,7 +24,8 @@ validation_generator = DataGenerator(partition['validation'], labels, **params)
 
 model = unet(input_shape=(28, 28, 28),
              kernel_size=(3, 3, 3),
-             weights=np.array([0.01, 0.99]))
+             weights=np.array([0.05, 0.95]),
+             learning_rate=0.05)
 
 for layer in model.layers:
     print(layer.name)
