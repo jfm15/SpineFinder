@@ -25,11 +25,11 @@ def six_conv_multi_classes(input_shape, kernel_size, classes, weights):
     loss_function = weighted_categorical_crossentropy(weights)
 
     # define metrics
-    metrics = []
+    list_of_metrics = []
     for i in range(0, classes):
-        metrics.append(km.binary_recall(label=i))
-    metrics.append(metrics.categorical_accuracy)
+        list_of_metrics.append(km.binary_recall(label=i))
+        list_of_metrics.append(metrics.categorical_accuracy)
 
-    model.compile(optimizer=sgd, loss=loss_function, metrics=metrics)
+    model.compile(optimizer=sgd, loss=loss_function, metrics=list_of_metrics)
 
     return model
