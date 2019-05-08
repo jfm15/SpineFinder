@@ -1,4 +1,5 @@
 import numpy as np
+import keras_metrics as km
 from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 from utility_functions import opening_files
@@ -35,8 +36,11 @@ def apply_model(data_path, model_dir, prediction_dir, patch_size, custom_objects
 
 
 weights = np.array([0.1, 0.9])
+recall_background = km.binary_recall(label=0)
+recall_vertebrae = km.binary_recall(label=1)
 apply_model(data_path="datasets/spine-1/patient0088/2684937/2684937.nii.gz",
-            model_dir="model_files/main-model.h5",
-            prediction_dir="predictions",
+            model_dir="model_files/six_conv_20_epochs.h5",
+            prediction_dir="predictions/six_conv_20_epochs",
             patch_size=np.array([28, 28, 28]),
-            custom_objects={'loss': weighted_categorical_crossentropy(weights)})
+            custom_objects={'loss': weighted_categorical_crossentropy(weights),
+                            'binary_recall': km.binary_recall()})

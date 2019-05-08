@@ -13,39 +13,39 @@ def unet(input_shape, kernel_size, weights, learning_rate=0.05):
 
     # 28^2
     step_down_1 = Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                    activation='relu')(main_input)
+                    activation='sigmoid')(main_input)
     step_down_1 = Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                    activation='relu')(step_down_1)
+                    activation='sigmoid')(step_down_1)
 
     # 14^2
     step_down_2 = MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2))(step_down_1)
     step_down_2 = Conv3D(128, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                    activation='relu')(step_down_2)
+                    activation='sigmoid')(step_down_2)
     step_down_2 = Conv3D(128, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                    activation='relu')(step_down_2)
+                    activation='sigmoid')(step_down_2)
 
     # 7^2
     floor = MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2))(step_down_2)
     floor = Conv3D(256, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                    activation='relu')(floor)
+                    activation='sigmoid')(floor)
     floor = Conv3D(256, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                    activation='relu')(floor)
+                    activation='sigmoid')(floor)
 
     # 14^2
     step_up_2 = UpSampling3D(size=(2, 2, 2))(floor)
     step_up_2 = concatenate([step_down_2, step_up_2], axis=-1)
     step_up_2 = Conv3D(128, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                         activation='relu')(step_up_2)
+                         activation='sigmoid')(step_up_2)
     step_up_2 = Conv3D(128, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                         activation='relu')(step_up_2)
+                         activation='sigmoid')(step_up_2)
 
     # 28^2
     step_up_1 = UpSampling3D(size=(2, 2, 2))(step_up_2)
     step_up_1 = concatenate([step_down_1, step_up_1], axis=-1)
     step_up_1 = Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                       activation='relu')(step_up_1)
+                       activation='sigmoid')(step_up_1)
     step_up_1 = Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                       activation='relu')(step_up_1)
+                       activation='sigmoid')(step_up_1)
 
     main_output = Conv3D(2, kernel_size=(1, 1, 1), strides=(1, 1, 1), padding="same",
                        activation='softmax')(step_up_1)

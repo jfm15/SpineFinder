@@ -10,7 +10,7 @@ sample_labelling = np.load(path + '-labelling.npy')
 
 weights = np.array([0.1, 0.9])
 
-model = load_model('main-model.h5', custom_objects={'loss': weighted_categorical_crossentropy(weights)})
+model = load_model('six_conv_10_epochs.h5', custom_objects={'loss': weighted_categorical_crossentropy(weights)})
 
 result = model.predict(sample.reshape(1, 28, 28, 28, 1))
 result = result.reshape(28, 28, 28, 2)

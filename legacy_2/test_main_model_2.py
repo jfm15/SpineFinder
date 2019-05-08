@@ -5,7 +5,7 @@ import numpy as np
 from utility_functions import opening_files
 import matplotlib.pyplot as plt
 
-model = training.load_old_model('main-model.h5')
+model = training.load_old_model('six_conv_10_epochs.h5')
 
 volume = opening_files.read_nii("datasets/spine-1/patient0078/2551924/2551924.nii.gz")
 #volume = np.expand_dims(volume, axis=0)

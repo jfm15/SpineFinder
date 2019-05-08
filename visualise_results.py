@@ -37,5 +37,5 @@ def visualise_results(data_path, prediction_path, plot_dir, cut_range=(0.2, 0.8)
 
 
 visualise_results(data_path="datasets/spine-1/patient0088/2684937/2684937.nii.gz",
-                  prediction_path="predictions/2684937-prediction.npy",
+                  prediction_path="predictions/six_conv_20_epochs/2684937-prediction.npy",
                   plot_dir="plots")

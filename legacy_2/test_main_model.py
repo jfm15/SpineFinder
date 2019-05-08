@@ -3,7 +3,7 @@ import numpy as np
 from utility_functions import opening_files
 import matplotlib.pyplot as plt
 
-model = load_model('main-model.h5')
+model = load_model('six_conv_10_epochs.h5')
 
 volume = opening_files.read_nii("datasets/spine-1/patient0023/4542094/4542094.nii.gz")
 
