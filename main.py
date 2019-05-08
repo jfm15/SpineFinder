@@ -14,7 +14,7 @@ partition, labels = create_partition_and_labels(sample_dir, 0.8, randomise=True)
 # Parameters
 params = {'dim': (28, 28, 28),
           'samples_dir': sample_dir,
-          'batch_size': 16,
+          'batch_size': 32,
           'n_channels': 1,
           'n_classes': 28,
           'shuffle': True}
@@ -36,7 +36,7 @@ model = six_conv_two_classes(input_shape=(28, 28, 28, 1),
 '''
 
 weights = np.ones(28) * 0.0384
-weights[0] = 0.002
+weights[0] = 0.001
 model = six_conv_multi_classes(input_shape=(28, 28, 28, 1),
                                kernel_size=(5, 5, 5),
                                classes=28,
@@ -52,6 +52,6 @@ model.fit_generator(generator=training_generator,
                     validation_data=validation_generator,
                     use_multiprocessing=True,
                     workers=6,
-                    epochs=40)
+                    epochs=20)
 
 model.save('main-model.h5')
