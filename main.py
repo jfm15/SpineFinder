@@ -16,7 +16,7 @@ params = {'dim': (28, 28, 28),
           'samples_dir': sample_dir,
           'batch_size': 16,
           'n_channels': 1,
-          'n_classes': 27,
+          'n_classes': 28,
           'shuffle': True}
 
 training_generator = DataGenerator(partition['train'], labels, **params)
@@ -35,7 +35,7 @@ model = six_conv_two_classes(input_shape=(28, 28, 28, 1),
                              weights=np.array([0.1, 0.9]))
 '''
 
-weights = np.ones(27) * 0.0384
+weights = np.ones(28) * 0.0384
 weights[0] = 0.002
 model = six_conv_multi_classes(input_shape=(28, 28, 28, 1),
                                kernel_size=(5, 5, 5),

@@ -5,7 +5,7 @@ def create_partition_and_labels(samples_dir, training_percentage, randomise=True
 
     label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
                          "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9",
-                         "T10", "T11", "T12", "L1", "L2", "L3", "L4", "L5",
+                         "T10", "T11", "T12", "L1", "L2", "L3", "L4", "L5", "L6"
                          "S1", "S2"]
 
     partition = {}
