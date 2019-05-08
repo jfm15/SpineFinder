@@ -26,8 +26,8 @@ validation_generator = DataGenerator(partition['validation'], labels, **params)
 
 model = unet(input_shape=(28, 28, 28),
              kernel_size=(3, 3, 3),
-             weights=np.array([0.05, 0.95]),
-             learning_rate=0.001)
+             weights=np.array([0.7, 0.93]),
+             learning_rate=0.003)
 
 '''
 model = six_conv_two_classes(input_shape=(28, 28, 28, 1),
@@ -45,7 +45,7 @@ model.fit_generator(generator=training_generator,
                     validation_data=validation_generator,
                     use_multiprocessing=True,
                     workers=6,
-                    epochs=20)
+                    epochs=40)
 
 model.save('six_conv_10_epochs.h5')
 
