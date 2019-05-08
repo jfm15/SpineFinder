@@ -6,7 +6,7 @@ import keras
 
 class DataGenerator(keras.utils.Sequence):
 
-    def __init__(self, ids_in_set, labels, dim, batch_size=32, n_channels=1, n_classes=2,
+    def __init__(self, ids_in_set, labels, dim, samples_dir, batch_size=32, n_channels=1, n_classes=2,
                  shuffle=True):
 
         self.dim = dim
@@ -16,6 +16,7 @@ class DataGenerator(keras.utils.Sequence):
         self.n_channels = n_channels
         self.n_classes = n_classes
         self.shuffle = shuffle
+        self.samples_dir = samples_dir
         self.on_epoch_end()
 
     def __len__(self):
@@ -53,12 +54,12 @@ class DataGenerator(keras.utils.Sequence):
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
             # Store sample
-            sample = np.load('samples/' + ID + '-sample.npy')
+            sample = np.load(self.samples_dir + '/' + ID + '-sample.npy')
             X[i, ] = np.expand_dims(sample, axis=3)
 
             # Store values
             label_id = self.labels[ID]
-            labelling = np.load('samples/' + label_id + '.npy')
+            labelling = np.load(self.samples_dir + '/' + label_id + '.npy')
             categorical_labelling = keras.utils.to_categorical(labelling, self.n_classes)
             y[i, ] = categorical_labelling
 

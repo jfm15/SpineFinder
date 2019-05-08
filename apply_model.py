@@ -38,7 +38,7 @@ def apply_model(data_path, model_dir, prediction_dir, patch_size, custom_objects
 weights = np.array([0.1, 0.9])
 recall_background = km.binary_recall(label=0)
 recall_vertebrae = km.binary_recall(label=1)
-apply_model(data_path="datasets/spine-1/patient0088/2684937/2684937.nii.gz",
+apply_model(data_path="datasets/spine-2/patient0090/3155447/3155447.nii.gz",
             model_dir="model_files/six_conv_20_epochs.h5",
             prediction_dir="predictions/six_conv_20_epochs",
             patch_size=np.array([28, 28, 28]),

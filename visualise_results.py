@@ -36,6 +36,6 @@ def visualise_results(data_path, prediction_path, plot_dir, cut_range=(0.2, 0.8)
     plt.savefig(plot_path)
 
 
-visualise_results(data_path="datasets/spine-1/patient0088/2684937/2684937.nii.gz",
-                  prediction_path="predictions/six_conv_20_epochs/2684937-prediction.npy",
+visualise_results(data_path="datasets/spine-2/patient0090/3155447/3155447.nii.gz",
+                  prediction_path="predictions/six_conv_20_epochs/3155447-prediction.npy",
                   plot_dir="plots")
