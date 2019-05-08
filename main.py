@@ -39,6 +39,7 @@ weights = np.ones(28) * 0.0384
 weights[0] = 0.002
 model = six_conv_multi_classes(input_shape=(28, 28, 28, 1),
                                kernel_size=(5, 5, 5),
+                               classes=28,
                                weights=weights)
 
 for layer in model.layers:
