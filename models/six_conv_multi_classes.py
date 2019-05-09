@@ -7,7 +7,7 @@ from keras.layers import Conv3D
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 
 
-def six_conv_multi_classes(input_shape, kernel_size, classes, weights):
+def six_conv_multi_classes(input_shape, kernel_size, classes, weights, learning_rate=0.1):
     # Input
     model = Sequential()
     model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same",
@@ -19,7 +19,7 @@ def six_conv_multi_classes(input_shape, kernel_size, classes, weights):
     model.add(Conv3D(classes, kernel_size=kernel_size, strides=(1, 1, 1), activation='softmax', padding="same"))
 
     # define optimizer
-    sgd = optimizers.SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = optimizers.SGD(lr=learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
 
     # define loss function
     loss_function = weighted_categorical_crossentropy(weights)

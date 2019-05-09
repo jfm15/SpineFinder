@@ -40,7 +40,8 @@ weights[0] = 0.001
 model = six_conv_multi_classes(input_shape=(28, 28, 28, 1),
                                kernel_size=(5, 5, 5),
                                classes=28,
-                               weights=weights)
+                               weights=weights,
+                               learning_rate=0.1)
 
 for layer in model.layers:
     print(layer.name)

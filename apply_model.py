@@ -39,8 +39,8 @@ weights = np.array([0.1, 0.9])
 recall_background = km.binary_recall(label=0)
 recall_vertebrae = km.binary_recall(label=1)
 apply_model(data_path="datasets/spine-2/patient0090/3155447/3155447.nii.gz",
-            model_dir="model_files/six_conv_20_epochs.h5",
-            prediction_dir="predictions/six_conv_20_epochs",
+            model_dir="model_files/unet_40_epochs.h5",
+            prediction_dir="predictions/unet_40_epochs",
             patch_size=np.array([28, 28, 28]),
             custom_objects={'loss': weighted_categorical_crossentropy(weights),
                             'binary_recall': km.binary_recall()})
