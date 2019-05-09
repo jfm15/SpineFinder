@@ -14,6 +14,11 @@ def six_conv_slices(kernel_size):
     x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
     x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
     x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
     main_output = Conv2D(1, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
 
     model = Model(inputs=main_input, outputs=main_output)
