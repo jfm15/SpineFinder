@@ -1,7 +1,12 @@
 from perform_learning import perform_learning
-from models.six_conv_slices import six_conv_slices
+from models.six_conv_slices import six_conv_slices, unet_slices
 
-model = six_conv_slices(kernel_size=(5, 5))
+model = unet_slices(kernel_size=(5, 5))
+
+for layer in model.layers:
+    print(layer.name)
+    print(layer.input_shape)
+    print(layer.output_shape)
 
 perform_learning(sample_dir="samples/slices",
                  training_val_split=0.8,
