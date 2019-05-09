@@ -62,4 +62,5 @@ label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
 
 generate_slice_samples(dataset_dir="datasets/spine-1",
                        sample_dir="samples/slices",
+                       no_of_samples=10,
                        label_translation=label_translation)
