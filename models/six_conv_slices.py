@@ -31,35 +31,35 @@ def unet_slices(kernel_size):
     main_input = Input(shape=(None, None, 1))
 
     step_down_1 = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                         activation='sigmoid')(main_input)
+                         activation='relu')(main_input)
     step_down_1 = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                         activation='sigmoid')(step_down_1)
+                         activation='relu')(step_down_1)
 
     step_down_2 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_1)
     step_down_2 = Conv2D(128, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                         activation='sigmoid')(step_down_2)
+                         activation='relu')(step_down_2)
     step_down_2 = Conv2D(128, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                         activation='sigmoid')(step_down_2)
+                         activation='relu')(step_down_2)
 
     floor = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_2)
     floor = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                   activation='sigmoid')(floor)
+                   activation='relu')(floor)
     floor = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                   activation='sigmoid')(floor)
+                   activation='relu')(floor)
 
     step_up_2 = UpSampling2D(size=(2, 2))(floor)
     step_up_2 = concatenate([step_down_2, step_up_2], axis=-1)
     step_up_2 = Conv2D(128, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                       activation='sigmoid')(step_up_2)
+                       activation='relu')(step_up_2)
     step_up_2 = Conv2D(128, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                       activation='sigmoid')(step_up_2)
+                       activation='relu')(step_up_2)
 
     step_up_1 = UpSampling2D(size=(2, 2))(step_up_2)
     step_up_1 = concatenate([step_down_1, step_up_1], axis=-1)
     step_up_1 = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                       activation='sigmoid')(step_up_1)
+                       activation='relu')(step_up_1)
     step_up_1 = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                       activation='sigmoid')(step_up_1)
+                       activation='relu')(step_up_1)
 
     main_output = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same",
                          activation='relu')(step_up_1)
