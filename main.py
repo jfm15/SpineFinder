@@ -1,26 +1,8 @@
 import numpy as np
-from create_partition import create_partition_and_labels
-from data_generator import DataGenerator
+from perform_learning import perform_learning
 from models.six_conv_multi_classes import six_conv_multi_classes
 from models.six_conv_two_classes import six_conv_two_classes
 from models.unet import unet
-
-sample_dir = "/".join(["samples", "multi_class"])
-
-# create partition
-partition, labels = create_partition_and_labels(sample_dir, 0.8, randomise=True)
-
-# generators
-# Parameters
-params = {'dim': (28, 28, 28),
-          'samples_dir': sample_dir,
-          'batch_size': 32,
-          'n_channels': 1,
-          'n_classes': 28,
-          'shuffle': True}
-
-training_generator = DataGenerator(partition['train'], labels, **params)
-validation_generator = DataGenerator(partition['validation'], labels, **params)
 
 '''
 model = unet(input_shape=(28, 28, 28),
@@ -43,16 +25,19 @@ model = six_conv_multi_classes(input_shape=(28, 28, 28, 1),
                                weights=weights,
                                learning_rate=0.1)
 
+'''
 for layer in model.layers:
     print(layer.name)
     print(layer.input_shape)
     print(layer.output_shape)
+'''
 
-# train the model
-model.fit_generator(generator=training_generator,
-                    validation_data=validation_generator,
-                    use_multiprocessing=True,
-                    workers=6,
-                    epochs=20)
-
-model.save('main-model.h5')
+perform_learning(sample_dir="samples/multi_class",
+                 training_val_split=0.8,
+                 sample_shape=(28, 28, 28),
+                 batch_size=32,
+                 sample_channels=1,
+                 output_classes=28,
+                 model=model,
+                 epochs=20,
+                 model_path="main-model.h5")
