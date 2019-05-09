@@ -1,7 +1,7 @@
 from perform_learning import perform_learning
 from models.six_conv_slices import six_conv_slices, unet_slices
 
-model = six_conv_slices(kernel_size=(7, 7))
+model = six_conv_slices(kernel_size=(9, 9))
 
 for layer in model.layers:
     print(layer.name)
