@@ -28,7 +28,7 @@ def generate_column_samples(dataset_dir, sample_dir, model_path, custom_objects=
 weights = np.array([0.1, 0.9])
 generate_column_samples(dataset_dir="datasets/spine-1",
                         sample_dir="samples/two_class_cropped",
-                        model_path="model_files/six_conv_20_epochs.h5",
+                        model_path="model_files/two_class_model.h5",
                         custom_objects={'loss': weighted_categorical_crossentropy(weights),
                                         'binary_recall': km.binary_recall()}
                         )
