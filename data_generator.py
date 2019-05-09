@@ -6,7 +6,7 @@ import keras
 
 class DataGenerator(keras.utils.Sequence):
 
-    def __init__(self, ids_in_set, labels, dim, samples_dir, batch_size=32, n_channels=1, n_classes=2,
+    def __init__(self, ids_in_set, labels, dim, samples_dir, batch_size=32, n_channels=1, categorise=True, n_classes=1,
                  shuffle=True):
 
         self.dim = dim
@@ -14,6 +14,7 @@ class DataGenerator(keras.utils.Sequence):
         self.labels = labels
         self.ids_in_set = ids_in_set
         self.n_channels = n_channels
+        self.categorise = categorise
         self.n_classes = n_classes
         self.shuffle = shuffle
         self.samples_dir = samples_dir
@@ -48,19 +49,27 @@ class DataGenerator(keras.utils.Sequence):
     def __data_generation(self, ids_in_set_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
         # Initialization
-        X = np.empty((self.batch_size, *self.dim, self.n_channels))
-        y = np.empty((self.batch_size, *self.dim, self.n_classes), dtype=int)
+        if self.categorise:
+            X = np.empty((self.batch_size, *self.dim, self.n_channels))
+            y = np.empty((self.batch_size, *self.dim, self.n_classes), dtype=int)
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
             # Store sample
             sample = np.load(self.samples_dir + '/' + ID + '-sample.npy')
+            if not self.categorise:
+                X = np.empty((1, *sample.shape, 1))
+
             X[i, ] = np.expand_dims(sample, axis=3)
 
             # Store values
             label_id = self.labels[ID]
             labelling = np.load(self.samples_dir + '/' + label_id + '.npy')
-            categorical_labelling = keras.utils.to_categorical(labelling, self.n_classes)
-            y[i, ] = categorical_labelling
+            if self.categorise:
+                categorical_labelling = keras.utils.to_categorical(labelling, self.n_classes)
+                y[i, ] = categorical_labelling
+            else:
+                y = np.empty((1, *sample.shape, 1))
+                y[i, ] = np.expand_dims(labelling, axis=3)
 
         return X, y

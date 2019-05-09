@@ -3,7 +3,7 @@ from data_generator import DataGenerator
 
 
 def perform_learning(sample_dir, training_val_split, sample_shape,
-                     batch_size, sample_channels, output_classes,
+                     batch_size, sample_channels, categorise, output_classes,
                      model, epochs, model_path):
 
     # create partition
@@ -14,6 +14,7 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
               'samples_dir': sample_dir,
               'batch_size': batch_size,
               'n_channels': sample_channels,
+              'categorise': categorise,
               'n_classes': output_classes,
               'shuffle': True}
 
