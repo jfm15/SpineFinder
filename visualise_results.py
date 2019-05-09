@@ -1,13 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-from utility_functions import opening_files
+from utility_functions import opening_files, sampling_helper_functions
 
 
 def visualise_results(data_path, centroids_path, prediction_path, plot_dir, cut_range=(0.2, 0.8), rows=1, cols=6, file_ext="-prediction.npy"):
 
     volume = opening_files.read_nii(data_path)
     prediction = np.load(prediction_path)
+
+    prediction = sampling_helper_functions.labelling(prediction)
 
     labels, centroids = opening_files.extract_centroid_info_from_lml(centroids_path)
     spacing = (2.0, 2.0, 2.0)

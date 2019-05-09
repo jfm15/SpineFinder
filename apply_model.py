@@ -5,15 +5,11 @@ from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_
 from utility_functions import opening_files
 
 
-def apply_model(data_path, model_dir, prediction_dir, patch_size, custom_objects={}, file_ext=".nii.gz"):
+def apply_model(volume, model, patch_size):
 
-    volume = opening_files.read_nii(data_path)
-
-    model = load_model(model_dir, custom_objects=custom_objects)
-
-    ext_len = len(file_ext)
-    name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
-    name = name + "-prediction"
+    #ext_len = len(file_ext)
+    #name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
+    #name = name + "-prediction"
 
     output = np.zeros(volume.shape)
 
@@ -31,10 +27,11 @@ def apply_model(data_path, model_dir, prediction_dir, patch_size, custom_objects
                 output[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = decat_result
                 print(x, y, z, np.bincount(decat_result.reshape(-1).astype(int)))
 
-    prediction_path = '/'.join([prediction_dir, name])
-    np.save(prediction_path, output)
+    return output
+    #prediction_path = '/'.join([prediction_dir, name])
+    #np.save(prediction_path, output)
 
-
+'''
 weights = np.array([0.1, 0.9])
 recall_background = km.binary_recall(label=0)
 recall_vertebrae = km.binary_recall(label=1)
@@ -44,3 +41,4 @@ apply_model(data_path="datasets/spine-2/patient0090/3155447/3155447.nii.gz",
             patch_size=np.array([28, 28, 28]),
             custom_objects={'loss': weighted_categorical_crossentropy(weights),
                             'binary_recall': km.binary_recall()})
+'''
