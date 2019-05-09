@@ -62,7 +62,7 @@ def unet_slices(kernel_size):
                        activation='sigmoid')(step_up_1)
 
     main_output = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same",
-                         activation='relu')(step_up_1)
+                         activation='sigmoid')(step_up_1)
 
     model = Model(inputs=main_input, outputs=main_output)
 
