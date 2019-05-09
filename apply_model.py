@@ -25,7 +25,7 @@ def apply_model(volume, model, patch_size):
                 result = np.squeeze(result, axis=0)
                 decat_result = np.argmax(result, axis=3)
                 output[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = decat_result
-                print(x, y, z, np.bincount(decat_result.reshape(-1).astype(int)))
+                # print(x, y, z, np.bincount(decat_result.reshape(-1).astype(int)))
 
     return output
     #prediction_path = '/'.join([prediction_dir, name])
