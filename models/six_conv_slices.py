@@ -20,6 +20,6 @@ def six_conv_slices(kernel_size):
     # define optimizer
     sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 
-    model.compile(optimizer=sgd, loss="mean_absolute_error", metrics=["mean_absolute_error"])
+    model.compile(optimizer=sgd, loss="mean_squared_error", metrics=["mean_absolute_error", "mean_squared_error"])
 
     return model
