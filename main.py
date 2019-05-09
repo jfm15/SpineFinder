@@ -33,7 +33,7 @@ for layer in model.layers:
     print(layer.output_shape)
 '''
 
-perform_learning(sample_dir="samples/multi_class",
+perform_learning(sample_dir="samples/two_class_cropped",
                  training_val_split=0.8,
                  sample_shape=(40, 40, 40),
                  batch_size=32,
@@ -41,4 +41,4 @@ perform_learning(sample_dir="samples/multi_class",
                  output_classes=28,
                  model=model,
                  epochs=20,
-                 model_path="main-model.h5")
+                 model_path="two_class_model.h5")
