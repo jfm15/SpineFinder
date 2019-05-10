@@ -18,7 +18,10 @@ prediction = prediction.reshape(*sample.shape)
 
 print(np.unique(prediction))
 
-plt.imshow(sample.T)
-#plt.imshow(labelling.T, cmap=cm.jet, alpha=0.2)
-plt.imshow(prediction.T, cmap=cm.jet, alpha=0.5)
+fig, ax = plt.subplots()
+
+ax.imshow(sample.T)
+
+# plt.imshow(labelling.T, cmap=cm.jet, alpha=0.2)
+# plt.imshow(prediction.T, cmap=cm.jet, alpha=0.5)
 plt.show()
