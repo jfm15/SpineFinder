@@ -79,7 +79,7 @@ class DataGenerator(keras.utils.Sequence):
                 y[i, ] = categorical_labelling
             else:
                 y = np.empty((1, *sample.shape, 1))
-                print(np.unique(labelling))
+                # print(np.unique(labelling))
                 y[i, ] = np.expand_dims(labelling, axis=3)
 
 
