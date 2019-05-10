@@ -2,6 +2,7 @@ import numpy as np
 import keras_metrics as km
 import keras.metrics as metrics
 from keras import optimizers
+from keras import backend as K
 from keras.models import Model, Sequential
 from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate
 
@@ -24,9 +25,13 @@ def six_conv_slices(kernel_size):
     # define optimizer
     sgd = optimizers.SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
 
-    model.compile(optimizer=sgd, loss="mean_absolute_error", metrics=["mean_absolute_error", "mean_squared_error"])
+    model.compile(optimizer=sgd, loss=cool_loss, metrics=["mean_absolute_error", "mean_squared_error"])
 
     return model
+
+
+def cool_loss(y_true, y_pred):
+    return K.mean(K.abs(y_pred - y_true) * K.maximum(1.0, y_true), axis=-1)
 
 
 def unet_slices(kernel_size):
