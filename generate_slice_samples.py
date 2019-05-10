@@ -51,7 +51,10 @@ def generate_slice_samples(dataset_dir, sample_dir, no_of_samples=5, label_trans
                         if dist < min_distance:
                             min_distance = dist
                             label = label_translation.index(label_name)
-                        sample_labels[i, j, k] = label
+                        if min_distance > 14:
+                            sample_labels[i, j, k] = 0
+                        else:
+                            sample_labels[i, j, k] = label
 
             volume_slice = volume[i, lower_j:upper_j, lower_k:upper_k]
             sample_labels_slice = sample_labels[i, lower_j:upper_j, lower_k:upper_k]
@@ -72,5 +75,5 @@ label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
 
 generate_slice_samples(dataset_dir="datasets/spine-1",
                        sample_dir="samples/slices",
-                       no_of_samples=10,
+                       no_of_samples=5,
                        label_translation=label_translation)
