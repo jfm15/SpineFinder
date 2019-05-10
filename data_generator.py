@@ -65,10 +65,10 @@ class DataGenerator(keras.utils.Sequence):
             if not self.categorise:
                 # make sample divisible by 4
                 # print(sample.shape)
-                i_padding = 4 - sample.shape[0] % 4
-                j_padding = 4 - sample.shape[1] % 4
-                sample = np.pad(sample, ((0, i_padding), (0, j_padding)), "edge")
-                labelling = np.pad(labelling, ((0, i_padding), (0, j_padding)), "edge")
+                # i_padding = 4 - sample.shape[0] % 4
+                # j_padding = 4 - sample.shape[1] % 4
+                # sample = np.pad(sample, ((0, i_padding), (0, j_padding)), "edge")
+                # labelling = np.pad(labelling, ((0, i_padding), (0, j_padding)), "edge")
                 # print(sample.shape)
                 X = np.empty((1, *sample.shape, 1))
 

@@ -19,12 +19,22 @@ def generate_slice_samples(dataset_dir, sample_dir, no_of_samples=5, label_trans
         labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
         centroid_indexes = np.round(centroids / np.array((2.0, 2.0, 2.0))).astype(int)
 
-        lower = np.min(centroid_indexes[:, 0])
-        lower = np.max([lower - 4, 0])
-        upper = np.max(centroid_indexes[:, 0])
-        upper = np.min([upper + 4, volume.shape[0] - 1])
+        lower_i = np.min(centroid_indexes[:, 0])
+        lower_i = np.max([lower_i - 4, 0])
+        upper_i = np.max(centroid_indexes[:, 0])
+        upper_i = np.min([upper_i + 4, volume.shape[0] - 1])
 
-        cuts = np.round(np.linspace(lower, upper, no_of_samples)).astype(int)
+        lower_j = np.min(centroid_indexes[:, 1])
+        lower_j = np.max([lower_j - 4, 0])
+        upper_j = np.max(centroid_indexes[:, 1])
+        upper_j = np.min([upper_j + 4, volume.shape[1] - 1])
+
+        lower_k = np.min(centroid_indexes[:, 2])
+        lower_k = np.max([lower_k - 4, 0])
+        upper_k = np.max(centroid_indexes[:, 2])
+        upper_k = np.min([upper_k + 4, volume.shape[2] - 1])
+
+        cuts = np.round(np.linspace(lower_i, upper_i, no_of_samples)).astype(int)
 
         sample_labels = np.zeros(volume.shape)
 
@@ -43,8 +53,8 @@ def generate_slice_samples(dataset_dir, sample_dir, no_of_samples=5, label_trans
                             label = label_translation.index(label_name)
                         sample_labels[i, j, k] = label
 
-            volume_slice = volume[i, :, :]
-            sample_labels_slice = sample_labels[i, :, :]
+            volume_slice = volume[i, lower_j:upper_j, lower_k:upper_k]
+            sample_labels_slice = sample_labels[i, lower_j:upper_j, lower_k:upper_k]
 
             # save file
             name_plus_id = name + "-" + str(idx)
