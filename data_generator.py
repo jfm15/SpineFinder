@@ -70,6 +70,7 @@ class DataGenerator(keras.utils.Sequence):
                 # sample = np.pad(sample, ((0, i_padding), (0, j_padding)), "edge")
                 # labelling = np.pad(labelling, ((0, i_padding), (0, j_padding)), "edge")
                 # print(sample.shape)
+                print(sample.shape)
                 X = np.empty((1, *sample.shape, 1))
 
             X[i, ] = np.expand_dims(sample, axis=3)
