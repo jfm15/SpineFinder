@@ -22,6 +22,6 @@ fig, ax = plt.subplots()
 
 plt.imshow(sample.T)
 
-plt.imshow(labelling.T, cmap=cm.jet, alpha=0.8)
-# plt.imshow(prediction.T, cmap=cm.jet, alpha=0.5)
+# plt.imshow(labelling.T, cmap=cm.jet, alpha=0.8)
+plt.imshow(prediction.T, cmap=cm.jet, alpha=0.5)
 plt.show()
