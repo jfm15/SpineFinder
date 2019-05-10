@@ -69,7 +69,7 @@ class DataGenerator(keras.utils.Sequence):
                 # j_padding = 4 - sample.shape[1] % 4
                 # sample = np.pad(sample, ((0, i_padding), (0, j_padding)), "edge")
                 # labelling = np.pad(labelling, ((0, i_padding), (0, j_padding)), "edge")
-                print(sample)
+                # print(sample)
                 X = np.empty((1, *sample.shape, 1))
 
             X[i, ] = np.expand_dims(sample, axis=3)
@@ -79,6 +79,7 @@ class DataGenerator(keras.utils.Sequence):
                 y[i, ] = categorical_labelling
             else:
                 y = np.empty((1, *sample.shape, 1))
+                print(np.unique(labelling))
                 y[i, ] = np.expand_dims(labelling, axis=3)
 
 
