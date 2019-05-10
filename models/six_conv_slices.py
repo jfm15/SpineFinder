@@ -32,7 +32,7 @@ def six_conv_slices(kernel_size):
 
 def cool_loss(y_true, y_pred):
     dont_cares = K.minimum(1.0, y_true)
-    return K.sum(K.abs(y_pred - y_true) * dont_cares, axis=-1) / K.sum(dont_cares)
+    return K.sum(K.abs(y_pred - y_true) * dont_cares, axis=-1) / K.sum(dont_cares, axis=-1)
 
 
 def unet_slices(kernel_size):
