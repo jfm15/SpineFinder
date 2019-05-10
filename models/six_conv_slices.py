@@ -13,8 +13,10 @@ def six_conv_slices(kernel_size):
     x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
     x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
     x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
-    x = Conv2D(64, kernel_size=(1, 100), strides=(1, 1), activation='sigmoid', padding="same")(x)
-    x = Conv2D(64, kernel_size=(24, 1), strides=(1, 1), activation='sigmoid', padding="same")(x)
+    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
+    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
+    x = Conv2D(256, kernel_size=(1, 100), strides=(1, 1), activation='sigmoid', padding="same")(x)
+    x = Conv2D(256, kernel_size=(24, 1), strides=(1, 1), activation='sigmoid', padding="same")(x)
     main_output = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), activation='relu', padding="same")(x)
 
     model = Model(inputs=main_input, outputs=main_output)

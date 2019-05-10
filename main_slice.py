@@ -16,5 +16,5 @@ perform_learning(sample_dir="samples/slices",
                  categorise=False,
                  output_classes=1,
                  model=model,
-                 epochs=10,
+                 epochs=100,
                  model_path="slices_model.h5")
