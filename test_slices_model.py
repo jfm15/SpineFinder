@@ -13,8 +13,8 @@ label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
 # sample = np.load('samples/slices/2684937-2-sample.npy')
 # labelling = np.load('samples/slices/2684937-2-labelling.npy')
 
-volume = opening_files.read_nii("datasets/spine-4/patient0286/4557469/4557469.nii.gz")
-labels, centroids = opening_files.extract_centroid_info_from_lml("datasets/spine-4/patient0286/4557469/4557469.lml")
+volume = opening_files.read_nii("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
+labels, centroids = opening_files.extract_centroid_info_from_lml("datasets/spine-1/patient0088/2684937/2684937.lml")
 centroid_indexes = np.round(centroids / np.array((2.0, 2.0, 2.0))).astype(int)
 
 cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
