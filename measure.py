@@ -30,7 +30,7 @@ def apply_detection_model(volume, model, patch_size):
 def apply_identification_model(volume, bounds, model):
     i_min, i_max, j_min, j_max, k_min, k_max = bounds
     cropped_volume = volume[i_min:i_max, j_min:j_max, k_min:k_max]
-
+    print(cropped_volume.shape)
     output = np.zeros(volume.shape)
 
     for i in range(i_max - i_min):

@@ -10,8 +10,8 @@ label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
                      "T10", "T11", "T12", "L1", "L2", "L3", "L4", "L5", "L6",
                      "S1", "S2"]
 
-sample = np.load('samples/slices/4576147-2-sample.npy')
-labelling = np.load('samples/slices/4576147-2-labelling.npy')
+sample = np.load('samples/slices/4613319-2-sample.npy')
+labelling = np.load('samples/slices/4613319-2-labelling.npy')
 
 '''
 volume = opening_files.read_nii("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
@@ -66,9 +66,9 @@ for key in histogram.keys():
     arr = np.array(histogram[key])
     if arr.shape[0] > 100:
         x, y = np.mean(arr, axis=0)
-        plt.annotate(label_translation[key], (x, y), color="red")
-        plt.scatter(x, y, s=2, color="red")
+        # plt.annotate(label_translation[key], (x, y), color="red")
+        # plt.scatter(x, y, s=2, color="red")
 
-# plt.imshow(prediction.T, cmap=cm.jet, alpha=1.0, origin='lower')
+plt.imshow(labelling.T, cmap=cm.jet, alpha=0.2, origin='lower')
 plt.show()
 
