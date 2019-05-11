@@ -30,13 +30,12 @@ def apply_detection_model(volume, model, patch_size):
 def apply_identification_model(volume, bounds, model):
     i_min, i_max, j_min, j_max, k_min, k_max = bounds
     cropped_volume = volume[i_min:i_max, j_min:j_max, k_min:k_max]
-    print(cropped_volume.shape)
     output = np.zeros(volume.shape)
 
     for i in range(i_max - i_min):
         volume_slice = cropped_volume[i, :, :]
-        volume_slice = volume_slice.reshape(1, *volume_slice.shape, 1)
-        prediction = model.predict(volume_slice)
+        volume_slice_input = volume_slice.reshape(1, *volume_slice.shape, 1)
+        prediction = model.predict(volume_slice_input)
         prediction = prediction.reshape(*volume_slice.shape)
         output[i, j_min:j_max, k_min:k_max] = prediction
 
@@ -85,8 +84,10 @@ def test_individual_scan(scan_path,
     for key in histogram.keys():
         arr = np.array(histogram[key])
         if arr.shape[0] > 100:
-            x, y, z = np.mean(arr, axis=0)
-            print(label_translation[key], x, y, z)
+            centroid_estimate = np.mean(arr, axis=0)
+            centroid_estimate *= 2
+            centroid_estimate = np.around(centroid_estimate, decimals=2)
+            print(label_translation[key], centroid_estimate)
 
 
 # modes
