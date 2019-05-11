@@ -30,8 +30,8 @@ def crop_labelling(predictions):
     k_min = np.min(largest_island_np[:, 2])
     k_max = np.max(largest_island_np[:, 2])
     print(new_predictions.shape, i_max - i_min, j_max - j_min, k_max - k_min)
-
-    return new_predictions
+    bounds = (i_min, i_max, j_min, j_max, k_min, k_max)
+    return bounds, new_predictions
 
 
 '''
