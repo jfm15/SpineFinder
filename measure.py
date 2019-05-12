@@ -128,7 +128,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
         file_path = file_dir_path + "/" + name + "-pred-centroids"
         file = open(file_path + ".txt", "w")
         for label, centroid in zip(pred_labels, pred_centroid_estimates):
-            file.write(" ".join([label, str(centroid[0]), str(centroid[1]), str(centroid[2])]))
+            file.write(" ".join([label, str(centroid[0]), str(centroid[1]), str(centroid[2]), "\n"]))
         file.close()
 
     if save_identifications:
@@ -138,7 +138,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
         np.save(file_path, pred_identifications)
 
     if save_plots:
-        plots_dir_path = '/'.join([identifications_path, dir_path])
+        plots_dir_path = '/'.join([plots_path, dir_path])
         os.makedirs(plots_dir_path)
         identification_plot = plots_dir_path + "/" + name + "-id-plot.png"
         centroid_plot = plots_dir_path + "/" + name + "-id-plot.png"
