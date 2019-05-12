@@ -11,6 +11,7 @@ ssh jfm15@spine-finder.westeurope.cloudapp.azure.com
 scp -r jfm15@spine-finder.westeurope.cloudapp.azure.com:SpineFinder/main-model.h5 /Users/James/SpineFinder
 nohup python main.py &> main-output.txt &
 (top and kill)
+scp -r jfm15@spine-finder.westeurope.cloudapp.azure.com:SpineFinder/results /Users/James/SpineFinder/
 
 File Structure
 |- main.py
