@@ -1,11 +1,14 @@
-# The aim of this script is to get the final centroid positions from a scan
+# The aim of this script is to provide measurements for any part of the pipeline
 import numpy as np
+import os
 import keras_metrics as km
 from utility_functions import opening_files, sampling_helper_functions
 from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 from models.six_conv_slices import cool_loss
-from labels import LABELS
+from utility_functions.labels import LABELS
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 
 def apply_detection_model(volume, model, patch_size):
@@ -43,9 +46,8 @@ def apply_identification_model(volume, bounds, model):
     return output
 
 
-def test_scan(scan_path,
-                         detection_model_path, detection_model_input_shape, detection_model_objects,
-                         identification_model_path, identification_model_objects):
+def test_scan(scan_path, detection_model_path, detection_model_input_shape, detection_model_objects,
+              identification_model_path, identification_model_objects):
 
     volume = opening_files.read_nii(scan_path)
 
@@ -78,35 +80,99 @@ def test_scan(scan_path,
 
     # find averages
     labels = []
-    lengths = []
     centroid_estimates = []
     for key in sorted(histogram.keys()):
         if 0 <= key < len(LABELS):
             arr = np.array(histogram[key])
             if arr.shape[0] > 100:
-                lengths.append(arr.shape[0])
                 centroid_estimate = np.mean(arr, axis=0)
                 centroid_estimate *= 2
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
                 labels.append(LABELS[key])
                 centroid_estimates.append(list(centroid_estimate))
 
-    for label, centroid_idx, length in zip(labels, centroid_estimates, lengths):
-        print(label, centroid_idx, length)
+    return labels, centroid_estimates, identifications
 
 
-def test_individual_scan(scan_path):
+def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, centroids_path="",
+                         save_identifications=False, identifications_path="",
+                         save_plots=False, plots_path=""):
+    sub_path = scan_path.split('/', 1)[1]
+    sub_path = sub_path[:-len(".nii.gz")]
+    sub_path_split = sub_path.split('/')
+    dir_path = '/'.join(sub_path_split[:-1])
+    name = sub_path_split[-1]
+
     # print identification_map
     weights = np.array([0.1, 0.9])
     detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
                              'binary_recall': km.binary_recall()}
     identification_model_objects = {'cool_loss': cool_loss}
-    test_scan(scan_path=scan_path,
-              detection_model_path="model_files/two_class_model.h5",
-              detection_model_input_shape=np.array([28, 28, 28]),
-              detection_model_objects=detection_model_objects,
-              identification_model_path="model_files/slices_model.h5",
-              identification_model_objects=identification_model_objects)
+    pred_labels, pred_centroid_estimates, pred_identifications = test_scan(
+        scan_path=scan_path,
+        detection_model_path="model_files/two_class_model.h5",
+        detection_model_input_shape=np.array([28, 28, 28]),
+        detection_model_objects=detection_model_objects,
+        identification_model_path="model_files/slices_model.h5",
+        identification_model_objects=identification_model_objects)
 
 
-test_individual_scan("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
+    # options
+    if print_centroids:
+        for label, centroid in zip(pred_labels, pred_centroid_estimates):
+            print(label, centroid)
+
+    if save_centroids:
+        file_dir_path = '/'.join([centroids_path, dir_path])
+        os.mkdirs(file_dir_path)
+        file_path = file_dir_path + "/" + name + "-pred-centroids"
+        file = open(file_path + ".txt", "w")
+        for label, centroid in zip(pred_labels, pred_centroid_estimates):
+            file.write(" ".join([label, str(centroid[0]), str(centroid[1]), str(centroid[2])]))
+        file.close()
+
+    if save_identifications:
+        identifications_dir_path = '/'.join([identifications_path, dir_path])
+        os.mkdirs(identifications_dir_path)
+        file_path = identifications_dir_path + "/" + name + "-identifications"
+        np.save(file_path, pred_identifications)
+
+    if save_plots:
+        plots_dir_path = '/'.join([identifications_path, dir_path])
+        os.mkdirs(plots_dir_path)
+        identification_plot = plots_dir_path + "/" + name + "-id-plot.png"
+        centroid_plot = plots_dir_path + "/" + name + "-id-plot.png"
+
+        # make plots
+        volume = opening_files.read_nii(scan_path)
+
+        # get cuts
+        cut = np.mean(pred_centroid_estimates[:, 0])
+        cut = np.round(cut).astype(int)
+
+        volume_slice = volume[cut, :, :]
+        identifications_slice = pred_identifications[cut, :, :]
+
+        # first plot
+        fig1, ax1 = plt.subplots()
+        ax1.imshow(volume_slice.T, origin='lower')
+        ax1.imshow(identifications_slice.T, cmap=cm.jet, alpha=0.6)
+        ax1.savefig(identification_plot)
+
+        # second plot
+        fig2, ax2 = plt.subplots()
+        ax2.imshow(volume_slice.T, origin='lower')
+
+        for label, centroid in zip(pred_labels, pred_centroid_estimates):
+            ax2.annotate(label, (centroid[1], centroid[2]), color="red")
+            ax2.scatter(centroid[1], centroid[2], s=2, color="red")
+
+        ax2.savefig(centroid_plot)
+
+
+test_individual_scan(scan_path="datasets/spine-1/patient0088/2684937/2684937.nii.gz",
+                     print_centroids=True,
+                     save_centroids=True,
+                     centroids_path="results/centroids",
+                     save_plots=True,
+                     plots_path="results/plots")

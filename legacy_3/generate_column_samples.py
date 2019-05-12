@@ -4,7 +4,7 @@ import keras_metrics as km
 from utility_functions import opening_files, sampling_helper_functions
 from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
-from apply_model import apply_model
+from legacy_3.apply_model import apply_model
 
 
 def generate_column_samples(dataset_dir, sample_dir, model_path, custom_objects={}, file_ext=".nii.gz"):
