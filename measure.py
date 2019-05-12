@@ -5,6 +5,7 @@ from utility_functions import opening_files, sampling_helper_functions
 from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 from models.six_conv_slices import cool_loss
+from labels import LABELS
 
 
 def apply_detection_model(volume, model, patch_size):
@@ -42,7 +43,7 @@ def apply_identification_model(volume, bounds, model):
     return output
 
 
-def test_individual_scan(scan_path,
+def test_scan(scan_path,
                          detection_model_path, detection_model_input_shape, detection_model_objects,
                          identification_model_path, identification_model_objects):
 
@@ -75,30 +76,35 @@ def test_individual_scan(scan_path,
                     else:
                         histogram[key] = [[i, j, k]]
 
-    label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
-                         "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9",
-                         "T10", "T11", "T12", "L1", "L2", "L3", "L4", "L5", "L6",
-                         "S1", "S2"]
-
     # find averages
-    for key in histogram.keys():
-        arr = np.array(histogram[key])
-        if arr.shape[0] > 100:
-            centroid_estimate = np.mean(arr, axis=0)
-            centroid_estimate *= 2
-            centroid_estimate = np.around(centroid_estimate, decimals=2)
-            print(label_translation[key], centroid_estimate)
+    labels = []
+    centroid_estimates = []
+    for key in sorted(histogram.keys()):
+        if 0 <= key < len(LABELS):
+            arr = np.array(histogram[key])
+            if arr.shape[0] > 100:
+                centroid_estimate = np.mean(arr, axis=0)
+                centroid_estimate *= 2
+                centroid_estimate = np.around(centroid_estimate, decimals=2)
+                labels.append(LABELS[key])
+                centroid_estimates.append(list(centroid_estimate))
+
+    for label, centroid_idx in zip(labels, centroid_estimates):
+        print(label, centroid_idx)
 
 
-# modes
-# print identification_map
-weights = np.array([0.1, 0.9])
-detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
-                         'binary_recall': km.binary_recall()}
-identification_model_objects = {'cool_loss': cool_loss}
-test_individual_scan(scan_path="datasets/spine-1/patient0088/2684937/2684937.nii.gz",
-                     detection_model_path="model_files/two_class_model.h5",
-                     detection_model_input_shape=np.array([28, 28, 28]),
-                     detection_model_objects=detection_model_objects,
-                     identification_model_path="model_files/slices_model.h5",
-                     identification_model_objects=identification_model_objects)
+def test_individual_scan(scan_path):
+    # print identification_map
+    weights = np.array([0.1, 0.9])
+    detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
+                             'binary_recall': km.binary_recall()}
+    identification_model_objects = {'cool_loss': cool_loss}
+    test_scan(scan_path=scan_path,
+              detection_model_path="model_files/two_class_model.h5",
+              detection_model_input_shape=np.array([28, 28, 28]),
+              detection_model_objects=detection_model_objects,
+              identification_model_path="model_files/slices_model.h5",
+              identification_model_objects=identification_model_objects)
+
+
+test_individual_scan("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
