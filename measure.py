@@ -78,19 +78,21 @@ def test_scan(scan_path,
 
     # find averages
     labels = []
+    lengths = []
     centroid_estimates = []
     for key in sorted(histogram.keys()):
         if 0 <= key < len(LABELS):
             arr = np.array(histogram[key])
             if arr.shape[0] > 100:
+                lengths.append(arr.shape[0])
                 centroid_estimate = np.mean(arr, axis=0)
                 centroid_estimate *= 2
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
                 labels.append(LABELS[key])
                 centroid_estimates.append(list(centroid_estimate))
 
-    for label, centroid_idx in zip(labels, centroid_estimates):
-        print(label, centroid_idx)
+    for label, centroid_idx, length in zip(labels, centroid_estimates, lengths):
+        print(label, centroid_idx, length)
 
 
 def test_individual_scan(scan_path):
