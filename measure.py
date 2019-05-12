@@ -147,7 +147,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
         volume = opening_files.read_nii(scan_path)
 
         # get cuts
-        cut = np.mean(pred_centroid_estimates[:, 0])
+        cut = np.mean(np.array(pred_centroid_estimates)[:, 0])
         cut = np.round(cut).astype(int)
 
         volume_slice = volume[cut, :, :]
@@ -157,7 +157,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
         fig1, ax1 = plt.subplots()
         ax1.imshow(volume_slice.T, origin='lower')
         ax1.imshow(identifications_slice.T, cmap=cm.jet, alpha=0.6)
-        ax1.savefig(identification_plot)
+        fig1.savefig(identification_plot)
 
         # second plot
         fig2, ax2 = plt.subplots()
@@ -167,7 +167,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
             ax2.annotate(label, (centroid[1], centroid[2]), color="red")
             ax2.scatter(centroid[1], centroid[2], s=2, color="red")
 
-        ax2.savefig(centroid_plot)
+        fig2.savefig(centroid_plot)
 
 
 test_individual_scan(scan_path="datasets/spine-1/patient0088/2684937/2684937.nii.gz",
