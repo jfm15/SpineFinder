@@ -141,7 +141,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
         plots_dir_path = '/'.join([plots_path, dir_path])
         os.makedirs(plots_dir_path)
         identification_plot = plots_dir_path + "/" + name + "-id-plot.png"
-        centroid_plot = plots_dir_path + "/" + name + "-id-plot.png"
+        centroid_plot = plots_dir_path + "/" + name + "-centroid-plot.png"
 
         # make plots
         volume = opening_files.read_nii(scan_path)
