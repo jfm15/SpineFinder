@@ -31,6 +31,27 @@ def apply_detection_model(volume, model, patch_size):
     return output
 
 
+def apply_ideal_detection(volume, labels, centroid_indexes):
+
+    output = np.zeros(volume.shape)
+
+    for i in range(volume.shape[0]):
+        for j in range(volume.shape[1]):
+            for k in range(volume.shape[2]):
+                label = -1
+                min_distance = 1000
+                for label_name, centroid_idx in zip(labels, centroid_indexes):
+                    dist = np.linalg.norm((i, j, k) - centroid_idx)
+                    if dist < min_distance:
+                        min_distance = dist
+                        label = LABELS.index(label_name)
+                    if min_distance > 14:
+                        output[i, j, k] = 0
+                    else:
+                        output[i, j, k] = label
+    return output
+
+
 def apply_identification_model(volume, bounds, model):
     i_min, i_max, j_min, j_max, k_min, k_max = bounds
     cropped_volume = volume[i_min:i_max, j_min:j_max, k_min:k_max]
@@ -46,14 +67,19 @@ def apply_identification_model(volume, bounds, model):
     return output
 
 
-def test_scan(scan_path, detection_model_path, detection_model_input_shape, detection_model_objects,
-              identification_model_path, identification_model_objects):
+def test_scan(scan_path, centroid_path, detection_model_path, detection_model_input_shape, detection_model_objects,
+              identification_model_path, identification_model_objects, ideal_detection, ):
 
     volume = opening_files.read_nii(scan_path)
 
     # first stage is to put the volume through the detection model to find where vertebrae are
-    detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
-    detections = apply_detection_model(volume, detection_model, detection_model_input_shape)
+    if not ideal_detection:
+        detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
+        detections = apply_detection_model(volume, detection_model, detection_model_input_shape)
+    else:
+        labels, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
+        centroid_indexes = np.round(centroids / np.array((2.0, 2.0, 2.0))).astype(int)
+        detections = apply_ideal_detection(volume, labels, centroid_indexes)
 
     # get the largest island
     bounds, detections = sampling_helper_functions.crop_labelling(detections)
@@ -94,9 +120,9 @@ def test_scan(scan_path, detection_model_path, detection_model_input_shape, dete
     return labels, centroid_estimates, identifications
 
 
-def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, centroids_path="",
+def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_centroids=False, centroids_path="",
                          save_identifications=False, identifications_path="",
-                         save_plots=False, plots_path=""):
+                         save_plots=False, plots_path="", ideal_detection=False):
     sub_path = scan_path.split('/', 1)[1]
     sub_path = sub_path[:-len(".nii.gz")]
     sub_path_split = sub_path.split('/')
@@ -110,11 +136,13 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
     identification_model_objects = {'cool_loss': cool_loss}
     pred_labels, pred_centroid_estimates, pred_identifications = test_scan(
         scan_path=scan_path,
+        centroid_path=centroid_path,
         detection_model_path="model_files/two_class_model.h5",
         detection_model_input_shape=np.array([28, 28, 28]),
         detection_model_objects=detection_model_objects,
         identification_model_path="model_files/slices_model.h5",
-        identification_model_objects=identification_model_objects)
+        identification_model_objects=identification_model_objects,
+        ideal_detection=ideal_detection)
 
 
     # options
@@ -182,7 +210,10 @@ def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True,
                         centroids_path="results/centroids", save_plots=True, plots_path="results/plots"):
 
     for scan_path in glob.glob(scans_dir + "/**/*.nii.gz", recursive=True):
-        test_individual_scan(scan_path=scan_path,
+        scan_path_without_ext = scan_path[:-len(".nii.gz")]
+        centroid_path = scan_path_without_ext + ".lml"
+
+        test_individual_scan(scan_path=scan_path, centroid_path=centroid_path,
                              print_centroids=print_centroids, save_centroids=save_centroids,
                              centroids_path=centroids_path, save_plots=save_plots, plots_path=plots_path)
 
