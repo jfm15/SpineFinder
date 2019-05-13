@@ -161,7 +161,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
 
         # first plot
         fig1, ax1 = plt.subplots()
-        ax1.imshow(volume_slice.T, origin='lower')
+        ax1.imshow(volume_slice.T)
         ax1.imshow(identifications_slice.T, cmap=cm.jet, alpha=0.3)
         fig1.savefig(identification_plot)
 
