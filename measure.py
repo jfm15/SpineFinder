@@ -97,6 +97,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
 
     print("first", np.unique(identifications))
 
+    print(identifications.shape, detections.shape)
     # crop parts of slices
     identifications *= detections
 
