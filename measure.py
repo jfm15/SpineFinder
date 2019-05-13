@@ -95,7 +95,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
     identifications = apply_identification_model(volume, bounds, identification_model)
 
-    print("first", np.unique(identifications))
+    print("first", np.unique(identifications), np.unique(detections))
 
     print(identifications.shape, detections.shape)
     # crop parts of slices
