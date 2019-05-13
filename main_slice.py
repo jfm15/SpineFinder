@@ -18,4 +18,4 @@ perform_learning(sample_dir="samples/slices",
                  model=model,
                  epochs=100,
                  model_path="slices_model.h5",
-                 checkpoint_path="checkpoints/slices_model.{epoch:02d}.h5")
+                 checkpoint_path="checkpoints/slices_model/slices_model.{epoch:02d}.h5")

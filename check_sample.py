@@ -2,20 +2,41 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-sample_path = "samples/3164509-74-"
 
-sample = np.load(sample_path + "sample.npy")
-dense_labelling = np.load(sample_path + "labelling.npy")
+def check_multi_class_sample(sample_path):
+    sample_path_without_ext = sample_path[:-len("sample.npy")]
+    labelling_path = sample_path_without_ext + "labelling.npy"
 
-slice = sample[15, :, :]
-labelling = dense_labelling[15, :, :]
+    sample = np.load(sample_path)
+    labelling = np.load(labelling_path)
 
-print(np.unique(dense_labelling))
-print(np.bincount(dense_labelling.reshape(-1).astype(int)))
+    print(np.bincount(labelling.reshape(-1).astype(int)))
 
-masked_data = np.ma.masked_where(labelling == 0, labelling)
+    cut = int(np.round(sample.shape[0] / 2.0))
 
-fig, ax = plt.subplots(1)
-ax.imshow(slice.T, interpolation="none", origin='lower')
-plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, alpha=1)
-plt.show()
+    sample_slice = sample[cut, :, :]
+    labelling_slice = labelling[cut, :, :]
+
+    masked_data = np.ma.masked_where(labelling_slice == 0, labelling_slice)
+
+    plt.imshow(sample_slice.T, interpolation="none", origin='lower')
+    plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, alpha=0.4)
+    plt.show()
+
+
+def check_slice_sample(sample_path):
+    sample_path_without_ext = sample_path[:-len("sample.npy")]
+    labelling_path = sample_path_without_ext + "labelling.npy"
+
+    sample = np.load(sample_path)
+    labelling = np.load(labelling_path)
+
+    masked_data = np.ma.masked_where(labelling == 0, labelling)
+
+    plt.imshow(sample.T, interpolation="none", origin='lower')
+    plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, alpha=0.3)
+    plt.show()
+
+
+# check_multi_class_sample("samples/multi_class/2558438-8-sample.npy")
+check_slice_sample("samples/slices/2684937-4-sample.npy")
