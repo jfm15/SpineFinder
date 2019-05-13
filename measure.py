@@ -89,6 +89,8 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
     k_max = np.max(largest_island_np[:, 2])
     bounds = (i_min, i_max, j_min, j_max, k_min, k_max)
 
+    print(bounds)
+
     # second stage is to pass slices of this to the identification network
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
     identifications = apply_identification_model(volume, bounds, identification_model)
