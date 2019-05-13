@@ -58,8 +58,7 @@ def apply_identification_model(volume, bounds, detections, model):
         volume_slice_input = volume_slice.reshape(1, *volume_slice.shape, 1)
         prediction = model.predict(volume_slice_input)
         prediction = prediction.reshape(*volume_slice.shape)
-        output[i, j_min:j_max, k_min:k_max] = prediction
-        print(np.unique(detections[i, j_min:j_max, k_min:k_max]))
+        output[i + i_min, j_min:j_max, k_min:k_max] = prediction
 
     return output
 
