@@ -31,24 +31,19 @@ def apply_detection_model(volume, model, patch_size):
     return output
 
 
-def apply_ideal_detection(volume, labels, centroid_indexes):
+def apply_ideal_detection(volume, centroid_indexes):
 
     output = np.zeros(volume.shape)
 
-    for i in range(volume.shape[0]):
-        for j in range(volume.shape[1]):
-            for k in range(volume.shape[2]):
-                label = -1
-                min_distance = 1000
-                for label_name, centroid_idx in zip(labels, centroid_indexes):
-                    dist = np.linalg.norm((i, j, k) - centroid_idx)
-                    if dist < min_distance:
-                        min_distance = dist
-                        label = LABELS.index(label_name)
-                    if min_distance > 14:
-                        output[i, j, k] = 0
-                    else:
-                        output[i, j, k] = label
+    for centroid_idx in centroid_indexes:
+        for i in range(-14, 14):
+            for j in range(-14, 14):
+                for k in range(-14, 14):
+                    point = np.array(centroid_idx) + np.array([i, j, k])
+                    point = np.clip(point, a_min=np.zeros(3), a_max=volume.shape - np.ones(3))
+                    dist = np.linalg.norm(point - centroid_idx)
+                    if dist < 14:
+                        output[i, j, k] = 1
     return output
 
 
@@ -77,9 +72,9 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
         detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
         detections = apply_detection_model(volume, detection_model, detection_model_input_shape)
     else:
-        labels, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
+        _, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
         centroid_indexes = np.round(centroids / np.array((2.0, 2.0, 2.0))).astype(int)
-        detections = apply_ideal_detection(volume, labels, centroid_indexes)
+        detections = apply_ideal_detection(volume, centroid_indexes)
 
     # get the largest island
     bounds, detections = sampling_helper_functions.crop_labelling(detections)
