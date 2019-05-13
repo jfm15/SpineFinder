@@ -213,7 +213,7 @@ def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True,
         test_individual_scan(scan_path=scan_path, centroid_path=centroid_path,
                              print_centroids=print_centroids, save_centroids=save_centroids,
                              centroids_path=centroids_path, save_plots=save_plots, plots_path=plots_path,
-                             ideal_detection=False)
+                             ideal_detection=True)
 
 
 test_multiple_scans("datasets_test")
