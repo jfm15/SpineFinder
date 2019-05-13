@@ -36,9 +36,9 @@ def apply_ideal_detection(volume, centroid_indexes):
     output = np.zeros(volume.shape)
 
     for centroid_idx in centroid_indexes:
-        for i in range(-14, 14):
-            for j in range(-14, 14):
-                for k in range(-14, 14):
+        for i in range(-10, 10):
+            for j in range(-10, 10):
+                for k in range(-10, 10):
                     point = np.array(centroid_idx) + np.array([i, j, k])
                     point = np.clip(point, a_min=np.zeros(3), a_max=volume.shape - np.ones(3))
                     dist = np.linalg.norm(point - centroid_idx)
@@ -79,7 +79,15 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
 
     print(detections.shape, np.unique(detections))
     # get the largest island
-    bounds, detections = sampling_helper_functions.crop_labelling(detections)
+    # bounds, detections = sampling_helper_functions.crop_labelling(detections)
+    largest_island_np = np.nonzero(detections)
+    i_min = np.min(largest_island_np[:, 0])
+    i_max = np.max(largest_island_np[:, 0])
+    j_min = np.min(largest_island_np[:, 1])
+    j_max = np.max(largest_island_np[:, 1])
+    k_min = np.min(largest_island_np[:, 2])
+    k_max = np.max(largest_island_np[:, 2])
+    bounds = (i_min, i_max, j_min, j_max, k_min, k_max)
 
     # second stage is to pass slices of this to the identification network
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
