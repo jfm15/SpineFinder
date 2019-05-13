@@ -124,7 +124,8 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
 
     if save_centroids:
         file_dir_path = '/'.join([centroids_path, dir_path])
-        os.makedirs(file_dir_path)
+        if not os.path.exists(file_dir_path):
+            os.makedirs(file_dir_path)
         file_path = file_dir_path + "/" + name + "-pred-centroids"
         file = open(file_path + ".txt", "w")
         for label, centroid in zip(pred_labels, pred_centroid_estimates):
@@ -133,13 +134,15 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
 
     if save_identifications:
         identifications_dir_path = '/'.join([identifications_path, dir_path])
-        os.makedirs(identifications_dir_path)
+        if not os.path.exists(identifications_dir_path):
+            os.makedirs(identifications_dir_path)
         file_path = identifications_dir_path + "/" + name + "-identifications"
         np.save(file_path, pred_identifications)
 
     if save_plots:
         plots_dir_path = '/'.join([plots_path, dir_path])
-        os.makedirs(plots_dir_path)
+        if not os.path.exists(plots_dir_path):
+            os.makedirs(plots_dir_path)
         identification_plot = plots_dir_path + "/" + name + "-id-plot.png"
         centroid_plot = plots_dir_path + "/" + name + "-centroid-plot.png"
 
@@ -156,7 +159,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
         # first plot
         fig1, ax1 = plt.subplots()
         ax1.imshow(volume_slice.T, origin='lower')
-        ax1.imshow(identifications_slice.T, cmap=cm.jet, alpha=0.6)
+        ax1.imshow(identifications_slice.T, cmap=cm.jet, alpha=0.3)
         fig1.savefig(identification_plot)
 
         # second plot
