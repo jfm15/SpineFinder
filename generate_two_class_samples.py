@@ -116,10 +116,10 @@ label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
                      "S1", "S2"]
 
 generate_samples(dataset_dir="datasets/spine-1",
-                 sample_dir="samples/two_class_cropped",
+                 sample_dir="samples/two_class",
                  spacing=(2.0, 2.0, 2.0),
                  radius=(28.0, 28.0, 28.0),
-                 sample_size=(56.0, 56.0, 56.0),
+                 sample_size=(60.0, 60.0, 120.0),
                  no_of_samples=150,
                  no_of_zero_samples=40,
                  use_labels=False,

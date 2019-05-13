@@ -51,7 +51,7 @@ def generate_slice_samples(dataset_dir, sample_dir, no_of_samples=5, label_trans
                         if dist < min_distance:
                             min_distance = dist
                             label = label_translation.index(label_name)
-                        if min_distance > 14:
+                        if min_distance > 7:
                             sample_labels[i, j, k] = 0
                         else:
                             sample_labels[i, j, k] = label
