@@ -95,10 +95,12 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
     identifications = apply_identification_model(volume, bounds, identification_model)
 
+    print("first", np.unique(identifications))
+
     # crop parts of slices
     identifications *= detections
 
-    print(np.unique(identifications))
+    print("second", np.unique(identifications))
 
     # aggregate the predictions
     identifications = np.round(identifications).astype(int)
