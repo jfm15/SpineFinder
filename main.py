@@ -41,4 +41,5 @@ perform_learning(sample_dir="samples/two_class_cropped",
                  output_classes=2,
                  model=model,
                  epochs=20,
-                 model_path="two_class_model.h5")
+                 model_path="two_class_model.h5",
+                 checkpoint_path="checkpoints/two_class_model.{epoch:02d}.h5")

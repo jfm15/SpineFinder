@@ -17,4 +17,5 @@ perform_learning(sample_dir="samples/slices",
                  output_classes=1,
                  model=model,
                  epochs=100,
-                 model_path="slices_model.h5")
+                 model_path="slices_model.h5",
+                 checkpoint_path="checkpoints/slices_model.{epoch:02d}.h5")
