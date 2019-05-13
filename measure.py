@@ -149,9 +149,11 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
         # make plots
         volume = opening_files.read_nii(scan_path)
 
+        pred_centroid_estimates /= 2.0
+
         # get cuts
         cut = np.mean(np.array(pred_centroid_estimates)[:, 0])
-        cut = np.round(cut / 2.0).astype(int)
+        cut = np.round(cut).astype(int)
 
         volume_slice = volume[cut, :, :]
         identifications_slice = pred_identifications[cut, :, :]
