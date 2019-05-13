@@ -59,7 +59,6 @@ def apply_identification_model(volume, bounds, model):
         prediction = model.predict(volume_slice_input)
         prediction = prediction.reshape(*volume_slice.shape)
         output[i, j_min:j_max, k_min:k_max] = prediction
-        print(np.unique(prediction))
 
     return output
 
@@ -98,6 +97,8 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
 
     # crop parts of slices
     identifications *= detections
+
+    print(np.unique(identifications))
 
     # aggregate the predictions
     identifications = np.round(identifications).astype(int)
