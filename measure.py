@@ -167,7 +167,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
 
         # second plot
         fig2, ax2 = plt.subplots()
-        ax2.imshow(volume_slice.T, origin='lower')
+        ax2.imshow(volume_slice.T)
 
         for label, centroid in zip(pred_labels, pred_centroid_estimates):
             ax2.annotate(label, (centroid[1], centroid[2]), color="red")
