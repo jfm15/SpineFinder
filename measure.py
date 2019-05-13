@@ -48,7 +48,7 @@ def apply_ideal_detection(volume, centroid_indexes):
     return output
 
 
-def apply_identification_model(volume, bounds, model):
+def apply_identification_model(volume, bounds, detections, model):
     i_min, i_max, j_min, j_max, k_min, k_max = bounds
     cropped_volume = volume[i_min:i_max, j_min:j_max, k_min:k_max]
     output = np.zeros(volume.shape)
@@ -59,6 +59,7 @@ def apply_identification_model(volume, bounds, model):
         prediction = model.predict(volume_slice_input)
         prediction = prediction.reshape(*volume_slice.shape)
         output[i, j_min:j_max, k_min:k_max] = prediction
+        print(np.unique(detections[i, j_min:j_max, k_min:k_max]))
 
     return output
 
@@ -93,7 +94,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
 
     # second stage is to pass slices of this to the identification network
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
-    identifications = apply_identification_model(volume, bounds, identification_model)
+    identifications = apply_identification_model(volume, bounds, detections, identification_model)
 
     print("first", np.unique(identifications), np.unique(detections))
 
