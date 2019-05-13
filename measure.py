@@ -77,7 +77,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
         centroid_indexes = np.round(centroids / np.array((2.0, 2.0, 2.0))).astype(int)
         detections = apply_ideal_detection(volume, centroid_indexes)
 
-    print(detections.shape)
+    print(detections.shape, np.unique(detections))
     # get the largest island
     bounds, detections = sampling_helper_functions.crop_labelling(detections)
 
