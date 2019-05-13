@@ -43,6 +43,7 @@ def apply_ideal_detection(volume, centroid_indexes):
                     point = np.clip(point, a_min=np.zeros(3), a_max=volume.shape - np.ones(3))
                     dist = np.linalg.norm(point - centroid_idx)
                     if dist < 14:
+                        point = point.astype(int)
                         output[point[0], point[1], point[2]] = 1
     return output
 
