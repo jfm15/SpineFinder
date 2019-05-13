@@ -72,6 +72,6 @@ def get_island(point, explored, predictions):
                         for k_add in range(-1, 2):
                             if i_add != 0 or j_add != 0 or k_add != 0:
                                 next_point = (i + i_add, j + j_add, k + k_add)
-                                if np.zeros(3) <= next_point < predictions.shape:
+                                if (np.zeros(3) <= next_point).all() and (next_point < predictions.shape).all():
                                     stack.append(next_point)
     return acc
