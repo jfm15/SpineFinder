@@ -36,9 +36,9 @@ def apply_ideal_detection(volume, centroid_indexes):
     output = np.zeros(volume.shape)
 
     for centroid_idx in centroid_indexes:
-        for i in range(-10, 10):
-            for j in range(-10, 10):
-                for k in range(-10, 10):
+        for i in range(-14, 14):
+            for j in range(-14, 14):
+                for k in range(-14, 14):
                     point = np.array(centroid_idx) + np.array([i, j, k])
                     point = np.clip(point, a_min=np.zeros(3), a_max=volume.shape - np.ones(3))
                     dist = np.linalg.norm(point - centroid_idx)
