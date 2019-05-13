@@ -164,6 +164,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
         ax1.imshow(volume_slice.T)
         ax1.imshow(identifications_slice.T, cmap=cm.jet, alpha=0.3)
         fig1.savefig(identification_plot)
+        plt.close(fig1)
 
         # second plot
         fig2, ax2 = plt.subplots()
@@ -174,6 +175,7 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
             ax2.scatter(centroid[1], centroid[2], s=2, color="red")
 
         fig2.savefig(centroid_plot)
+        plt.close(fig2)
 
 
 def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True,
