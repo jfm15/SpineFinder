@@ -1,6 +1,6 @@
 # The aim of this script is to provide measurements for any part of the pipeline
 import numpy as np
-import os
+import os, glob
 import keras_metrics as km
 from utility_functions import opening_files, sampling_helper_functions
 from keras.models import load_model
@@ -176,9 +176,13 @@ def test_individual_scan(scan_path, print_centroids=True, save_centroids=False, 
         fig2.savefig(centroid_plot)
 
 
-test_individual_scan(scan_path="datasets/spine-1/patient0088/2684937/2684937.nii.gz",
-                     print_centroids=True,
-                     save_centroids=True,
-                     centroids_path="results/centroids",
-                     save_plots=True,
-                     plots_path="results/plots")
+def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True,
+                        centroids_path="results/centroids", save_plots=True, plots_path="results/plots"):
+
+    for scan_path in glob.glob(scans_dir + "/**/*.nii.gz", recursive=True):
+        test_individual_scan(scan_path=scan_path,
+                             print_centroids=print_centroids, save_centroids=save_centroids,
+                             centroids_path=centroids_path, save_plots=save_plots, plots_path=plots_path)
+
+
+test_multiple_scans("datasets_test")
