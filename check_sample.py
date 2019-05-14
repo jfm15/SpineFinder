@@ -39,5 +39,5 @@ def check_slice_sample(sample_path):
     plt.show()
 
 
-check_multi_class_sample("samples/two_class/2684937-3-sample.npy")
-# check_slice_sample("samples/")slices/2684937-1-sample.npy
+# check_multi_class_sample("samples/two_class/2684937-3-sample.npy")
+check_slice_sample("samples/slices/2684937-1-sample.npy")

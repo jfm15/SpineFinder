@@ -10,12 +10,10 @@ from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_
 def six_conv_two_classes(input_shape, kernel_size, weights):
     # Input
     model = Sequential()
-    model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same",
+    model.add(Conv3D(16, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same",
                      input_shape=input_shape))
-    model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same"))
-    model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same"))
-    model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same"))
-    model.add(Conv3D(64, kernel_size=kernel_size, strides=(1, 1, 1), activation='sigmoid', padding="same"))
+    model.add(Conv3D(16, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
+    model.add(Conv3D(16, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
     model.add(Conv3D(2, kernel_size=kernel_size, strides=(1, 1, 1), activation='softmax', padding="same"))
 
     # define optimizer

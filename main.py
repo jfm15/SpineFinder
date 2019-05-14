@@ -13,7 +13,7 @@ model = unet(input_shape=(28, 28, 28),
 
 
 model = six_conv_two_classes(input_shape=(30, 30, 60, 1),
-                             kernel_size=(5, 5, 5),
+                             kernel_size=(3, 3, 3),
                              weights=np.array([0.1, 0.9]))
 
 '''
