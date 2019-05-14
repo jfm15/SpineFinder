@@ -101,7 +101,7 @@ def generate_samples(dataset_dir, sample_dir,
                 path = '/'.join([sample_dir, name_plus_id])
                 sample_path = path + "-sample"
                 labelling_path = path + "-labelling"
-                if sample.shape == sample_size_in_pixels:
+                if np.all(sample.shape == sample_size_in_pixels):
                     np.save(sample_path, sample)
                     np.save(labelling_path, labelling)
                 else:
