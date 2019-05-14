@@ -5,6 +5,7 @@ from keras import optimizers
 from keras.models import Sequential
 from keras.layers import Conv3D
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
+from losses_and_metrics.dsc import dice_coef_label
 
 
 def six_conv_two_classes(input_shape, kernel_size, weights):
@@ -23,10 +24,11 @@ def six_conv_two_classes(input_shape, kernel_size, weights):
     loss_function = weighted_categorical_crossentropy(weights)
 
     # define metrics
+    dsc = dice_coef_label(label=1)
     recall_background = km.binary_recall(label=0)
     recall_vertebrae = km.binary_recall(label=1)
     cat_accuracy = metrics.categorical_accuracy
 
-    model.compile(optimizer=sgd, loss=loss_function, metrics=[recall_background, recall_vertebrae, cat_accuracy])
+    model.compile(optimizer=sgd, loss=loss_function, metrics=[dsc, recall_background, recall_vertebrae, cat_accuracy])
 
     return model

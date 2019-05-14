@@ -1,7 +1,7 @@
 import numpy as np
 from perform_learning import perform_learning
 from models.six_conv_multi_classes import six_conv_multi_classes
-from models.six_conv_two_classes import six_conv_two_classes
+from models.simple_detection import six_conv_two_classes
 from models.unet import unet
 
 '''

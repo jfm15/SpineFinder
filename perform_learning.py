@@ -27,7 +27,7 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
     checkpoint = ModelCheckpoint(checkpoint_path, period=5)
 
     # tensorboard
-    tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
+    tensorboard = TensorBoard(log_dir="logs/detection-{}".format(time()))
 
     # train the model
     model.fit_generator(generator=training_generator,
