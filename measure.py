@@ -165,6 +165,9 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
             file.write(" ".join([label, str(centroid[0]), str(centroid[1]), str(centroid[2]), "\n"]))
         file.close()
 
+    pred_centroid_estimates = np.array(pred_centroid_estimates)
+    pred_centroid_estimates = pred_centroid_estimates / 2.0
+
     if plot_detections:
         detections_dir_path = '/'.join([detections_path, dir_path])
         if not os.path.exists(detections_dir_path):
@@ -175,7 +178,7 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
         volume = opening_files.read_nii(scan_path)
 
         # get cuts
-        cut = np.mean(np.array(pred_centroid_estimates)[:, 0])
+        cut = np.mean(pred_centroid_estimates[:, 0])
         cut = np.round(cut).astype(int)
 
         volume_slice = volume[cut, :, :]
@@ -205,11 +208,8 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
         # make plots
         volume = opening_files.read_nii(scan_path)
 
-        pred_centroid_estimates = np.array(pred_centroid_estimates)
-        pred_centroid_estimates = pred_centroid_estimates / 2.0
-
         # get cuts
-        cut = np.mean(np.array(pred_centroid_estimates)[:, 0])
+        cut = np.mean(pred_centroid_estimates[:, 0])
         cut = np.round(cut).astype(int)
 
         volume_slice = volume[cut, :, :]
