@@ -1,6 +1,7 @@
 from create_partition import create_partition_and_labels
 from data_generator import DataGenerator
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, TensorBoard
+from time import time
 
 
 def perform_learning(sample_dir, training_val_split, sample_shape,
@@ -25,13 +26,16 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
     # set checkpoint
     checkpoint = ModelCheckpoint(checkpoint_path, period=5)
 
+    # tensorboard
+    tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
+
     # train the model
     model.fit_generator(generator=training_generator,
                         validation_data=validation_generator,
                         use_multiprocessing=True,
                         workers=6,
                         epochs=epochs,
-                        callbacks=[checkpoint])
+                        callbacks=[checkpoint, tensorboard])
 
     model.save(model_path)
 
