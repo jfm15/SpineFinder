@@ -175,7 +175,7 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
         volume = opening_files.read_nii(scan_path)
 
         # get cuts
-        cut = np.mean(pred_centroid_estimates[:, 0])
+        cut = np.mean(np.array(pred_centroid_estimates)[:, 0])
         cut = np.round(cut).astype(int)
 
         volume_slice = volume[cut, :, :]
@@ -187,7 +187,6 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
         plt.imshow(masked_data.T, cmap=cm.jet, alpha=0.3)
         plt.savefig(detection_plot)
         plt.close()
-
 
     if save_identifications:
         identifications_dir_path = '/'.join([identifications_path, dir_path])
@@ -210,7 +209,7 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
         pred_centroid_estimates = pred_centroid_estimates / 2.0
 
         # get cuts
-        cut = np.mean(pred_centroid_estimates[:, 0])
+        cut = np.mean(np.array(pred_centroid_estimates)[:, 0])
         cut = np.round(cut).astype(int)
 
         volume_slice = volume[cut, :, :]
