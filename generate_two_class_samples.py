@@ -101,6 +101,7 @@ def generate_samples(dataset_dir, sample_dir,
                 path = '/'.join([sample_dir, name_plus_id])
                 sample_path = path + "-sample"
                 labelling_path = path + "-labelling"
+                print(sample.shape)
                 np.save(sample_path, sample)
                 np.save(labelling_path, labelling)
 
