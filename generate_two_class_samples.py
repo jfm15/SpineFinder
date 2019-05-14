@@ -105,7 +105,7 @@ def generate_samples(dataset_dir, sample_dir,
                     np.save(sample_path, sample)
                     np.save(labelling_path, labelling)
                 else:
-                    print(data_path)
+                    print(data_path, volume.shape)
 
     values_histogram = np.sum(values_histogram) - values_histogram
     values_histogram /= np.sum(values_histogram)
