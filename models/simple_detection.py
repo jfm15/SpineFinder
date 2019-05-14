@@ -19,7 +19,7 @@ def six_conv_two_classes(input_shape, kernel_size, weights):
 
     # define optimizer
     # sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-    adam = optimizers.Adamax(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
+    adam = optimizers.Adam(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0)
 
     # define loss function
     loss_function = weighted_categorical_crossentropy(weights)
