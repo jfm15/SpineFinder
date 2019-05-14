@@ -34,7 +34,7 @@ for layer in model.layers:
 '''
 
 perform_learning(sample_dir="samples/two_class",
-                 training_val_split=0.8,
+                 training_val_split=0.5,
                  sample_shape=(30, 30, 60),
                  batch_size=32,
                  sample_channels=1,

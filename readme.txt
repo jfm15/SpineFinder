@@ -12,6 +12,7 @@ scp -r jfm15@spine-finder.westeurope.cloudapp.azure.com:SpineFinder/main-model.h
 nohup python main.py &> main-output.txt &
 (top and kill)
 scp -r jfm15@spine-finder.westeurope.cloudapp.azure.com:SpineFinder/results /Users/James/SpineFinder/
+tensorboard --logdir=logs/
 
 File Structure
 |- main.py
