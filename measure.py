@@ -64,7 +64,7 @@ def apply_identification_model(volume, bounds, detections, model):
 
 
 def test_scan(scan_path, centroid_path, detection_model_path, detection_model_input_shape, detection_model_objects,
-              identification_model_path, identification_model_objects, ideal_detection, ):
+              identification_model_path, identification_model_objects, ideal_detection):
 
     volume = opening_files.read_nii(scan_path)
 
@@ -121,10 +121,11 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
                 labels.append(LABELS[key])
                 centroid_estimates.append(list(centroid_estimate))
 
-    return labels, centroid_estimates, identifications
+    return labels, centroid_estimates, detections, identifications
 
 
 def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_centroids=False, centroids_path="",
+                         plot_detections=False, detections_path="",
                          save_identifications=False, identifications_path="",
                          save_plots=False, plots_path="", ideal_detection=False):
     sub_path = scan_path.split('/', 1)[1]
@@ -138,7 +139,7 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
     detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
                              'binary_recall': km.binary_recall()}
     identification_model_objects = {'cool_loss': cool_loss}
-    pred_labels, pred_centroid_estimates, pred_identifications = test_scan(
+    pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
         scan_path=scan_path,
         centroid_path=centroid_path,
         detection_model_path="model_files/two_class_model.h5",
@@ -163,6 +164,30 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
         for label, centroid in zip(pred_labels, pred_centroid_estimates):
             file.write(" ".join([label, str(centroid[0]), str(centroid[1]), str(centroid[2]), "\n"]))
         file.close()
+
+    if plot_detections:
+        detections_dir_path = '/'.join([detections_path, dir_path])
+        if not os.path.exists(detections_dir_path):
+            os.makedirs(detections_dir_path)
+
+        detection_plot = detections_dir_path + "/" + name + "-detection-plot.png"
+
+        volume = opening_files.read_nii(scan_path)
+
+        # get cuts
+        cut = np.mean(pred_centroid_estimates[:, 0])
+        cut = np.round(cut).astype(int)
+
+        volume_slice = volume[cut, :, :]
+        detections_slice = pred_detections[cut, :, :]
+
+        masked_data = np.ma.masked_where(detections_slice == 0, detections_slice)
+
+        plt.imshow(volume_slice.T)
+        plt.imshow(masked_data.T, cmap=cm.jet, alpha=0.3)
+        plt.savefig(detection_plot)
+        plt.close()
+
 
     if save_identifications:
         identifications_dir_path = '/'.join([identifications_path, dir_path])
@@ -210,14 +235,16 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
         plt.close(fig2)
 
 
-def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True,
-                        centroids_path="results/centroids", save_plots=True, plots_path="results/plots"):
+def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True, plot_detections=True,
+                        detections_path="results/detections", centroids_path="results/centroids",
+                        save_plots=True, plots_path="results/plots"):
 
     for scan_path in glob.glob(scans_dir + "/**/*.nii.gz", recursive=True):
         scan_path_without_ext = scan_path[:-len(".nii.gz")]
         centroid_path = scan_path_without_ext + ".lml"
 
         test_individual_scan(scan_path=scan_path, centroid_path=centroid_path,
+                             plot_detections=plot_detections, detections_path=detections_path,
                              print_centroids=print_centroids, save_centroids=save_centroids,
                              centroids_path=centroids_path, save_plots=save_plots, plots_path=plots_path,
                              ideal_detection=False)
