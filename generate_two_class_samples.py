@@ -148,5 +148,4 @@ generate_samples(dataset_dir="datasets/",
                  sample_size=(60.0, 60.0, 72.0),
                  no_of_samples=75,
                  no_of_zero_samples=20,
-                 use_labels=False,
-                 label_translation=label_translation)
+                 use_labels=False)
