@@ -15,6 +15,7 @@ def six_conv_two_classes(input_shape, kernel_size, weights):
                      input_shape=input_shape))
     model.add(Conv3D(16, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
     model.add(Conv3D(16, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
+    model.add(Conv3D(16, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
     model.add(Conv3D(2, kernel_size=kernel_size, strides=(1, 1, 1), activation='softmax', padding="same"))
 
     # define optimizer
