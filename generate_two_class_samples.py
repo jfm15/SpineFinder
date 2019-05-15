@@ -71,6 +71,7 @@ def generate_samples(dataset_dir, sample_dir,
 
         sample_size_in_pixels = (sample_size / np.array(spacing)).astype(int)
         cut_size_in_pixels = (cut_size / np.array(spacing)).astype(int)
+        cut_size_in_pixels = np.clip(cut_size_in_pixels, a_min=np.zeros(3), a_max=volume.shape - np.ones(3)).astype(int)
 
         random_area = volume.shape - cut_size_in_pixels
 
@@ -116,11 +117,11 @@ def generate_samples(dataset_dir, sample_dir,
                 path = '/'.join([sample_dir, name_plus_id])
                 sample_path = path + "-sample"
                 labelling_path = path + "-labelling"
-                # if np.all(sample.shape == sample_size_in_pixels):
-                np.save(sample_path, sample)
-                np.save(labelling_path, labelling)
-                # else:
-                    # print(data_path, volume.shape)
+                if np.all(sample.shape == sample_size_in_pixels):
+                    np.save(sample_path, sample)
+                    np.save(labelling_path, labelling)
+                else:
+                    print(data_path, volume.shape)
 
     values_histogram = np.sum(values_histogram) - values_histogram
     values_histogram /= np.sum(values_histogram)
