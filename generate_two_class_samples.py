@@ -53,12 +53,10 @@ def generate_samples(dataset_dir, sample_dir,
         metadata_path = data_path_without_ext + ".lml"
 
         # get image, resample it and scale centroids accordingly
-        image = sitk.ReadImage(data_path)
-        image = processing.resample_image(image, out_spacing=spacing)
         labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
         centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
 
-        volume = sitk.GetArrayFromImage(image).T
+        volume = opening_files.read_nii(data_path)
 
         # densely populate
         dense_labelling = densely_label(labels=labels,
