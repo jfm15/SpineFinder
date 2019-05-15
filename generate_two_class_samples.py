@@ -2,6 +2,7 @@ import glob
 from utility_functions import opening_files, processing
 import SimpleITK as sitk
 import numpy as np
+import scipy.ndimage
 
 
 def densely_label(labels, volume_shape, centroid_indexes, spacing, radius, use_labels, label_translation):
@@ -37,6 +38,7 @@ def generate_samples(dataset_dir, sample_dir,
     # numpy these so they can be divided later on
     radius = np.array(radius)
     sample_size = np.array(sample_size)
+    cut_size = sample_size + np.array([10, 10, 10])
 
     ext_len = len(file_ext)
 
@@ -68,7 +70,9 @@ def generate_samples(dataset_dir, sample_dir,
                                         label_translation=label_translation)
 
         sample_size_in_pixels = (sample_size / np.array(spacing)).astype(int)
-        random_area = volume.shape - sample_size_in_pixels
+        cut_size_in_pixels = (cut_size / np.array(spacing)).astype(int)
+
+        random_area = volume.shape - cut_size_in_pixels
 
         name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
         print(name)
@@ -79,10 +83,23 @@ def generate_samples(dataset_dir, sample_dir,
             random_factor = np.random.rand(3)
             random_position = np.round(random_area * random_factor).astype(int)
             corner_a = random_position
-            corner_b = random_position + sample_size_in_pixels
+            corner_b = random_position + cut_size_in_pixels
 
             sample = volume[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
             labelling = dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
+
+            # randomly rotate
+            angle = np.random.rand() * 20.0 - 10.0
+            sample = scipy.ndimage.interpolation.rotate(sample, angle, axes=(-1, 1), mode="constant")
+            labelling = scipy.ndimage.interpolation.rotate(labelling, angle, axes=(-1, 1), mode="constant")
+            labelling = np.round(labelling).astype(int)
+
+            padding_corner_a = np.round((sample.shape - sample_size_in_pixels) / 2.0).astype(int)
+            padding_corner_b = padding_corner_a + sample_size_in_pixels
+            sample = sample[padding_corner_a[0]:padding_corner_b[0], padding_corner_a[1]:padding_corner_b[1],
+                     padding_corner_a[2]:padding_corner_b[2]]
+            labelling = labelling[padding_corner_a[0]:padding_corner_b[0], padding_corner_a[1]:padding_corner_b[1],
+                     padding_corner_a[2]:padding_corner_b[2]]
 
             # if a centroid is contained
             unique_labels = np.unique(labelling).shape[0]
@@ -99,11 +116,11 @@ def generate_samples(dataset_dir, sample_dir,
                 path = '/'.join([sample_dir, name_plus_id])
                 sample_path = path + "-sample"
                 labelling_path = path + "-labelling"
-                if np.all(sample.shape == sample_size_in_pixels):
-                    np.save(sample_path, sample)
-                    np.save(labelling_path, labelling)
-                else:
-                    print(data_path, volume.shape)
+                # if np.all(sample.shape == sample_size_in_pixels):
+                np.save(sample_path, sample)
+                np.save(labelling_path, labelling)
+                # else:
+                    # print(data_path, volume.shape)
 
     values_histogram = np.sum(values_histogram) - values_histogram
     values_histogram /= np.sum(values_histogram)
@@ -121,7 +138,7 @@ generate_samples(dataset_dir="datasets/",
                  spacing=(2.0, 2.0, 2.0),
                  radius=(28.0, 28.0, 28.0),
                  sample_size=(60.0, 60.0, 72.0),
-                 no_of_samples=75,
-                 no_of_zero_samples=20,
+                 no_of_samples=10,
+                 no_of_zero_samples=2,
                  use_labels=False,
                  label_translation=label_translation)
