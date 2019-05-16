@@ -5,7 +5,7 @@ from models.simple_detection import simple_detection
 from models.unet import unet
 
 # inputs to the model
-model_params = {'kernel_size': (3, 3, 3),
+model_params = {'kernel_size': (5, 5, 5),
                 'filters': 16,
                 'weights': np.array([0.1, 0.9]),
                 'learning_rate': 0.005}
@@ -13,7 +13,7 @@ model_params = {'kernel_size': (3, 3, 3),
 perform_learning(sample_dir="samples/two_class",
                  training_val_split=0.5,
                  sample_shape=(30, 30, 36),
-                 batch_size=16,
+                 batch_size=32,
                  sample_channels=1,
                  categorise=True,
                  output_classes=2,
