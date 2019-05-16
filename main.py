@@ -6,7 +6,7 @@ from models.unet import unet
 
 # inputs to the model
 model_params = {'kernel_size': (3, 3, 3),
-                'weights': np.array([0.05, 0.95]),
+                'weights': np.array([0.1, 0.9]),
                 'learning_rate': 0.005}
 
 perform_learning(sample_dir="samples/two_class",
