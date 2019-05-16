@@ -18,6 +18,6 @@ perform_learning(sample_dir="samples/two_class",
                  output_classes=2,
                  model_func=simple_detection,
                  model_params=model_params,
-                 epochs=50,
+                 epochs=150,
                  model_path="two_class_model.h5",
                  checkpoint_path="checkpoints/two_class_model/two_class_model.{epoch:02d}.h5")
