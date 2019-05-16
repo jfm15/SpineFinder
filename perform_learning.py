@@ -55,7 +55,7 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
 
     # add other info
     file.write("\n\nOTHER INFO\n")
-    file.write("Using 20 Samples with 2 all zero samples with ROTATE, using ADAM compiler, using ReLu and softmax activation")
+    file.write("Using 20 Samples with 2 all zero samples with NO ROTATE and NORMALIZED, using ADAM compiler, using ReLu and softmax activation")
     file.write("\n\n")
 
     # https://stackoverflow.com/questions/41665799/keras-model-summary-object-to-string

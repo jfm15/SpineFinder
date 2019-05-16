@@ -149,4 +149,4 @@ generate_samples(dataset_dir="datasets/",
                  no_of_samples=20,
                  no_of_zero_samples=2,
                  use_labels=False,
-                 rotate=True)
+                 rotate=False)
