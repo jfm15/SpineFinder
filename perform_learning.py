@@ -1,10 +1,10 @@
 from create_partition import create_partition_and_labels
 from data_generator import DataGenerator
 from keras.callbacks import ModelCheckpoint, TensorBoard
-import numpy as np
 import datetime
 import os
 import inspect
+
 
 def perform_learning(sample_dir, training_val_split, sample_shape,
                      batch_size, sample_channels, categorise, output_classes,
@@ -66,7 +66,6 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
     file.close()
 
     # train the mode
-    '''
     model.fit_generator(generator=training_generator,
                         validation_data=validation_generator,
                         use_multiprocessing=True,
@@ -75,5 +74,4 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
                         callbacks=[checkpoint, tensorboard])
 
     model.save(model_path)
-    '''
 
