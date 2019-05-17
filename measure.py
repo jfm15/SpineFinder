@@ -263,7 +263,7 @@ def compete_detection_picture(scans_dir, models_dir, plot_path):
                      'binary_recall': km.binary_recall(),
                      'dice_coef': dice_coef_label(label=1)}
 
-    fig, axes = plt.subplots(nrows=no_of_model_paths, ncols=no_of_scan_paths, figsize=(1,1))
+    fig, axes = plt.subplots(nrows=no_of_model_paths, ncols=no_of_scan_paths, figsize=(20, 10), dpi=300)
 
     i = 1
 
