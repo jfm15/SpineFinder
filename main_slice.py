@@ -20,4 +20,5 @@ perform_learning(sample_dir="samples/slices",
                  checkpoint_path="checkpoints/slices_model/slices_model.{epoch:02d}.h5",
                  log_name="identification",
                  log_description="Using 5 NORMALIZED samples, using ADAM compiler, "
-                                 "using ReLu and softmax activation")
+                                 "using ReLu and softmax activation",
+                 limit=100)

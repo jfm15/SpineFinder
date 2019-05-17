@@ -24,4 +24,5 @@ perform_learning(sample_dir="samples/two_class",
                  checkpoint_path="checkpoints/two_class_model/two_class_model.{epoch:02d}.h5",
                  log_name="detection",
                  log_description="Using 60 Samples with 6 all zero samples with NO ROTATE and NORMALIZE, using ADAM compiler, "
-               "using ReLu and softmax activation, batch norm with mom=0.1")
+               "using ReLu and softmax activation, batch norm with mom=0.1",
+                 limit=1000000)
