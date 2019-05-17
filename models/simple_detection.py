@@ -3,7 +3,7 @@ import keras_metrics as km
 import keras.metrics as metrics
 from keras import optimizers
 from keras.models import Sequential
-from keras.layers import Conv3D, Dropout
+from keras.layers import Conv3D, BatchNormalization, Activation
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 from losses_and_metrics.dsc import dice_coef_label
 
@@ -11,15 +11,19 @@ from losses_and_metrics.dsc import dice_coef_label
 def simple_detection(input_shape, filters, kernel_size, weights, learning_rate):
     # Input
     model = Sequential()
-    model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same",
+    model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
                      input_shape=input_shape))
-    model.add(Dropout(0.5))
-    model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
-    model.add(Dropout(0.5))
-    model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
-    model.add(Dropout(0.5))
-    model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
-    model.add(Dropout(0.5))
+    model.add(BatchNormalization())
+    model.add(Activation("relu"))
+    model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same"))
+    model.add(BatchNormalization())
+    model.add(Activation("relu"))
+    model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same"))
+    model.add(BatchNormalization())
+    model.add(Activation("relu"))
+    model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same"))
+    model.add(BatchNormalization())
+    model.add(Activation("relu"))
     model.add(Conv3D(2, kernel_size=kernel_size, strides=(1, 1, 1), activation='softmax', padding="same"))
 
     # define optimizer
