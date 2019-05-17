@@ -56,7 +56,7 @@ def six_conv_slices(kernel_size):
 
 
 def ignore_background_loss(y_true, y_pred):
-    y_true = K.maximum(y_true, K.epsilon())
+    # y_true = K.maximum(y_true, K.epsilon())
     dont_cares = K.minimum(1.0, y_true)
     return K.sum(K.abs(y_pred - y_true) * dont_cares) / K.sum(dont_cares)
 
