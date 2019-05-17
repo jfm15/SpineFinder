@@ -2,9 +2,9 @@ from perform_learning import perform_learning
 from models.simple_identification import simple_identification
 
 # inputs to the model
-model_params = {'kernel_size': (7, 7),
-                'filters': 64,
-                'learning_rate': 0.0001}
+model_params = {'kernel_size': (5, 5),
+                'filters': 256,
+                'learning_rate': 0.005}
 
 perform_learning(sample_dir="samples/slices",
                  training_val_split=0.5,

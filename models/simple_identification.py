@@ -11,6 +11,8 @@ def simple_identification(input_shape, kernel_size, filters, learning_rate):
     x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
     x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
     x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
     main_output = Conv2D(1, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
 
     model = Model(inputs=main_input, outputs=main_output)
