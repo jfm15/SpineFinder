@@ -6,10 +6,18 @@ from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate,
 
 def simple_identification(input_shape, kernel_size, filters, learning_rate):
     main_input = Input(shape=(None, None, 1))
-    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(main_input)
-    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
-    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
-    main_output = Conv2D(1, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(main_input)
+    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
+    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
+    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
+    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
+    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
+    branch_1 = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
+    branch_1 = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(branch_1)
+    branch_2 = Conv2D(256, kernel_size=(1, 100), strides=(1, 1), activation='sigmoid', padding="same")(x)
+    branch_2 = Conv2D(256, kernel_size=(24, 1), strides=(1, 1), activation='sigmoid', padding="same")(branch_2)
+    x = concatenate([branch_1, branch_2], axis=-1)
+    main_output = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), activation='relu', padding="same")(x)
 
     model = Model(inputs=main_input, outputs=main_output)
 
