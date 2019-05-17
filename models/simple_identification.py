@@ -4,7 +4,7 @@ from keras.models import Model, Sequential
 from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate
 
 
-def simple_identification(kernel_size, filters, learning_rate):
+def simple_identification(input_shape, kernel_size, filters, learning_rate):
     main_input = Input(shape=(None, None, 1))
     x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(main_input)
     x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
