@@ -14,14 +14,18 @@ import matplotlib.cm as cm
 
 def apply_detection_model(volume, model, patch_size):
 
-    output = np.zeros(volume.shape)
+    # pad to make it divisible to patch size
+    paddings = np.mod(patch_size - np.mod(volume.shape, patch_size), patch_size)
+    paddings = np.array(list(zip(np.zeros(3), paddings))).astype(int)
+    volume_padded = np.pad(volume, paddings, mode="constant")
+    output = np.zeros(volume_padded.shape)
 
-    for x in range(0, volume.shape[0] - patch_size[0], patch_size[0]):
-        for y in range(0, volume.shape[1] - patch_size[1], patch_size[1]):
-            for z in range(0, volume.shape[2] - patch_size[2], patch_size[2]):
+    for x in range(0, volume_padded.shape[0], patch_size[0]):
+        for y in range(0, volume_padded.shape[1], patch_size[1]):
+            for z in range(0, volume_padded.shape[2], patch_size[2]):
                 corner_a = [x, y, z]
                 corner_b = corner_a + patch_size
-                patch = volume[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
+                patch = volume_padded[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
                 patch = patch.reshape(1, *patch_size, 1)
                 result = model.predict(patch)
                 result = np.squeeze(result, axis=0)
@@ -29,7 +33,7 @@ def apply_detection_model(volume, model, patch_size):
                 output[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = decat_result
                 # print(x, y, z, np.bincount(decat_result.reshape(-1).astype(int)))
 
-    return output
+    return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
 
 
 def apply_ideal_detection(volume, centroid_indexes):
@@ -252,7 +256,7 @@ def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True, pl
 
 def compete_detection_picture(scans_dir, models_dir, plot_path):
 
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[:6]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:8]
     model_paths = glob.glob(models_dir + "/*.h5", recursive=True)
     no_of_scan_paths = len(scan_paths)
     no_of_model_paths = len(model_paths)
