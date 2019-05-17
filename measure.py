@@ -256,7 +256,7 @@ def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True, pl
 
 def compete_detection_picture(scans_dir, models_dir, plot_path):
 
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:8]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:10]
     model_paths = glob.glob(models_dir + "/*.h5", recursive=True)
     no_of_scan_paths = len(scan_paths)
     no_of_model_paths = len(model_paths)
@@ -304,7 +304,7 @@ def compete_detection_picture(scans_dir, models_dir, plot_path):
 
             i += 1
 
-    fig.subplots_adjust(left=0.3, wspace=-0.2, hspace=0.4)
+    fig.subplots_adjust(wspace=-0.2, hspace=0.4)
     fig.savefig(plot_path + '/detection-complete.png')
 
 
