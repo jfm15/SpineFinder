@@ -21,4 +21,4 @@ perform_learning(sample_dir="samples/slices",
                  log_name="identification",
                  log_description="Using 5 NORMALIZED samples, using ADAM compiler, "
                                  "using ReLu and softmax activation",
-                 limit=100)
+                 limit=20)
