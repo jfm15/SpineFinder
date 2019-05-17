@@ -6,6 +6,7 @@ from utility_functions import opening_files, sampling_helper_functions
 from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 from models.six_conv_slices import cool_loss
+from losses_and_metrics.dsc import dice_coef_label
 from utility_functions.labels import LABELS
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -249,4 +250,58 @@ def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True, pl
                              ideal_detection=False)
 
 
-test_multiple_scans("datasets_test")
+def compete_detection_picture(scans_dir, models_dir, plot_path):
+
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)
+    model_paths = glob.glob(models_dir + "/*.h5", recursive=True)
+    no_of_scan_paths = len(scan_paths)
+    no_of_model_paths = len(model_paths)
+
+    weights = np.array([0.1, 0.9])
+    model_objects = {'loss': weighted_categorical_crossentropy(weights),
+                     'binary_recall': km.binary_recall(),
+                     'dice_coef': dice_coef_label(label=1)}
+
+    fig, axes = plt.subplots(nrows=no_of_model_paths, ncols=no_of_scan_paths)
+
+    i = 1
+
+    for col, scan_path in enumerate(scan_paths):
+
+        scan_path_without_ext = scan_path[:-len(".nii.gz")]
+        centroid_path = scan_path_without_ext + ".lml"
+
+        _, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
+        centroid_indexes = centroids / np.array((2.0, 2.0, 2.0))
+
+        cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
+
+        scan_name = (scan_path.rsplit('/', 1)[-1])[:-len(".nii.gz")]
+        axes[0, col].set_title(scan_name, fontsize=10, pad=10)
+
+        for row, model_path in enumerate(model_paths):
+            print(i)
+
+            model_name = (model_path.rsplit('/', 1)[-1])[:-len(".h5")]
+            axes[row, 0].set_ylabel(model_name, rotation=0, labelpad=50, fontsize=10)
+
+            volume = opening_files.read_nii(scan_path)
+            detection_model = load_model(model_path, custom_objects=model_objects)
+            detections = apply_detection_model(volume, detection_model, np.array([30, 30, 36]))
+
+            volume_slice = volume[cut, :, :]
+            detections_slice = detections[cut, :, :]
+
+            masked_data = np.ma.masked_where(detections_slice == 0, detections_slice)
+
+            axes[row, col].imshow(volume_slice.T, cmap='gray')
+            axes[row, col].imshow(masked_data.T, cmap=cm.autumn, alpha=0.4)
+
+            i += 1
+
+    fig.subplots_adjust(left=0.3, wspace=-0.2, hspace=0.4)
+    fig.savefig(plot_path + '/detection-complete.png')
+
+
+# test_multiple_scans("datasets_test")
+compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
