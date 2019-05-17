@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+from utility_functions.labels import LABELS
 
 
 # takes in a volume of predictions (0 and 1s) and takes out all but the largest island of points
@@ -76,3 +77,28 @@ def get_island(point, explored, predictions):
                                         and np.all(np.less(next_point, predictions.shape)):
                                     stack.append(next_point)
     return acc
+
+
+def densely_label(labels, volume_shape, centroid_indexes, spacing, radius, use_labels):
+
+    diameter_in_pixels = radius / np.array(spacing)
+    radius_in_pixels = ((diameter_in_pixels - np.ones(3)) / 2.0).astype(int)
+
+    dense_labelling = np.zeros(volume_shape)
+
+    upper_clip = volume_shape - np.ones(3)
+
+    for label, centroid_idx in zip(labels, centroid_indexes):
+
+        corner_a = centroid_idx - radius_in_pixels
+        corner_a = np.clip(corner_a, a_min=np.zeros(3), a_max=upper_clip).astype(int)
+        corner_b = centroid_idx + radius_in_pixels
+        corner_b = np.clip(corner_b, a_min=np.zeros(3), a_max=upper_clip).astype(int)
+
+        label_value = 1
+        if use_labels:
+            label_value = LABELS.index(label)
+
+        dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = label_value
+
+    return dense_labelling

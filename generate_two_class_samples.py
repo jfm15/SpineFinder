@@ -1,33 +1,9 @@
 import glob
 from utility_functions import opening_files, processing
-import SimpleITK as sitk
 import numpy as np
 import scipy.ndimage
-
-
-def densely_label(labels, volume_shape, centroid_indexes, spacing, radius, use_labels, label_translation):
-
-    diameter_in_pixels = radius / np.array(spacing)
-    radius_in_pixels = ((diameter_in_pixels - np.ones(3)) / 2.0).astype(int)
-
-    dense_labelling = np.zeros(volume_shape)
-
-    upper_clip = volume_shape - np.ones(3)
-
-    for label, centroid_idx in zip(labels, centroid_indexes):
-
-        corner_a = centroid_idx - radius_in_pixels
-        corner_a = np.clip(corner_a, a_min=np.zeros(3), a_max=upper_clip).astype(int)
-        corner_b = centroid_idx + radius_in_pixels
-        corner_b = np.clip(corner_b, a_min=np.zeros(3), a_max=upper_clip).astype(int)
-
-        label_value = 1
-        if use_labels:
-            label_value = label_translation.index(label)
-
-        dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = label_value
-
-    return dense_labelling
+from utility_functions.labels import LABELS
+from utility_functions.sampling_helper_functions import densely_label
 
 
 def generate_samples(dataset_dir, sample_dir,
@@ -45,7 +21,7 @@ def generate_samples(dataset_dir, sample_dir,
     # track quantities of various labels using this histogram
     no_of_values = 2
     if use_labels:
-        no_of_values = len(label_translation)
+        no_of_values = len(LABELS)
     values_histogram = np.zeros(no_of_values)
 
     for data_path in glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True):
@@ -66,8 +42,7 @@ def generate_samples(dataset_dir, sample_dir,
                                         centroid_indexes=centroid_indexes,
                                         spacing=spacing,
                                         radius=radius,
-                                        use_labels=use_labels,
-                                        label_translation=label_translation)
+                                        use_labels=use_labels)
 
         sample_size_in_pixels = (sample_size / np.array(spacing)).astype(int)
         cut_size_in_pixels = (cut_size / np.array(spacing)).astype(int)
@@ -135,11 +110,6 @@ def generate_samples(dataset_dir, sample_dir,
     values_histogram = np.around(values_histogram, decimals=4)
     print(values_histogram)
 
-
-label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
-                     "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9",
-                     "T10", "T11", "T12", "L1", "L2", "L3", "L4", "L5", "L6",
-                     "S1", "S2"]
 
 generate_samples(dataset_dir="datasets/",
                  sample_dir="samples/two_class",
