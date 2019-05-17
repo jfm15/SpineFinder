@@ -6,12 +6,9 @@ from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate,
 
 def simple_identification(input_shape, kernel_size, filters, learning_rate):
     main_input = Input(shape=(None, None, 1))
-    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(main_input)
-    x = LeakyReLU(alpha=0.05)(x)
-    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(x)
-    x = LeakyReLU(alpha=0.05)(x)
-    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(x)
-    x = LeakyReLU(alpha=0.05)(x)
+    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(main_input)
+    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
+    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
     main_output = Conv2D(1, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
 
     model = Model(inputs=main_input, outputs=main_output)
