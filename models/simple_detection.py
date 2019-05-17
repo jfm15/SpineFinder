@@ -13,9 +13,13 @@ def simple_detection(input_shape, filters, kernel_size, weights, learning_rate):
     model = Sequential()
     model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same",
                      input_shape=input_shape))
+    model.add(Dropout(0.5))
     model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
+    model.add(Dropout(0.5))
     model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
+    model.add(Dropout(0.5))
     model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
+    model.add(Dropout(0.5))
     model.add(Conv3D(2, kernel_size=kernel_size, strides=(1, 1, 1), activation='softmax', padding="same"))
 
     # define optimizer
