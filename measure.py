@@ -252,17 +252,18 @@ def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True, pl
 
 def compete_detection_picture(scans_dir, models_dir, plot_path):
 
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[:6]
     model_paths = glob.glob(models_dir + "/*.h5", recursive=True)
     no_of_scan_paths = len(scan_paths)
     no_of_model_paths = len(model_paths)
+    print("rows", no_of_model_paths, "cols", no_of_scan_paths)
 
     weights = np.array([0.1, 0.9])
     model_objects = {'loss': weighted_categorical_crossentropy(weights),
                      'binary_recall': km.binary_recall(),
                      'dice_coef': dice_coef_label(label=1)}
 
-    fig, axes = plt.subplots(nrows=no_of_model_paths, ncols=no_of_scan_paths)
+    fig, axes = plt.subplots(nrows=no_of_model_paths, ncols=no_of_scan_paths, figsize=(1,1))
 
     i = 1
 
