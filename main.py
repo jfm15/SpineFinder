@@ -8,7 +8,7 @@ from models.unet import unet
 model_params = {'kernel_size': (5, 5, 5),
                 'filters': 16,
                 'weights': np.array([0.1, 0.9]),
-                'learning_rate': 0.005}
+                'learning_rate': 0.01}
 
 perform_learning(sample_dir="samples/two_class",
                  training_val_split=0.5,
