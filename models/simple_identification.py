@@ -1,10 +1,24 @@
-import numpy as np
-import keras_metrics as km
-import keras.metrics as metrics
 from keras import optimizers
 from keras import backend as K
 from keras.models import Model, Sequential
 from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate
+
+
+def simple_identification(kernel_size, filters, learning_rate):
+    main_input = Input(shape=(None, None, 1))
+    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(main_input)
+    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    x = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+    main_output = Conv2D(1, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same")(x)
+
+    model = Model(inputs=main_input, outputs=main_output)
+
+    # NOTE: if any of the below parameters change then change the description file
+    adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-6)
+
+    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=["mean_absolute_error"])
+
+    return model
 
 
 def six_conv_slices(kernel_size):
@@ -28,12 +42,12 @@ def six_conv_slices(kernel_size):
     # define optimizer
     sgd = optimizers.SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
 
-    model.compile(optimizer=sgd, loss=cool_loss, metrics=["mean_absolute_error", "mean_squared_error"])
+    model.compile(optimizer=sgd, loss=ignore_background_loss, metrics=["mean_absolute_error", "mean_squared_error"])
 
     return model
 
 
-def cool_loss(y_true, y_pred):
+def ignore_background_loss(y_true, y_pred):
     dont_cares = K.minimum(1.0, y_true)
     return K.sum(K.abs(y_pred - y_true) * dont_cares) / K.sum(dont_cares)
 

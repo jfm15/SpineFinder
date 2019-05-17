@@ -19,20 +19,21 @@ def generate_slice_samples(dataset_dir, sample_dir, no_of_samples=5, label_trans
         labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
         centroid_indexes = np.round(centroids / np.array((2.0, 2.0, 2.0))).astype(int)
 
+        radius = 8
         lower_i = np.min(centroid_indexes[:, 0])
-        lower_i = np.max([lower_i - 4, 0])
+        lower_i = np.max([lower_i - radius, 0])
         upper_i = np.max(centroid_indexes[:, 0])
-        upper_i = np.min([upper_i + 4, volume.shape[0] - 1])
+        upper_i = np.min([upper_i + radius, volume.shape[0] - 1])
 
         lower_j = np.min(centroid_indexes[:, 1])
-        lower_j = np.max([lower_j - 4, 0])
+        lower_j = np.max([lower_j - radius, 0])
         upper_j = np.max(centroid_indexes[:, 1])
-        upper_j = np.min([upper_j + 4, volume.shape[1] - 1])
+        upper_j = np.min([upper_j + radius, volume.shape[1] - 1])
 
         lower_k = np.min(centroid_indexes[:, 2])
-        lower_k = np.max([lower_k - 4, 0])
+        lower_k = np.max([lower_k - radius, 0])
         upper_k = np.max(centroid_indexes[:, 2])
-        upper_k = np.min([upper_k + 4, volume.shape[2] - 1])
+        upper_k = np.min([upper_k + radius, volume.shape[2] - 1])
 
         cuts = np.round(np.linspace(lower_i, upper_i, no_of_samples)).astype(int)
 
@@ -73,7 +74,7 @@ label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
                      "T10", "T11", "T12", "L1", "L2", "L3", "L4", "L5", "L6",
                      "S1", "S2"]
 
-generate_slice_samples(dataset_dir="datasets/spine-1",
+generate_slice_samples(dataset_dir="datasets/",
                        sample_dir="samples/slices",
                        no_of_samples=5,
                        label_translation=label_translation)

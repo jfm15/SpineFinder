@@ -5,7 +5,7 @@ import keras_metrics as km
 from utility_functions import opening_files, sampling_helper_functions
 from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
-from models.six_conv_slices import cool_loss
+from models.simple_identification import ignore_background_loss
 from losses_and_metrics.dsc import dice_coef_label
 from utility_functions.labels import LABELS
 import matplotlib.pyplot as plt
@@ -143,7 +143,7 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
     weights = np.array([0.1, 0.9])
     detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
                              'binary_recall': km.binary_recall()}
-    identification_model_objects = {'cool_loss': cool_loss}
+    identification_model_objects = {'ignore_background_loss': ignore_background_loss}
     pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
         scan_path=scan_path,
         centroid_path=centroid_path,

@@ -3,7 +3,7 @@ from keras.models import load_model
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from utility_functions import opening_files
-from models.six_conv_slices import cool_loss
+from models.simple_identification import cool_loss
 
 label_translation = ["B", "C1", "C2", "C3", "C4", "C5", "C6", "C7",
                      "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9",

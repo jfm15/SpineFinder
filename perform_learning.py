@@ -9,7 +9,8 @@ import gc
 
 def perform_learning(sample_dir, training_val_split, sample_shape,
                      batch_size, sample_channels, categorise, output_classes,
-                     model_func, model_params, epochs, model_path, checkpoint_path):
+                     model_func, model_params, epochs, model_path, checkpoint_path,
+                     log_name, log_description):
 
     # create partition
     partition, labels = create_partition_and_labels(sample_dir, training_val_split, randomise=True)
@@ -36,7 +37,7 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
     # tensorboard
     now = datetime.datetime.now()
     tensorboard_name = now.strftime("%Y-%m-%d-%H:%M")
-    tensorboard_name = 'detection-' + tensorboard_name
+    tensorboard_name = log_name + '-' + tensorboard_name
     path = "logs/" + tensorboard_name
     tensorboard = TensorBoard(log_dir=path)
 
@@ -56,8 +57,7 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
 
     # add other info
     file.write("\n\nOTHER INFO\n")
-    file.write("Using 60 Samples with 6 all zero samples with NO ROTATE and NORMALIZE, using ADAM compiler, "
-               "using ReLu and softmax activation, batch norm with mom=0.1")
+    file.write(log_description)
     file.write("\n\n")
 
     # https://stackoverflow.com/questions/41665799/keras-model-summary-object-to-string
