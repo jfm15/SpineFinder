@@ -4,7 +4,7 @@ from models.simple_identification import simple_identification
 # inputs to the model
 model_params = {'kernel_size': (7, 7),
                 'filters': 64,
-                'learning_rate': 0.001}
+                'learning_rate': 0.0001}
 
 perform_learning(sample_dir="samples/slices",
                  training_val_split=0.5,
