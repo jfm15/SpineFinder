@@ -2,7 +2,7 @@ from perform_learning import perform_learning
 from models.simple_identification import simple_identification
 
 # inputs to the model
-model_params = {'kernel_size': (5, 5),
+model_params = {'kernel_size': (7, 9),
                 'filters': 32,
                 'learning_rate': 0.005}
 
