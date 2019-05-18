@@ -92,5 +92,5 @@ generate_slice_samples(dataset_dir="datasets/",
                        sample_dir="samples/slices",
                        sample_size=(40, 160),
                        diameter=(28.0, 28.0, 28.0),
-                       no_of_samples=20,
+                       no_of_samples=60,
                        no_of_vertebrae_in_each=2)
