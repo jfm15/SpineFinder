@@ -16,7 +16,7 @@ def generate_slice_samples(dataset_dir, sample_dir, diameter=(28.0, 28.0, 28.0),
         metadata_path = data_path_without_ext + ".lml"
 
         volume = opening_files.read_nii(data_path, spacing=spacing)
-        print(volume.shape)
+        # print(volume.shape)
         labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
         centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
 
@@ -54,6 +54,7 @@ def generate_slice_samples(dataset_dir, sample_dir, diameter=(28.0, 28.0, 28.0),
             sample_path = path + "-sample"
             labelling_path = path + "-labelling"
             np.save(sample_path, volume_slice)
+            print(sample_labels_slice.shape)
             np.save(labelling_path, sample_labels_slice)
 
 
