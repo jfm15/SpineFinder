@@ -10,10 +10,10 @@ import gc
 def perform_learning(sample_dir, training_val_split, sample_shape,
                      batch_size, sample_channels, categorise, output_classes,
                      model_func, model_params, epochs, model_path, checkpoint_path,
-                     log_name, log_description, limit):
+                     log_name, log_description):
 
     # create partition
-    partition, labels = create_partition_and_labels(sample_dir, training_val_split, randomise=True, limit=limit)
+    partition, labels = create_partition_and_labels(sample_dir, training_val_split, randomise=True)
 
     # generators
     params = {'dim': sample_shape,

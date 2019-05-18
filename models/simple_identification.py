@@ -1,30 +1,25 @@
 from keras import optimizers
 from keras import backend as K
-from keras.models import Model, Sequential
-from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate, LeakyReLU
+from keras.models import Sequential
+from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate, Activation
 
 
 def simple_identification(input_shape, kernel_size, filters, learning_rate):
-    main_input = Input(shape=(None, None, 1))
-    x = Conv2D(64, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(main_input)
-    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
-    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
-    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
-    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
-    x = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
-    branch_1 = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(x)
-    branch_1 = Conv2D(256, kernel_size=kernel_size, strides=(1, 1), activation='sigmoid', padding="same")(branch_1)
-    branch_2 = Conv2D(256, kernel_size=(1, 100), strides=(1, 1), activation='sigmoid', padding="same")(x)
-    branch_2 = Conv2D(256, kernel_size=(24, 1), strides=(1, 1), activation='sigmoid', padding="same")(branch_2)
-    x = concatenate([branch_1, branch_2], axis=-1)
-    main_output = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), activation='relu', padding="same")(x)
 
-    model = Model(inputs=main_input, outputs=main_output)
+    model = Sequential()
+    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
+                     activation="relu", input_shape=input_shape))
+    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
+                     activation="relu"))
+    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
+                     activation="relu"))
+    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
+                     activation="relu"))
+    model.add(Conv2D(1, kernel_size=kernel_size, strides=(1, 1, 1), activation='relu', padding="same"))
 
     # NOTE: if any of the below parameters change then change the description file
     adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-6)
-    sgd = optimizers.SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(optimizer=sgd, loss=ignore_background_loss, metrics=["mean_absolute_error"])
+    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=["mean_absolute_error"])
 
     return model
 

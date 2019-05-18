@@ -2,7 +2,7 @@ import glob
 import numpy as np
 
 
-def create_partition_and_labels(samples_dir, training_percentage, randomise=True, limit=10000):
+def create_partition_and_labels(samples_dir, training_percentage, randomise=True):
 
     partition = {}
     training_labels = []
@@ -10,7 +10,7 @@ def create_partition_and_labels(samples_dir, training_percentage, randomise=True
     labels = {}
 
     ext_len = len("-labelling.npy")
-    paths = glob.glob(samples_dir + "/**/*labelling.npy", recursive=True)[:limit]
+    paths = glob.glob(samples_dir + "/**/*labelling.npy", recursive=True)
     scans = list(map(lambda x: x.split('-')[0], paths))
     scans = np.unique(np.array(scans))
     no_of_training_scans = round(scans.shape[0] * training_percentage)
