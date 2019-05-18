@@ -15,8 +15,6 @@ def simple_identification(input_shape, kernel_size, filters, learning_rate):
                      activation="relu"))
     model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same",
                      activation="relu"))
-    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                     activation="relu"))
     model.add(Conv2D(1, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same"))
 
     # NOTE: if any of the below parameters change then change the description file
