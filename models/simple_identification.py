@@ -1,22 +1,25 @@
 from keras import optimizers
 from keras import backend as K
 from keras.models import Sequential
-from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate, Activation
+from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate, Activation, BatchNormalization
 
 
 def simple_identification(input_shape, kernel_size, filters, learning_rate):
 
     model = Sequential()
     model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                     activation="relu", input_shape=input_shape))
-    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                     activation="relu"))
-    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                     activation="relu"))
-    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                     activation="relu"))
-    model.add(Conv2D(filters, kernel_size=(1, 160), strides=(1, 1), padding="same",
-                     activation="relu"))
+                     input_shape=input_shape))
+    model.add(BatchNormalization(momentum=0.1))
+    model.add(Activation("relu"))
+    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same"))
+    model.add(BatchNormalization(momentum=0.1))
+    model.add(Activation("relu"))
+    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same"))
+    model.add(BatchNormalization(momentum=0.1))
+    model.add(Activation("relu"))
+    model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same"))
+    model.add(BatchNormalization(momentum=0.1))
+    model.add(Activation("relu"))
     model.add(Conv2D(1, kernel_size=kernel_size, strides=(1, 1), activation='relu', padding="same"))
 
     # NOTE: if any of the below parameters change then change the description file
