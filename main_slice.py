@@ -3,7 +3,7 @@ from models.simple_identification import simple_identification
 
 # inputs to the model
 model_params = {'kernel_size': (5, 5),
-                'filters': 32,
+                'filters': 64,
                 'learning_rate': 0.005}
 
 perform_learning(sample_dir="samples/slices",
@@ -19,5 +19,5 @@ perform_learning(sample_dir="samples/slices",
                  model_path="slices_model.h5",
                  checkpoint_path="checkpoints/slices_model/slices_model.{epoch:02d}.h5",
                  log_name="identification",
-                 log_description="Using 5 NORMALIZED samples, using ADAM compiler, "
-                                 "using ReLu and softmax activation")
+                 log_description="Using 20 NORMALIZED samples each with > 2 vertebrae, using ADAM compiler, "
+                                 "using ReLu activation")

@@ -70,5 +70,4 @@ class DataGenerator(keras.utils.Sequence):
                 # print(np.unique(labelling))
                 y[i, ] = np.expand_dims(labelling, axis=-1)
 
-
         return X, y
