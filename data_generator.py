@@ -72,7 +72,7 @@ class DataGenerator(keras.utils.Sequence):
                 # print(sample)
                 X = np.empty((1, *sample.shape, 1))
 
-            X[i, ] = np.expand_dims(sample, axis=-1)
+            X[i, ] = np.expand_dims(sample, axis=2)
 
             if self.categorise:
                 categorical_labelling = keras.utils.to_categorical(labelling, self.n_classes)
@@ -80,7 +80,7 @@ class DataGenerator(keras.utils.Sequence):
             else:
                 y = np.empty((1, *sample.shape, 1))
                 # print(np.unique(labelling))
-                y[i, ] = np.expand_dims(labelling, axis=-1)
+                y[i, ] = np.expand_dims(labelling, axis=2)
 
 
         return X, y
