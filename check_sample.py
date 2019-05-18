@@ -41,4 +41,4 @@ def check_slice_sample(sample_path):
 
 
 # check_multi_class_sample("samples/two_class/2684937-1-sample.npy")
-check_slice_sample("samples/slices/2684937-1-sample.npy")
+check_slice_sample("samples/slices/2558438-4-sample.npy")
