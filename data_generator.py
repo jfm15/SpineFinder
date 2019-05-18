@@ -49,9 +49,8 @@ class DataGenerator(keras.utils.Sequence):
     def __data_generation(self, ids_in_set_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
         # Initialization
-        if self.categorise:
-            X = np.empty((self.batch_size, *self.dim, self.n_channels))
-            y = np.empty((self.batch_size, *self.dim, self.n_classes), dtype=int)
+        X = np.empty((self.batch_size, *self.dim, self.n_channels))
+        y = np.empty((self.batch_size, *self.dim, self.n_classes), dtype=int)
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
@@ -62,25 +61,14 @@ class DataGenerator(keras.utils.Sequence):
             label_id = self.labels[ID]
             labelling = np.load(self.samples_dir + '/' + label_id + '.npy')
 
-            if not self.categorise:
-                # make sample divisible by 4
-                # print(sample.shape)
-                # i_padding = 4 - sample.shape[0] % 4
-                # j_padding = 4 - sample.shape[1] % 4
-                # sample = np.pad(sample, ((0, i_padding), (0, j_padding)), "edge")
-                # labelling = np.pad(labelling, ((0, i_padding), (0, j_padding)), "edge")
-                # print(sample)
-                X = np.empty((1, *sample.shape, 1))
-
-            X[i, ] = np.expand_dims(sample, axis=2)
+            X[i, ] = np.expand_dims(sample, axis=-1)
 
             if self.categorise:
                 categorical_labelling = keras.utils.to_categorical(labelling, self.n_classes)
                 y[i, ] = categorical_labelling
             else:
-                y = np.empty((1, *sample.shape, 1))
                 # print(np.unique(labelling))
-                y[i, ] = np.expand_dims(labelling, axis=2)
+                y[i, ] = np.expand_dims(labelling, axis=-1)
 
 
         return X, y
