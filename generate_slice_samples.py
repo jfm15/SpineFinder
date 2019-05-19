@@ -61,14 +61,14 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), diame
                 volume_slice = np.pad(volume_slice, ((0, dif), (0, 0)),
                                       mode="constant", constant_values=-5)
                 sample_labels_slice = np.pad(sample_labels_slice, ((0, dif), (0, 0)),
-                                             mode="constant", constant_values=-5)
+                                             mode="constant")
 
             if volume_slice.shape[1] < sample_size[1]:
                 dif = sample_size[1] - volume_slice.shape[1]
                 volume_slice = np.pad(volume_slice, ((0, 0), (0, dif)),
                                       mode="constant", constant_values=-5)
                 sample_labels_slice = np.pad(sample_labels_slice, ((0, 0), (0, dif)),
-                                             mode="constant", constant_values=-5)
+                                             mode="constant")
 
             while True:
                 random_area = volume_slice.shape - sample_size
