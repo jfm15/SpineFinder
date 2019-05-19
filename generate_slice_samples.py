@@ -58,13 +58,17 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), diame
             # crop or pad depending on what is necessary
             if volume_slice.shape[0] < sample_size[0]:
                 dif = sample_size[0] - volume_slice.shape[0]
-                volume_slice = np.pad(volume_slice, ((0, dif), (0, 0)), mode="constant")
-                sample_labels_slice = np.pad(sample_labels_slice, ((0, dif), (0, 0)), mode="constant")
+                volume_slice = np.pad(volume_slice, ((0, dif), (0, 0)),
+                                      mode="constant", constant_values=-5)
+                sample_labels_slice = np.pad(sample_labels_slice, ((0, dif), (0, 0)),
+                                             mode="constant", constant_values=-5)
 
             if volume_slice.shape[1] < sample_size[1]:
                 dif = sample_size[1] - volume_slice.shape[1]
-                volume_slice = np.pad(volume_slice, ((0, 0), (0, dif)), mode="constant")
-                sample_labels_slice = np.pad(sample_labels_slice, ((0, 0), (0, dif)), mode="constant")
+                volume_slice = np.pad(volume_slice, ((0, 0), (0, dif)),
+                                      mode="constant", constant_values=-5)
+                sample_labels_slice = np.pad(sample_labels_slice, ((0, 0), (0, dif)),
+                                             mode="constant", constant_values=-5)
 
             while True:
                 random_area = volume_slice.shape - sample_size
