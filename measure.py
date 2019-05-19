@@ -370,7 +370,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
         i += 1
 
-    fig.subplots_adjust(wspace=2, hspace=0.4)
+    fig.subplots_adjust(wspace=1, hspace=0.4)
     fig.savefig(plot_path + '/identification-complete.png')
 
 
