@@ -24,7 +24,7 @@ def simple_identification(input_shape, kernel_size, filters, learning_rate):
 
     # NOTE: if any of the below parameters change then change the description file
     adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-6)
-    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=vertebrae_classification_rate)
+    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=[vertebrae_classification_rate])
 
     return model
 
@@ -145,6 +145,6 @@ def unet_slices(input_shape, kernel_size, filters, learning_rate):
     # define optimizer
     # sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
     adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-6)
-    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=vertebrae_classification_rate)
+    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=[vertebrae_classification_rate])
 
     return model
