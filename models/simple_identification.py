@@ -65,7 +65,7 @@ def ignore_background_loss(y_true, y_pred):
 def vertebrae_classification_rate(y_true, y_pred):
     # y_true = K.maximum(y_true, K.epsilon())
     dont_cares = K.minimum(1.0, y_true)
-    return K.sum(K.equal(K.round(y_pred), y_true) * dont_cares) / K.sum(dont_cares)
+    return K.sum(K.cast(K.equal(K.round(y_pred), y_true), 'float32') * dont_cares) / K.sum(dont_cares)
 
 
 def unet_slices(input_shape, kernel_size, filters, learning_rate):
