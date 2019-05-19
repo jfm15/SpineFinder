@@ -326,7 +326,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
     identification_model_objects = {'ignore_background_loss': ignore_background_loss,
                                     'vertebrae_classification_rate': vertebrae_classification_rate}
 
-    fig, axes = plt.subplots(nrows=1, ncols=no_of_scan_paths, figsize=(20, 10), dpi=300)
+    fig, axes = plt.subplots(nrows=1, ncols=no_of_scan_paths, figsize=(30, 10), dpi=300)
 
     i = 1
 
