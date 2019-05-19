@@ -350,10 +350,10 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
             scan_path=scan_path,
             centroid_path=centroid_path,
-            detection_model_path="model_files/two_class_model.h5",
+            detection_model_path=detection_model_path,
             detection_model_input_shape=np.array([30, 30, 36]),
             detection_model_objects=detection_model_objects,
-            identification_model_path="model_files/slices_model.h5",
+            identification_model_path=identification_model_path,
             identification_model_input_shape=np.array([40, 160]),
             identification_model_objects=identification_model_objects)
 
@@ -375,5 +375,6 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
-complete_identification_picture('datasets_test', 'saved_current_models', 'plots')
+complete_identification_picture('datasets_test', 'model_files/detection-model.h5',
+                                'model_files/identification-model.h5', 'plots')
 
