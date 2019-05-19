@@ -24,7 +24,7 @@ def simple_identification(input_shape, kernel_size, filters, learning_rate):
 
     # NOTE: if any of the below parameters change then change the description file
     adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-6)
-    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=["mean_absolute_error"])
+    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=vertebrae_classification_rate)
 
     return model
 
@@ -55,10 +55,17 @@ def six_conv_slices(kernel_size):
     return model
 '''
 
+
 def ignore_background_loss(y_true, y_pred):
     # y_true = K.maximum(y_true, K.epsilon())
     dont_cares = K.minimum(1.0, y_true)
     return K.sum(K.abs(y_pred - y_true) * dont_cares) / K.sum(dont_cares)
+
+
+def vertebrae_classification_rate(y_true, y_pred):
+    # y_true = K.maximum(y_true, K.epsilon())
+    dont_cares = K.minimum(1.0, y_true)
+    return K.sum(K.equal(K.round(y_pred), y_true) * dont_cares) / K.sum(dont_cares)
 
 
 def unet_slices(input_shape, kernel_size, filters, learning_rate):
@@ -138,6 +145,6 @@ def unet_slices(input_shape, kernel_size, filters, learning_rate):
     # define optimizer
     # sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
     adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-6)
-    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=["mean_absolute_error"])
+    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=vertebrae_classification_rate)
 
     return model
