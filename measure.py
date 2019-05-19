@@ -5,7 +5,7 @@ import keras_metrics as km
 from utility_functions import opening_files, sampling_helper_functions
 from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
-from models.simple_identification import ignore_background_loss
+from models.simple_identification import ignore_background_loss, vertebrae_classification_rate
 from losses_and_metrics.dsc import dice_coef_label
 from utility_functions.labels import LABELS
 import matplotlib.pyplot as plt
@@ -53,23 +53,32 @@ def apply_ideal_detection(volume, centroid_indexes):
     return output
 
 
-def apply_identification_model(volume, bounds, detections, model):
-    i_min, i_max, j_min, j_max, k_min, k_max = bounds
-    cropped_volume = volume[i_min:i_max, j_min:j_max, k_min:k_max]
-    output = np.zeros(volume.shape)
+def apply_identification_model(volume, i_min, i_max, model, patch_size):
 
-    for i in range(i_max - i_min):
-        volume_slice = cropped_volume[i, :, :]
-        volume_slice_input = volume_slice.reshape(1, *volume_slice.shape, 1)
-        prediction = model.predict(volume_slice_input)
-        prediction = prediction.reshape(*volume_slice.shape)
-        output[i + i_min, j_min:j_max, k_min:k_max] = prediction
+    paddings = np.mod(patch_size - np.mod(volume.shape[1:3], patch_size), patch_size)
+    paddings = np.array(list(zip(np.zeros(3), [0] + list(paddings)))).astype(int)
+    volume_padded = np.pad(volume, paddings, mode="constant")
+    output = np.zeros(volume_padded.shape)
 
-    return output
+    for i in range(i_min, i_max):
+        volume_slice_padded = volume_padded[i, :, :]
+        for x in range(0, volume_slice_padded.shape[0], patch_size[0]):
+            for y in range(0, volume_slice_padded.shape[1], patch_size[1]):
+                corner_a = [x, y]
+                corner_b = corner_a + patch_size
+                patch = volume_slice_padded[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]]
+                patch = patch.reshape(1, *patch_size, 1)
+                result = model.predict(patch)
+                result = np.squeeze(result, axis=0)
+                result = np.squeeze(result, axis=-1)
+                result = np.round(result)
+                output[i, corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]] = result
+
+    return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
 
 
 def test_scan(scan_path, centroid_path, detection_model_path, detection_model_input_shape, detection_model_objects,
-              identification_model_path, identification_model_objects, ideal_detection):
+              identification_model_path, identification_model_input_shape, identification_model_objects, ideal_detection):
 
     volume = opening_files.read_nii(scan_path)
 
@@ -87,15 +96,11 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
     largest_island_np = np.transpose(np.nonzero(detections))
     i_min = np.min(largest_island_np[:, 0])
     i_max = np.max(largest_island_np[:, 0])
-    j_min = np.min(largest_island_np[:, 1])
-    j_max = np.max(largest_island_np[:, 1])
-    k_min = np.min(largest_island_np[:, 2])
-    k_max = np.max(largest_island_np[:, 2])
-    bounds = (i_min, i_max, j_min, j_max, k_min, k_max)
 
     # second stage is to pass slices of this to the identification network
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
-    identifications = apply_identification_model(volume, bounds, detections, identification_model)
+    identifications = apply_identification_model(volume, i_min, i_max,
+                                                 identification_model,identification_model_input_shape)
 
     # crop parts of slices
     identifications *= detections
@@ -308,5 +313,67 @@ def compete_detection_picture(scans_dir, models_dir, plot_path):
     fig.savefig(plot_path + '/detection-complete.png')
 
 
+def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path):
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:10]
+    no_of_scan_paths = len(scan_paths)
+
+    weights = np.array([0.1, 0.9])
+    detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
+                     'binary_recall': km.binary_recall(),
+                     'dice_coef': dice_coef_label(label=1)}
+
+    identification_model_objects = {'ignore_background_loss': ignore_background_loss,
+                                    'vertebrae_classification_rate': vertebrae_classification_rate}
+
+    fig, axes = plt.subplots(nrows=1, ncols=no_of_scan_paths, figsize=(20, 10), dpi=300)
+
+    i = 1
+
+    for col, scan_path in enumerate(scan_paths):
+        print(i)
+        scan_path_without_ext = scan_path[:-len(".nii.gz")]
+        centroid_path = scan_path_without_ext + ".lml"
+
+        _, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
+        centroid_indexes = centroids / np.array((2.0, 2.0, 2.0))
+
+        cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
+
+        scan_name = (scan_path.rsplit('/', 1)[-1])[:-len(".nii.gz")]
+        axes[col].set_title(scan_name, fontsize=10, pad=10)
+
+        detection_model_name = (detection_model_path.rsplit('/', 1)[-1])[:-len(".h5")]
+        identification_model_name = (identification_model_path.rsplit('/', 1)[-1])[:-len(".h5")]
+        name = detection_model_name + "\n" + identification_model_name
+        axes[0].set_ylabel(name, rotation=0, labelpad=50, fontsize=10)
+
+        pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
+            scan_path=scan_path,
+            centroid_path=centroid_path,
+            detection_model_path="model_files/two_class_model.h5",
+            detection_model_input_shape=np.array([30, 30, 36]),
+            detection_model_objects=detection_model_objects,
+            identification_model_path="model_files/slices_model.h5",
+            identification_model_input_shape=np.array([40, 160]),
+            identification_model_objects=identification_model_objects)
+
+        volume = opening_files.read_nii(scan_path)
+
+        volume_slice = volume[cut, :, :]
+        identifications_slice = pred_identifications[cut, :, :]
+
+        masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
+
+        axes[col].imshow(volume_slice.T, cmap='gray')
+        axes[col].imshow(masked_data.T, cmap=cm.jet, alpha=0.4)
+
+        i += 1
+
+    fig.subplots_adjust(wspace=-0.2, hspace=0.4)
+    fig.savefig(plot_path + '/identification-complete.png')
+
+
 # test_multiple_scans("datasets_test")
-compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
+# compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
+complete_identification_picture('datasets_test', 'saved_current_models', 'plots')
+
