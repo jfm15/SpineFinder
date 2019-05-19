@@ -78,7 +78,8 @@ def apply_identification_model(volume, i_min, i_max, model, patch_size):
 
 
 def test_scan(scan_path, centroid_path, detection_model_path, detection_model_input_shape, detection_model_objects,
-              identification_model_path, identification_model_input_shape, identification_model_objects, ideal_detection):
+              identification_model_path, identification_model_input_shape, identification_model_objects,
+              ideal_detection=False):
 
     volume = opening_files.read_nii(scan_path)
 
