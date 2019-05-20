@@ -352,12 +352,12 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
 
         scan_name = (scan_path.rsplit('/', 1)[-1])[:-len(".nii.gz")]
-        axes[col].set_title(scan_name, fontsize=10, pad=10)
+        axes[0, col].set_title(scan_name, fontsize=10, pad=10)
 
         detection_model_name = (detection_model_path.rsplit('/', 1)[-1])[:-len(".h5")]
         identification_model_name = (identification_model_path.rsplit('/', 1)[-1])[:-len(".h5")]
         name = detection_model_name + "\n" + identification_model_name
-        axes[0].set_ylabel(name, rotation=0, labelpad=50, fontsize=10)
+        axes[0, 0].set_ylabel(name, rotation=0, labelpad=50, fontsize=10)
 
         pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
             scan_path=scan_path,
