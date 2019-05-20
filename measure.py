@@ -55,13 +55,15 @@ def apply_ideal_detection(volume, centroid_indexes):
 
 def apply_identification_model(volume, i_min, i_max, model, patch_size):
 
-    paddings = np.mod(patch_size - np.mod(volume.shape[1:3], patch_size), patch_size)
+    # paddings = np.mod(patch_size - np.mod(volume.shape[1:3], patch_size), patch_size)
+    paddings = np.mod(8 - np.mod(volume.shape[1:3], 8), 8)
     paddings = np.array(list(zip(np.zeros(3), [0] + list(paddings)))).astype(int)
     volume_padded = np.pad(volume, paddings, mode="constant")
     output = np.zeros(volume_padded.shape)
 
     for i in range(i_min, i_max):
         volume_slice_padded = volume_padded[i, :, :]
+        '''
         for x in range(0, volume_slice_padded.shape[0], patch_size[0]):
             for y in range(0, volume_slice_padded.shape[1], patch_size[1]):
                 corner_a = [x, y]
@@ -73,8 +75,17 @@ def apply_identification_model(volume, i_min, i_max, model, patch_size):
                 result = np.squeeze(result, axis=-1)
                 result = np.round(result)
                 output[i, corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]] = result
+        '''
+        patch = patch.reshape(1, *volume_slice_padded, 1)
+        result = model.predict(patch)
+        result = np.squeeze(result, axis=0)
+        result = np.squeeze(result, axis=-1)
+        result = np.round(result)
+        output[i, :, :] = result
 
     return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
+
+
 
 
 def test_scan(scan_path, centroid_path, detection_model_path, detection_model_input_shape, detection_model_objects,
