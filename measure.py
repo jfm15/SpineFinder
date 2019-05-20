@@ -76,7 +76,7 @@ def apply_identification_model(volume, i_min, i_max, model, patch_size):
                 result = np.round(result)
                 output[i, corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]] = result
         '''
-        patch = patch.reshape(1, *volume_slice_padded, 1)
+        patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
         result = model.predict(patch)
         result = np.squeeze(result, axis=0)
         result = np.squeeze(result, axis=-1)
@@ -382,12 +382,11 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         i += 1
 
     fig.subplots_adjust(wspace=1, hspace=0.4)
-    fig.colorbar()
     fig.savefig(plot_path + '/identification-complete.png')
 
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 complete_identification_picture('datasets_test', 'model_files/detection-model.h5',
-                                'model_files/identification-model.h5', 'plots')
+                                'model_files/identification-model-2.h5', 'plots')
 
