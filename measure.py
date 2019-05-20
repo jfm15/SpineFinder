@@ -137,7 +137,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
         if 0 <= key < len(LABELS):
             arr = np.array(histogram[key])
             if arr.shape[0] > 100:
-                centroid_estimate = np.mean(arr, axis=0)
+                centroid_estimate = np.median(arr, axis=0)
                 centroid_estimate *= 2
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
                 labels.append(LABELS[key])
@@ -337,7 +337,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
     identification_model_objects = {'ignore_background_loss': ignore_background_loss,
                                     'vertebrae_classification_rate': vertebrae_classification_rate}
 
-    fig, axes = plt.subplots(nrows=1, ncols=no_of_scan_paths, figsize=(30, 10), dpi=300)
+    fig, axes = plt.subplots(nrows=2, ncols=no_of_scan_paths, figsize=(30, 10), dpi=300)
 
     i = 1
 
@@ -376,17 +376,25 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
         masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
 
-        axes[col].imshow(volume_slice.T, cmap='gray', origin='lower')
-        axes[col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
+        axes[0, col].imshow(volume_slice.T, cmap='gray', origin='lower')
+        axes[0, col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
+
+        axes[1, col].imshow(volume_slice.T, cmap='gray', origin='lower')
+        axes[1, col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
 
         for label, centroid_idx in zip(labels, centroid_indexes):
             u, v = centroid_idx[1:3]
-            axes[col].annotate(label, (u, v), color="red", size=6)
-            axes[col].scatter(u, v, color="red", s=8)
+            axes[0, col].annotate(label, (u, v), color="red", size=6)
+            axes[0, col].scatter(u, v, color="red", s=8)
+
+        for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
+            u, v = pred_centroid_idx[1:3]
+            axes[1, col].annotate(pred_label, (u, v), color="red", size=6)
+            axes[1, col].scatter(u, v, color="red", s=8)
 
         i += 1
 
-    fig.subplots_adjust(wspace=1, hspace=0.4)
+    fig.subplots_adjust(wspace=-0.2, hspace=0.4)
     fig.savefig(plot_path + '/identification-complete.png')
 
 
