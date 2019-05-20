@@ -381,8 +381,8 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
         for label, centroid_idx in zip(labels, centroid_indexes):
             u, v = centroid_idx[1:3]
-            axes[col].annotate(label, (u, v), color="red")
-            axes[col].scatter(u, v, color="red")
+            axes[col].annotate(label, (u, v), color="red", size=6)
+            axes[col].scatter(u, v, color="red", s=8)
 
         i += 1
 
