@@ -97,6 +97,8 @@ def densely_label(labels, volume_shape, centroid_indexes, spacing, radius, use_l
 
         label_value = 1
         if use_labels:
+            if label == 'L6':
+                print("has L6 vertebrae")
             label_value = LABELS.index(label)
 
         dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = label_value
