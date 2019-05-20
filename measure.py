@@ -376,7 +376,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
         masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
 
-        axes[col].imshow(volume_slice.T, cmap='gray')
+        axes[col].imshow(volume_slice.T, cmap='gray', origin='lower')
         axes[col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4)
 
         i += 1
