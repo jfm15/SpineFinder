@@ -136,9 +136,8 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
     for key in sorted(histogram.keys()):
         if 0 <= key < len(LABELS):
             arr = np.array(histogram[key])
-            if arr.shape[0] > 100:
+            if arr.shape[0] > 300:
                 centroid_estimate = np.median(arr, axis=0)
-                centroid_estimate *= 2
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
                 labels.append(LABELS[key])
                 centroid_estimates.append(list(centroid_estimate))
