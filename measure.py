@@ -346,7 +346,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         scan_path_without_ext = scan_path[:-len(".nii.gz")]
         centroid_path = scan_path_without_ext + ".lml"
 
-        _, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
+        labels, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
         centroid_indexes = centroids / np.array((2.0, 2.0, 2.0))
 
         cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
@@ -378,6 +378,11 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
         axes[col].imshow(volume_slice.T, cmap='gray', origin='lower')
         axes[col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
+
+        for label, centroid_idx in zip(labels, centroid_indexes):
+            u, v = centroid_idx[1:3]
+            axes[col].annotate(label, (u, v), color="red")
+            axes[col].scatter(u, v, color="red")
 
         i += 1
 
