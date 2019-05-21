@@ -118,7 +118,7 @@ def unet_slices(input_shape, kernel_size, filters, learning_rate):
 
     # 10 x 40
     step_up_4 = UpSampling2D(size=(2, 2))(floor)
-    step_up_4 = concatenate([step_down_3, step_up_4], axis=-1)
+    step_up_4 = concatenate([step_down_4, step_up_4], axis=-1)
     step_up_4 = Conv2D(8 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_up_4)
     step_up_4 = BatchNormalization(momentum=0.1)(step_up_4)
     step_up_4 = Activation("relu")(step_up_4)
