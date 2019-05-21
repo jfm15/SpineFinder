@@ -90,9 +90,9 @@ def apply_identification_model(volume, i_min, i_max, model, patch_size):
 
 def test_scan(scan_path, centroid_path, detection_model_path, detection_model_input_shape, detection_model_objects,
               identification_model_path, identification_model_input_shape, identification_model_objects,
-              ideal_detection=False):
+              ideal_detection=False, spacing=(2.0, 2.0, 2.0)):
 
-    volume = opening_files.read_nii(scan_path)
+    volume = opening_files.read_nii(scan_path, spacing)
 
     # first stage is to put the volume through the detection model to find where vertebrae are
     if not ideal_detection:
@@ -100,7 +100,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
         detections = apply_detection_model(volume, detection_model, detection_model_input_shape)
     else:
         _, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
-        centroid_indexes = np.round(centroids / np.array((2.0, 2.0, 2.0))).astype(int)
+        centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
         detections = apply_ideal_detection(volume, centroid_indexes)
 
     # get the largest island
@@ -112,7 +112,8 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
     # second stage is to pass slices of this to the identification network
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
     identifications = apply_identification_model(volume, i_min, i_max,
-                                                 identification_model,identification_model_input_shape)
+                                                 identification_model,
+                                                 identification_model_input_shape)
 
     # crop parts of slices
     identifications *= detections
@@ -148,7 +149,8 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
 def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_centroids=False, centroids_path="",
                          plot_detections=False, detections_path="",
                          save_identifications=False, identifications_path="",
-                         save_plots=False, plots_path="", ideal_detection=False):
+                         save_plots=False, plots_path="", ideal_detection=False,
+                         spacing=(2.0, 2.0, 2.0)):
     sub_path = scan_path.split('/', 1)[1]
     sub_path = sub_path[:-len(".nii.gz")]
     sub_path_split = sub_path.split('/')
@@ -187,7 +189,7 @@ def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_ce
         file.close()
 
     pred_centroid_estimates = np.array(pred_centroid_estimates)
-    pred_centroid_estimates = pred_centroid_estimates / 2.0
+    pred_centroid_estimates = pred_centroid_estimates / np.array(spacing)
 
     if plot_detections:
         detections_dir_path = '/'.join([detections_path, dir_path])
@@ -270,7 +272,7 @@ def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True, pl
                              ideal_detection=False)
 
 
-def compete_detection_picture(scans_dir, models_dir, plot_path):
+def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.0, 2.0)):
 
     scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:10]
     model_paths = glob.glob(models_dir + "/*.h5", recursive=True)
@@ -293,7 +295,7 @@ def compete_detection_picture(scans_dir, models_dir, plot_path):
         centroid_path = scan_path_without_ext + ".lml"
 
         _, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
-        centroid_indexes = centroids / np.array((2.0, 2.0, 2.0))
+        centroid_indexes = centroids / np.array(spacing)
 
         cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
 
@@ -324,7 +326,8 @@ def compete_detection_picture(scans_dir, models_dir, plot_path):
     fig.savefig(plot_path + '/detection-complete.png')
 
 
-def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path):
+def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path,
+                                    spacing=(2.0, 2.0, 2.0)):
     scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:10]
     no_of_scan_paths = len(scan_paths)
 
@@ -346,7 +349,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         centroid_path = scan_path_without_ext + ".lml"
 
         labels, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
-        centroid_indexes = centroids / np.array((2.0, 2.0, 2.0))
+        centroid_indexes = centroids / np.array(spacing)
 
         cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
 
@@ -366,7 +369,8 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             detection_model_objects=detection_model_objects,
             identification_model_path=identification_model_path,
             identification_model_input_shape=np.array([40, 160]),
-            identification_model_objects=identification_model_objects)
+            identification_model_objects=identification_model_objects,
+            spacing=spacing)
 
         volume = opening_files.read_nii(scan_path)
 
@@ -400,5 +404,6 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 complete_identification_picture('datasets_test', 'model_files/detection-model.h5',
-                                'model_files/identification-model-2.h5', 'plots')
+                                'model_files/identification-model-2.h5', 'plots',
+                                spacing=(1.0, 1.0, 1.0))
 
