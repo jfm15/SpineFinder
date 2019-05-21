@@ -92,7 +92,7 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), diame
             np.save(labelling_path, cropped_sample_labels_slice)
 
 
-generate_slice_samples(dataset_dir="datasets/spine-1",
+generate_slice_samples(dataset_dir="datasets/",
                        sample_dir="samples/slices",
                        sample_size=(80, 320),
                        diameter=(28.0, 28.0, 28.0),

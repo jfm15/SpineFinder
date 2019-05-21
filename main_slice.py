@@ -8,7 +8,7 @@ model_params = {'kernel_size': (3, 3),
 
 perform_learning(sample_dir="samples/slices",
                  training_val_split=0.5,
-                 sample_shape=(40, 160),
+                 sample_shape=(80, 320),
                  batch_size=16,
                  sample_channels=1,
                  categorise=False,
