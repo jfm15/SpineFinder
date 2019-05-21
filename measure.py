@@ -372,7 +372,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             identification_model_objects=identification_model_objects,
             spacing=spacing)
 
-        volume = opening_files.read_nii(scan_path)
+        volume = opening_files.read_nii(scan_path, spacing=spacing)
 
         volume_slice = volume[cut, :, :]
         identifications_slice = pred_identifications[cut, :, :]
