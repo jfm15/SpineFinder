@@ -48,7 +48,7 @@ def simple_detection(input_shape, filters, kernel_size, weights, learning_rate):
 def detection_unet(input_shape, filters, kernel_size, weights, learning_rate):
 
     # Input
-    main_input = Input(shape=(None, None, 1))
+    main_input = Input(shape=(None, None, None, 1))
 
     # 64 x 64 x 80
     step_down_1 = Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same")(main_input)
