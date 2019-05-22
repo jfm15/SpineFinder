@@ -13,7 +13,7 @@ def check_multi_class_sample(sample_path):
     print(np.bincount(labelling.reshape(-1).astype(int)))
 
     # cut = int(np.round(sample.shape[0] / 2.0))
-    cut = 16
+    cut = 20
 
     sample_slice = sample[cut, :, :]
     labelling_slice = labelling[cut, :, :]
@@ -40,5 +40,5 @@ def check_slice_sample(sample_path):
     plt.show()
 
 
-check_multi_class_sample("samples/two_class/2684937-5-sample.npy")
+check_multi_class_sample("samples/two_class/2805012-4-sample.npy")
 # check_slice_sample("samples/slices/2805012-4-sample.npy")
