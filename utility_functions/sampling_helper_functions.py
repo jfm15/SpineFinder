@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-from utility_functions.labels import LABELS
+from utility_functions.labels import LABELS, VERTEBRAE_SIZES
 
 
 # takes in a volume of predictions (0 and 1s) and takes out all but the largest island of points
@@ -79,6 +79,8 @@ def get_island(point, explored, predictions):
     return acc
 
 
+# NOTE old function
+'''
 def densely_label(labels, volume_shape, centroid_indexes, spacing, radius, use_labels):
 
     diameter_in_pixels = radius / np.array(spacing)
@@ -104,3 +106,41 @@ def densely_label(labels, volume_shape, centroid_indexes, spacing, radius, use_l
         dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = label_value
 
     return dense_labelling
+'''
+
+
+def densely_label(volume_shape, labels, centroids, spacing, use_labels):
+    labelling = np.zeros(volume_shape)
+
+    # do middle centroids
+    for i, label in enumerate(labels[1:-1]):
+        a = (centroids[i] + centroids[i + 1]) / 2.0
+        b = (centroids[i + 1] + centroids[i + 2]) / 2.0
+        create_tube(a, b, VERTEBRAE_SIZES[label], spacing, labelling)
+
+    # do first centroid
+    b = (centroids[0] + centroids[1]) / 2.0
+    a = centroids[0] - (b - centroids[0])
+    a = np.clip(a, a_min=np.zeros(3), a_max=volume_shape - np.ones(3)).astype(int)
+    create_tube(a, b, VERTEBRAE_SIZES[labels[0]], spacing, labelling)
+
+    # do last centroid
+    b = (centroids[-2] + centroids[-1]) / 2.0
+    a = centroids[-1] - (b - centroids[-1])
+    a = np.clip(a, a_min=np.zeros(3), a_max=volume_shape - np.ones(3)).astype(int)
+    create_tube(a, b, VERTEBRAE_SIZES[labels[-1]], spacing,  labelling)
+
+    return labelling
+
+
+def create_tube(a, b, diameter, spacing, labelling):
+    dist = np.linalg.norm(b - a)
+    spline = np.round(np.linspace(a, b, num=np.round(dist).astype(int) * 2)).astype(int)
+    radius = np.round((diameter / 2.0) / spacing[0]).astype(int)
+    for center_point in spline:
+        for x in range(-radius - 1, radius + 1):
+            for y in range(-radius, radius):
+                point = center_point + np.array([x, y, 0])
+                point = np.clip(point, a_min=np.zeros(3), a_max=labelling.shape - np.ones(3)).astype(int)
+                if np.linalg.norm(np.array([x, y])) <= radius + 1:
+                    labelling[point[0], point[1], point[2]] = 1

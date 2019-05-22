@@ -7,14 +7,12 @@ from utility_functions.sampling_helper_functions import densely_label
 
 
 def generate_samples(dataset_dir, sample_dir,
-                     spacing, radius, sample_size,
+                     spacing, sample_size,
                      no_of_samples, no_of_zero_samples,
-                     use_labels=False, rotate=False, file_ext=".nii.gz"):
+                     use_labels=False, file_ext=".nii.gz"):
 
     # numpy these so they can be divided later on
-    radius = np.array(radius)
     sample_size = np.array(sample_size)
-    cut_size = sample_size + np.array([10, 10, 10])
 
     ext_len = len(file_ext)
 
@@ -34,24 +32,17 @@ def generate_samples(dataset_dir, sample_dir,
         labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
         centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
 
-        volume = opening_files.read_nii(data_path)
+        volume = opening_files.read_nii(data_path, spacing=spacing)
 
         # densely populate
         dense_labelling = densely_label(labels=labels,
                                         volume_shape=volume.shape,
-                                        centroid_indexes=centroid_indexes,
+                                        centroids=centroid_indexes,
                                         spacing=spacing,
-                                        radius=radius,
                                         use_labels=use_labels)
 
         sample_size_in_pixels = (sample_size / np.array(spacing)).astype(int)
-        cut_size_in_pixels = (cut_size / np.array(spacing)).astype(int)
-        cut_size_in_pixels = np.clip(cut_size_in_pixels, a_min=np.zeros(3), a_max=volume.shape - np.ones(3)).astype(int)
-
-        if rotate:
-            random_area = volume.shape - cut_size_in_pixels
-        else:
-            random_area = volume.shape - sample_size_in_pixels
+        random_area = volume.shape - sample_size_in_pixels
 
         name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
         print(name)
@@ -62,27 +53,10 @@ def generate_samples(dataset_dir, sample_dir,
             random_factor = np.random.rand(3)
             random_position = np.round(random_area * random_factor).astype(int)
             corner_a = random_position
-            if rotate:
-                corner_b = random_position + cut_size_in_pixels
-            else:
-                corner_b = random_position + sample_size_in_pixels
+            corner_b = random_position + sample_size_in_pixels
 
             sample = volume[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
             labelling = dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
-
-            # randomly rotate
-            if rotate:
-                angle = np.random.rand() * 20.0 - 10.0
-                sample = scipy.ndimage.interpolation.rotate(sample, angle, axes=(-1, 1), mode="constant")
-                labelling = scipy.ndimage.interpolation.rotate(labelling, angle, axes=(-1, 1), mode="constant")
-                labelling = np.round(labelling).astype(int)
-
-                padding_corner_a = np.round((sample.shape - sample_size_in_pixels) / 2.0).astype(int)
-                padding_corner_b = padding_corner_a + sample_size_in_pixels
-                sample = sample[padding_corner_a[0]:padding_corner_b[0], padding_corner_a[1]:padding_corner_b[1],
-                         padding_corner_a[2]:padding_corner_b[2]]
-                labelling = labelling[padding_corner_a[0]:padding_corner_b[0], padding_corner_a[1]:padding_corner_b[1],
-                         padding_corner_a[2]:padding_corner_b[2]]
 
             # if a centroid is contained
             unique_labels = np.unique(labelling).shape[0]
@@ -113,10 +87,8 @@ def generate_samples(dataset_dir, sample_dir,
 
 generate_samples(dataset_dir="datasets/",
                  sample_dir="samples/two_class",
-                 spacing=(2.0, 2.0, 2.0),
-                 radius=(28.0, 28.0, 28.0),
-                 sample_size=(60.0, 60.0, 72.0),
-                 no_of_samples=60,
-                 no_of_zero_samples=6,
-                 use_labels=False,
-                 rotate=False)
+                 spacing=(1.0, 1.0, 1.0),
+                 sample_size=(64.0, 64.0, 80.0),
+                 no_of_samples=10,
+                 no_of_zero_samples=2,
+                 use_labels=False)
