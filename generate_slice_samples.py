@@ -22,9 +22,13 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
 
         dense_labelling = densely_label(volume.shape, labels, centroid_indexes, spacing, use_labels=True)
 
-        dense_labelling_squashed = np.any(dense_labelling, axis=(1, 2))
-        lower_i = np.min(np.where(dense_labelling_squashed == 1))
-        upper_i = np.max(np.where(dense_labelling_squashed == 1))
+        # dense_labelling_squashed = np.any(dense_labelling, axis=(1, 2))
+        # lower_i = np.min(np.where(dense_labelling_squashed == 1))
+        # upper_i = np.max(np.where(dense_labelling_squashed == 1))
+        lower_i = np.min(centroid_indexes[:, 0])
+        lower_i = np.max([lower_i - 10, 0]).astype(int)
+        upper_i = np.max(centroid_indexes[:, 0])
+        upper_i = np.min([upper_i + 10, volume.shape[0] - 1]).astype(int)
 
         '''
         lower_j = np.min(centroid_indexes[:, 1])
