@@ -28,7 +28,7 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
     validation_generator = DataGenerator(partition['validation'], labels, **params)
 
     # set checkpoint
-    checkpoint = ModelCheckpoint(checkpoint_path, period=5)
+    checkpoint = ModelCheckpoint(checkpoint_path, period=3)
 
     # create model
     model_input_shape = tuple(list(sample_shape) + [1])
