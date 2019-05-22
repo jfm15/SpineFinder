@@ -1,8 +1,6 @@
 import numpy as np
 from perform_learning import perform_learning
-from models.six_conv_multi_classes import six_conv_multi_classes
-from models.simple_detection import simple_detection, detection_unet
-from models.unet import unet
+from models.simple_detection import detection_unet
 
 # inputs to the model
 model_params = {'kernel_size': (3, 3, 3),

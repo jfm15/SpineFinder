@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-from utility_functions.labels import LABELS, VERTEBRAE_SIZES
+from utility_functions.labels import LABELS, LABELS_NO_L6, VERTEBRAE_SIZES
 
 
 # takes in a volume of predictions (0 and 1s) and takes out all but the largest island of points
@@ -116,24 +116,28 @@ def densely_label(volume_shape, labels, centroids, spacing, use_labels):
     for i, label in enumerate(labels[1:-1]):
         a = (centroids[i] + centroids[i + 1]) / 2.0
         b = (centroids[i + 1] + centroids[i + 2]) / 2.0
-        create_tube(a, b, VERTEBRAE_SIZES[label], spacing, labelling)
+        create_tube(a, b, VERTEBRAE_SIZES[label], spacing, labelling,
+                    labels[i:i+3], centroids[i:i+3], use_labels=use_labels)
 
     # do first centroid
     b = (centroids[0] + centroids[1]) / 2.0
     a = centroids[0] - (b - centroids[0])
     a = np.clip(a, a_min=np.zeros(3), a_max=volume_shape - np.ones(3)).astype(int)
-    create_tube(a, b, VERTEBRAE_SIZES[labels[0]], spacing, labelling)
+    create_tube(a, b, VERTEBRAE_SIZES[labels[0]], spacing, labelling,
+                labels[:2], centroids[:2], use_labels=use_labels)
 
     # do last centroid
     b = (centroids[-2] + centroids[-1]) / 2.0
     a = centroids[-1] - (b - centroids[-1])
     a = np.clip(a, a_min=np.zeros(3), a_max=volume_shape - np.ones(3)).astype(int)
-    create_tube(a, b, VERTEBRAE_SIZES[labels[-1]], spacing,  labelling)
+    create_tube(a, b, VERTEBRAE_SIZES[labels[-1]], spacing,  labelling,
+                labels[-2:], centroids[-2:], use_labels=use_labels)
 
     return labelling
 
 
-def create_tube(a, b, diameter, spacing, labelling):
+def create_tube(a, b, diameter, spacing, labelling, possible_labels,
+                possible_centroids, use_labels=False):
     dist = np.linalg.norm(b - a)
     spline = np.round(np.linspace(a, b, num=np.round(dist).astype(int) * 2)).astype(int)
     radius = np.round((diameter / 2.0) / spacing[0]).astype(int)
@@ -143,4 +147,17 @@ def create_tube(a, b, diameter, spacing, labelling):
                 point = center_point + np.array([x, y, 0])
                 point = np.clip(point, a_min=np.zeros(3), a_max=labelling.shape - np.ones(3)).astype(int)
                 if np.linalg.norm(np.array([x, y])) <= radius + 1:
-                    labelling[point[0], point[1], point[2]] = 1
+                    if use_labels:
+                        min_label = ''
+                        min_dist = 100000.0
+                        for label, pos_centroid in zip(possible_labels, possible_centroids):
+                            curr_dist = np.linalg.norm(point - pos_centroid)
+                            if curr_dist < min_dist:
+                                min_label = label
+                                min_dist = curr_dist
+                        # ignore special vertebrae
+                        if min_label == 'L6':
+                            min_label = 'L5'
+                        labelling[point[0], point[1], point[2]] = LABELS_NO_L6.index(min_label)
+                    else:
+                        labelling[point[0], point[1], point[2]] = 1

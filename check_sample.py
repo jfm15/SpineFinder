@@ -36,9 +36,9 @@ def check_slice_sample(sample_path):
     masked_data = np.ma.masked_where(labelling == 0, labelling)
 
     plt.imshow(sample.T, interpolation="none", origin='lower', cmap='gray')
-    plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, alpha=0.4)
+    plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26,  alpha=0.4)
     plt.show()
 
 
-check_multi_class_sample("samples/two_class/2805012-4-sample.npy")
-# check_slice_sample("samples/slices/2805012-4-sample.npy")
+# check_multi_class_sample("samples/two_class/2805012-4-sample.npy")
+check_slice_sample("samples/slices/2805012-9-sample.npy")

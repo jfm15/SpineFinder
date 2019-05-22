@@ -4,7 +4,7 @@ from utility_functions import opening_files
 from utility_functions.sampling_helper_functions import densely_label
 
 
-def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), diameter=(28.0, 28.0, 28.0), spacing=(2.0, 2.0, 2.0),
+def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spacing=(2.0, 2.0, 2.0),
                            no_of_samples=5, no_of_vertebrae_in_each=2, file_ext=".nii.gz"):
     sample_size = np.array(sample_size)
     ext_len = len(file_ext)
@@ -20,13 +20,11 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), diame
         labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
         centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
 
-        dense_labelling = densely_label(labels, volume.shape, centroid_indexes, spacing, diameter, use_labels=True)
+        dense_labelling = densely_label(volume.shape, labels, centroid_indexes, spacing, use_labels=True)
 
-        radius = (np.array(diameter) / np.array(spacing)) / 2.0
-        lower_i = np.min(centroid_indexes[:, 0])
-        lower_i = np.max([lower_i - radius[0], 0]).astype(int)
-        upper_i = np.max(centroid_indexes[:, 0])
-        upper_i = np.min([upper_i + radius[0], volume.shape[0] - 1]).astype(int)
+        dense_labelling_squashed = np.any(dense_labelling, axis=(1, 2))
+        lower_i = np.min(np.where(dense_labelling_squashed == 1))
+        upper_i = np.max(np.where(dense_labelling_squashed == 1))
 
         '''
         lower_j = np.min(centroid_indexes[:, 1])
@@ -95,7 +93,6 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), diame
 generate_slice_samples(dataset_dir="datasets/",
                        sample_dir="samples/slices",
                        sample_size=(80, 320),
-                       diameter=(28.0, 28.0, 28.0),
-                       no_of_samples=60,
+                       no_of_samples=20,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=2)

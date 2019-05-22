@@ -274,7 +274,7 @@ def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True, pl
 
 def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.0, 2.0)):
 
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:10]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)
     model_paths = glob.glob(models_dir + "/*.h5", recursive=True)
     no_of_scan_paths = len(scan_paths)
     no_of_model_paths = len(model_paths)
@@ -295,9 +295,6 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
         centroid_path = scan_path_without_ext + ".lml"
 
         _, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
-        centroid_indexes = centroids / np.array(spacing)
-
-        cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
 
         scan_name = (scan_path.rsplit('/', 1)[-1])[:-len(".nii.gz")]
         axes[0, col].set_title(scan_name, fontsize=10, pad=10)
@@ -305,12 +302,23 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
         for row, model_path in enumerate(model_paths):
             print(i)
 
+            size = np.array([30, 30, 36])
+            current_spacing = spacing
+            if model_path == "saved_current_models/detec-15:59.h5":
+                print("here")
+                size = np.array([64, 64, 80])
+                current_spacing = (1.0, 1.0, 1.0)
+
+            centroid_indexes = centroids / np.array(current_spacing)
+            cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
+
             model_name = (model_path.rsplit('/', 1)[-1])[:-len(".h5")]
             axes[row, 0].set_ylabel(model_name, rotation=0, labelpad=50, fontsize=10)
 
-            volume = opening_files.read_nii(scan_path)
+            volume = opening_files.read_nii(scan_path, spacing=current_spacing)
             detection_model = load_model(model_path, custom_objects=model_objects)
-            detections = apply_detection_model(volume, detection_model, np.array([30, 30, 36]))
+
+            detections = apply_detection_model(volume, detection_model, size)
 
             volume_slice = volume[cut, :, :]
             detections_slice = detections[cut, :, :]
@@ -402,8 +410,10 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
 
 # test_multiple_scans("datasets_test")
-# compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
+compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
+'''
 complete_identification_picture('datasets_test', 'model_files/detection-model.h5',
                                 'model_files/identification-model-2.h5', 'plots',
                                 spacing=(2.0, 2.0, 2.0))
+'''
 
