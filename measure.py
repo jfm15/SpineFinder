@@ -304,7 +304,8 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
 
             size = np.array([30, 30, 36])
             current_spacing = spacing
-            if model_path == "saved_current_models/detec-15:59.h5":
+            if model_path == "saved_current_models/detec-15:59.h5" \
+                    or model_path == "saved_current_models/detec-15:59-20e.h5" :
                 print("here")
                 size = np.array([64, 64, 80])
                 current_spacing = (1.0, 1.0, 1.0)
