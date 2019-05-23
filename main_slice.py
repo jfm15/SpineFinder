@@ -19,5 +19,5 @@ perform_learning(sample_dir="samples/slices",
                  model_path="slices_model.h5",
                  checkpoint_path="checkpoints/slices_model/slices_model.{epoch:02d}.h5",
                  log_name="identification",
-                 log_description="Using 100 NORMALIZED deformed samples each with > 500 vertebrae pixels, using ADAM compiler, "
+                 log_description="Using 100 NORMALIZED deformed samples with sigma=7 each with > 500 vertebrae pixels, using ADAM compiler, "
                                  "using ReLu activation")

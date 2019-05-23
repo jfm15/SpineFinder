@@ -61,7 +61,7 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
             sample_labels_slice = dense_labelling[i, :, :]
 
             [volume_slice, sample_labels_slice] = elasticdeform.deform_random_grid(
-                [volume_slice, sample_labels_slice], sigma=5, points=3, order=0)
+                [volume_slice, sample_labels_slice], sigma=7, points=3, order=0)
 
             # crop or pad depending on what is necessary
             if volume_slice.shape[0] < sample_size[0]:
@@ -107,6 +107,6 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
 generate_slice_samples(dataset_dir="datasets/spine-1",
                        sample_dir="samples/slices",
                        sample_size=(80, 320),
-                       no_of_samples=100,
+                       no_of_samples=160,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)
