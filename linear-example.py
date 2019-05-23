@@ -1,5 +1,5 @@
 import numpy as np
-import imcut.pycut as pspc
+import elasticdeform
 import matplotlib.pyplot as plt
 from utility_functions import opening_files
 from utility_functions import sampling_helper_functions
@@ -12,9 +12,19 @@ centroids = centroids / np.array(spacing)
 idx = 8
 chosen_centroid = np.round(centroids[idx]).astype(int)
 
-volume_slice = volume[chosen_centroid[0], :, :]
+labelling = sampling_helper_functions.densely_label(volume.shape, labels,
+                                                    centroids, spacing=(1.0, 1.0, 1.0), use_labels=False)
 
-labelling = sampling_helper_functions.densely_label(volume.shape, labels, centroids, False)
+volume_slice = volume[chosen_centroid[0], :, :]
+labelling_slice = labelling[chosen_centroid[0], :, :]
+
+print(volume_slice.shape, labelling_slice.shape)
+
+[volume_slice_deformed, labelling_slice_deformed] = elasticdeform.deform_random_grid([volume_slice, labelling_slice], sigma=5, points=3)
+[volume_slice_deformed2, labelling_slice_deformed2] = elasticdeform.deform_random_grid([volume_slice, labelling_slice], sigma=5, points=3)
+[volume_slice_deformed3, labelling_slice_deformed3] = elasticdeform.deform_random_grid([volume_slice, labelling_slice], sigma=5, points=3)
+
+print(volume_slice_deformed.shape, labelling_slice_deformed.shape)
 
 # Show results
 colormap = plt.cm.get_cmap('brg')
@@ -22,6 +32,14 @@ colormap._init()
 colormap._lut[:1:,3]=0
 
 
-plt.imshow(volume_slice.T, cmap='gray', origin="lower")
-plt.imshow(labelling[chosen_centroid[0], :, :].T, cmap=colormap, interpolation='none', alpha=0.4, origin="lower")
+plt.imshow(volume_slice_deformed.T, cmap='gray', origin="lower")
+plt.imshow(labelling_slice_deformed.T, cmap=colormap, interpolation='none', alpha=0.4, origin="lower")
+plt.show()
+
+plt.imshow(volume_slice_deformed2.T, cmap='gray', origin="lower")
+plt.imshow(labelling_slice_deformed2.T, cmap=colormap, interpolation='none', alpha=0.4, origin="lower")
+plt.show()
+
+plt.imshow(volume_slice_deformed3.T, cmap='gray', origin="lower")
+plt.imshow(labelling_slice_deformed3.T, cmap=colormap, interpolation='none', alpha=0.4, origin="lower")
 plt.show()
