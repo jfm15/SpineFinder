@@ -1,5 +1,6 @@
 import glob
 import numpy as np
+import elasticdeform
 from utility_functions import opening_files
 from utility_functions.sampling_helper_functions import densely_label
 
@@ -59,6 +60,9 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
             volume_slice = volume[i, :, :]
             sample_labels_slice = dense_labelling[i, :, :]
 
+            [volume_slice, sample_labels_slice] = elasticdeform.deform_random_grid(
+                [volume_slice, sample_labels_slice], sigma=5, points=3, order=0)
+
             # crop or pad depending on what is necessary
             if volume_slice.shape[0] < sample_size[0]:
                 dif = sample_size[0] - volume_slice.shape[0]
@@ -74,6 +78,7 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                 sample_labels_slice = np.pad(sample_labels_slice, ((0, 0), (0, dif)),
                                              mode="constant")
 
+            j = 0
             while True:
                 random_area = volume_slice.shape - sample_size
                 random_factor = np.random.rand(2)
@@ -84,7 +89,10 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                 cropped_volume_slice = volume_slice[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]]
                 cropped_sample_labels_slice = sample_labels_slice[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]]
 
-                if np.unique(cropped_sample_labels_slice).shape[0] > no_of_vertebrae_in_each:
+                care_about_labels = np.count_nonzero(cropped_sample_labels_slice)
+                j += 1
+                if care_about_labels > 500 or j > 100:
+                    print(j)
                     break
 
             # save file
@@ -96,9 +104,9 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
             np.save(labelling_path, cropped_sample_labels_slice)
 
 
-generate_slice_samples(dataset_dir="datasets",
+generate_slice_samples(dataset_dir="datasets/spine-1",
                        sample_dir="samples/slices",
                        sample_size=(80, 320),
-                       no_of_samples=20,
+                       no_of_samples=100,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)
