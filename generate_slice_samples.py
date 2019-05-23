@@ -13,7 +13,7 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
 
     for cnt, data_path in enumerate(paths):
 
-        print(cnt + " / " + len(paths))
+        print(str(cnt) + " / " + str(len(paths)))
         # get path to corresponding metadata
         data_path_without_ext = data_path[:-ext_len]
         metadata_path = data_path_without_ext + ".lml"
