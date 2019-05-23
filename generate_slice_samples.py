@@ -9,8 +9,11 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
     sample_size = np.array(sample_size)
     ext_len = len(file_ext)
 
-    for data_path in glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True):
+    paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
 
+    for cnt, data_path in enumerate(paths):
+
+        print(cnt + " / " + len(paths))
         # get path to corresponding metadata
         data_path_without_ext = data_path[:-ext_len]
         metadata_path = data_path_without_ext + ".lml"
@@ -50,7 +53,6 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                 cuts.append(cut)
 
         name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
-        print(name)
 
         for idx, i in enumerate(cuts):
 
@@ -94,9 +96,9 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
             np.save(labelling_path, cropped_sample_labels_slice)
 
 
-generate_slice_samples(dataset_dir="datasets/",
+generate_slice_samples(dataset_dir="datasets/spine-1",
                        sample_dir="samples/slices",
                        sample_size=(80, 320),
                        no_of_samples=20,
                        spacing=(1.0, 1.0, 1.0),
-                       no_of_vertebrae_in_each=2)
+                       no_of_vertebrae_in_each=1)
