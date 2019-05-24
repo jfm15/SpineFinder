@@ -47,14 +47,11 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
         upper_k = np.min([upper_k + radius[2], volume.shape[2] - 1]).astype(int)
         '''
 
-        j = 0
         cuts = []
         while len(cuts) < no_of_samples:
             cut = np.random.randint(lower_i, high=upper_i)
             sample_labels_slice = dense_labelling[cut, :, :]
-            j += 1
-            care_about = np.count_nonzero(sample_labels_slice)
-            if care_about > 5000 or (care_about > 2500 and j > 50) or j > 100:
+            if np.unique(sample_labels_slice).shape[0] > no_of_vertebrae_in_each:
                 cuts.append(cut)
 
         name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
@@ -82,7 +79,6 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                 sample_labels_slice = np.pad(sample_labels_slice, ((0, 0), (0, dif)),
                                              mode="constant")
 
-            '''
             j = 0
             while True:
                 random_area = volume_slice.shape - sample_size
@@ -96,23 +92,22 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
 
                 care_about_labels = np.count_nonzero(cropped_sample_labels_slice)
                 j += 1
-                if care_about_labels > 5000 or j > 100:
+                if care_about_labels > 500 or j > 100:
                     print(j)
                     break
-            '''
 
             # save file
             name_plus_id = name + "-" + str(idx)
             path = '/'.join([sample_dir, name_plus_id])
             sample_path = path + "-sample"
             labelling_path = path + "-labelling"
-            np.save(sample_path, volume_slice)
-            np.save(labelling_path, sample_labels_slice)
+            np.save(sample_path, cropped_volume_slice)
+            np.save(labelling_path, cropped_sample_labels_slice)
 
 
 generate_slice_samples(dataset_dir="datasets",
                        sample_dir="samples/slices",
-                       sample_size=(272, 720),
-                       no_of_samples=60,
+                       sample_size=(80, 320),
+                       no_of_samples=160,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)
