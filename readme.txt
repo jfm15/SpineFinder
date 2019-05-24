@@ -13,6 +13,7 @@ nohup python main.py &> main-output.txt &
 (top and kill)
 scp -r jfm15@spine-finder.westeurope.cloudapp.azure.com:SpineFinder/results /Users/James/SpineFinder/
 tensorboard --logdir=logs/
+ls . | wc -l
 
 File Structure
 |- main.py
