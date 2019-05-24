@@ -59,7 +59,7 @@ def six_conv_slices(kernel_size):
 def ignore_background_loss(y_true, y_pred):
     # y_true = K.maximum(y_true, K.epsilon())
     dont_cares = K.minimum(1.0, y_true)
-    return K.sum(K.abs(y_pred - y_true) * dont_cares) / K.sum(dont_cares)
+    return K.sum(K.maximum(K.abs(y_pred - y_true) - 0.5, 0.0) * dont_cares) / K.sum(dont_cares)
 
 
 def vertebrae_classification_rate(y_true, y_pred):
