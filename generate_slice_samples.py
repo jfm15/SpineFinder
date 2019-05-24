@@ -12,6 +12,9 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
 
     paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
 
+    max_width = 0
+    max_height = 0
+
     for cnt, data_path in enumerate(paths):
 
         print(str(cnt) + " / " + str(len(paths)))
@@ -20,6 +23,12 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
         metadata_path = data_path_without_ext + ".lml"
 
         volume = opening_files.read_nii(data_path, spacing=spacing)
+
+        max_width = max(max_width, volume.shape[1])
+        max_height = max(max_height, volume.shape[2])
+        print(max_width, max_height)
+
+        '''
         # print(volume.shape)
         labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
         centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
@@ -35,6 +44,7 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
         upper_i = np.min([upper_i + 10, volume.shape[0] - 1]).astype(int)
 
         '''
+        '''
         lower_j = np.min(centroid_indexes[:, 1])
         lower_j = np.max([lower_j - radius[1], 0]).astype(int)
         upper_j = np.max(centroid_indexes[:, 1])
@@ -45,7 +55,7 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
         upper_k = np.max(centroid_indexes[:, 2])
         upper_k = np.min([upper_k + radius[2], volume.shape[2] - 1]).astype(int)
         '''
-
+        '''
         cuts = []
         while len(cuts) < no_of_samples:
             cut = np.random.randint(lower_i, high=upper_i)
@@ -102,6 +112,7 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
             labelling_path = path + "-labelling"
             np.save(sample_path, cropped_volume_slice)
             np.save(labelling_path, cropped_sample_labels_slice)
+            '''
 
 
 generate_slice_samples(dataset_dir="datasets",
