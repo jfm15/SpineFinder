@@ -412,7 +412,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
-complete_identification_picture('datasets_test', 'model_files/detection-model.h5',
-                                'model_files/identification-model-2.h5', 'plots',
+complete_identification_picture('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
+                                'saved_current_models/ident-16:12.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
 
