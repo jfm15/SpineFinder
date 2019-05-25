@@ -133,7 +133,6 @@ def densely_label(volume_shape, disk_indices, labels, centroids, use_labels):
     create_tube(a, b, disk_indices[labels[-1]],  labelling,
                 labels[-1], use_labels=use_labels)
 
-    print(np.unique(labelling))
     return labelling
 
 

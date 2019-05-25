@@ -35,8 +35,8 @@ def check_slice_sample(sample_path):
 
     masked_data = np.ma.masked_where(labelling == 0, labelling)
 
-    plt.imshow(sample.T, interpolation="none", origin='lower', cmap='gray', vmin=-2)
-    plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26,  alpha=0.4)
+    plt.imshow(sample[:, :, 1].T, interpolation="none", origin='lower', cmap='gray', vmin=-2)
+    #plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26,  alpha=0.4)
     plt.show()
 
 
