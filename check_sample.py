@@ -33,9 +33,13 @@ def check_slice_sample(sample_path):
     sample = np.load(sample_path)
     labelling = np.load(labelling_path)
 
-    masked_data = np.ma.masked_where(labelling == 0, labelling)
+    cut = 0
+    sample_slice = sample[cut]
+    labelling_slice = labelling[cut]
 
-    plt.imshow(sample.T, interpolation="none", origin='lower', cmap='gray', vmin=-2)
+    masked_data = np.ma.masked_where(labelling_slice == 0, labelling_slice)
+
+    plt.imshow(sample_slice.T, interpolation="none", origin='lower', cmap='gray', vmin=-2)
     plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26,  alpha=0.4)
     plt.show()
 
