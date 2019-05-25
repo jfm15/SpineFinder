@@ -141,9 +141,9 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                     np.save(labelling_path, cropped_sample_labels_slice)
 
 
-generate_slice_samples(dataset_dir="datasets/spine-1",
+generate_slice_samples(dataset_dir="datasets",
                        sample_dir="samples/slices",
                        sample_size=(80, 320),
-                       no_of_samples=5,
+                       no_of_samples=100,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)
