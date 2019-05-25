@@ -63,6 +63,7 @@ def apply_identification_model(volume, i_min, i_max, model, patch_size):
 
     for i in range(i_min, i_max):
         volume_slice_padded = volume_padded[i, :, :]
+        '''
         for x in range(0, volume_slice_padded.shape[0], patch_size[0]):
             for y in range(0, volume_slice_padded.shape[1], patch_size[1]):
                 corner_a = [x, y]
@@ -81,7 +82,6 @@ def apply_identification_model(volume, i_min, i_max, model, patch_size):
         result = np.squeeze(result, axis=-1)
         result = np.round(result)
         output[i, :, :] = result
-        '''
 
     return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
 
