@@ -5,7 +5,7 @@ from utility_functions import opening_files
 from utility_functions.sampling_helper_functions import densely_label, pre_compute_disks
 
 
-def generate_slice_samples(dataset_dir, sample_dir, sample_size=(16, 40, 160), spacing=(2.0, 2.0, 2.0),
+def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), spacing=(2.0, 2.0, 2.0),
                            no_of_samples=5, no_of_vertebrae_in_each=2, file_ext=".nii.gz"):
     sample_size = np.array(sample_size)
     ext_len = len(file_ext)
@@ -64,13 +64,13 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(16, 40, 160), s
         count = 0
         for i in cuts:
 
-            volume_slice = volume[i:i+sample_size[0], :, :]
-            sample_labels_slice = dense_labelling[i:i+sample_size[0], :, :]
+            volume_slice = volume[i, :, :]
+            sample_labels_slice = dense_labelling[i, :, :]
             # get vertebrae identification map
             # detection_slice = (sample_labels_slice > 0).astype(int)
 
             [volume_slice, sample_labels_slice] = elasticdeform.deform_random_grid(
-                [volume_slice, sample_labels_slice], sigma=3, points=3, order=0, axis=(1, 2))
+                [volume_slice, sample_labels_slice], sigma=7, points=3, order=0)
 
             '''
             vertebrae_js = np.max(sample_labels_slice, axis=0)
@@ -95,22 +95,22 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(16, 40, 160), s
                     '''
 
             # crop or pad depending on what is necessary
-            if volume_slice.shape[1] < sample_size[1]:
-                dif = sample_size[1] - volume_slice.shape[1]
-                volume_slice = np.pad(volume_slice, ((0, 0), (0, dif), (0, 0)),
+            if volume_slice.shape[0] < sample_size[0]:
+                dif = sample_size[0] - volume_slice.shape[0]
+                volume_slice = np.pad(volume_slice, ((0, dif), (0, 0)),
                                       mode="constant", constant_values=-5)
                 # detection_slice = np.pad(detection_slice, ((0, dif), (0, 0)),
                 #                         mode="constant")
-                sample_labels_slice = np.pad(sample_labels_slice, ((0, 0), (0, dif), (0, 0)),
+                sample_labels_slice = np.pad(sample_labels_slice, ((0, dif), (0, 0)),
                                              mode="constant")
 
-            if volume_slice.shape[2] < sample_size[2]:
-                dif = sample_size[2] - volume_slice.shape[2]
-                volume_slice = np.pad(volume_slice, ((0, 0), (0, 0), (0, dif)),
+            if volume_slice.shape[1] < sample_size[1]:
+                dif = sample_size[1] - volume_slice.shape[1]
+                volume_slice = np.pad(volume_slice, ((0, 0), (0, dif)),
                                       mode="constant", constant_values=-5)
                 # detection_slice = np.pad(detection_slice, ((0, 0), (0, dif)),
                 #                         mode="constant")
-                sample_labels_slice = np.pad(sample_labels_slice, ((0, 0), (0, 0), (0, dif)),
+                sample_labels_slice = np.pad(sample_labels_slice, ((0, 0), (0, dif)),
                                              mode="constant")
 
             # volume_slice = np.expand_dims(volume_slice, axis=2)
@@ -118,34 +118,33 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(16, 40, 160), s
             # combines_slice = np.concatenate((volume_slice, detection_slice), axis=2)
             j = 0
             while True:
-                random_area = volume_slice.shape[1:3] - sample_size[1:3]
+                random_area = volume_slice.shape - sample_size
                 random_factor = np.random.rand(2)
                 random_position = np.round(random_area * random_factor).astype(int)
                 corner_a = random_position
-                corner_b = corner_a + sample_size[1:3]
+                corner_b = corner_a + sample_size
 
-                cropped_combines_slice = volume_slice[:, corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]]
-                cropped_sample_labels_slice = sample_labels_slice[:, corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]]
+                cropped_combines_slice = volume_slice[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]]
+                cropped_sample_labels_slice = sample_labels_slice[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]]
 
                 care_about_labels = np.count_nonzero(cropped_sample_labels_slice)
                 j += 1
-                if care_about_labels > 8 * 500 or j > 100:
+                if care_about_labels > 500 or j > 100:
                     break
 
-            if cropped_combines_slice.shape[0] == 16:
-                # save file
-                count += 1
-                name_plus_id = name + "-" + str(count)
-                path = '/'.join([sample_dir, name_plus_id])
-                sample_path = path + "-sample"
-                labelling_path = path + "-labelling"
-                np.save(sample_path, cropped_combines_slice)
-                np.save(labelling_path, cropped_sample_labels_slice)
+            # save file
+            count += 1
+            name_plus_id = name + "-" + str(count)
+            path = '/'.join([sample_dir, name_plus_id])
+            sample_path = path + "-sample"
+            labelling_path = path + "-labelling"
+            np.save(sample_path, cropped_combines_slice)
+            np.save(labelling_path, cropped_sample_labels_slice)
 
 
-generate_slice_samples(dataset_dir="datasets",
+generate_slice_samples(dataset_dir="datasets/spine-1",
                        sample_dir="samples/slices",
-                       sample_size=(16, 80, 320),
+                       sample_size=(80, 320),
                        no_of_samples=10,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)
