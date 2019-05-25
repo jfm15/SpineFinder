@@ -132,14 +132,15 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(16, 40, 160), s
                 if care_about_labels > 8 * 500 or j > 100:
                     break
 
-            # save file
-            count += 1
-            name_plus_id = name + "-" + str(count)
-            path = '/'.join([sample_dir, name_plus_id])
-            sample_path = path + "-sample"
-            labelling_path = path + "-labelling"
-            np.save(sample_path, cropped_combines_slice)
-            np.save(labelling_path, cropped_sample_labels_slice)
+            if sample_path.shape[0] == 16:
+                # save file
+                count += 1
+                name_plus_id = name + "-" + str(count)
+                path = '/'.join([sample_dir, name_plus_id])
+                sample_path = path + "-sample"
+                labelling_path = path + "-labelling"
+                np.save(sample_path, cropped_combines_slice)
+                np.save(labelling_path, cropped_sample_labels_slice)
 
 
 generate_slice_samples(dataset_dir="datasets",
