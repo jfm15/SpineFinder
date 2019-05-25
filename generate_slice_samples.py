@@ -2,7 +2,7 @@ import glob
 import numpy as np
 import elasticdeform
 from utility_functions import opening_files
-from utility_functions.sampling_helper_functions import densely_label
+from utility_functions.sampling_helper_functions import densely_label, pre_compute_disks
 
 
 def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spacing=(2.0, 2.0, 2.0),
@@ -25,7 +25,8 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
         labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
         centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
 
-        dense_labelling = densely_label(volume.shape, labels, centroid_indexes, spacing, use_labels=True)
+        disk_indices = pre_compute_disks(spacing)
+        dense_labelling = densely_label(volume.shape, disk_indices, labels, centroid_indexes, use_labels=True)
 
         # dense_labelling_squashed = np.any(dense_labelling, axis=(1, 2))
         # lower_i = np.min(np.where(dense_labelling_squashed == 1))
@@ -93,7 +94,6 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                 care_about_labels = np.count_nonzero(cropped_sample_labels_slice)
                 j += 1
                 if care_about_labels > 500 or j > 100:
-                    print(j)
                     break
 
             # save file
@@ -105,9 +105,9 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
             np.save(labelling_path, cropped_sample_labels_slice)
 
 
-generate_slice_samples(dataset_dir="datasets",
+generate_slice_samples(dataset_dir="datasets/spine-1",
                        sample_dir="samples/slices",
                        sample_size=(80, 320),
-                       no_of_samples=160,
+                       no_of_samples=10,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)
