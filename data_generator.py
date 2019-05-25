@@ -62,13 +62,13 @@ class DataGenerator(keras.utils.Sequence):
             labelling = np.load(self.samples_dir + '/' + label_id + '.npy')
 
             # X[i, ] = np.expand_dims(sample, axis=-1)
-            X[i, ] = np.tranpose(sample, (1, 2, 0))
+            X[i, ] = np.transpose(sample, (1, 2, 0))
 
             if self.categorise:
                 categorical_labelling = keras.utils.to_categorical(labelling, self.n_classes)
                 y[i, ] = categorical_labelling
             else:
                 # print(np.unique(labelling))
-                y[i, ] = np.tranpose(labelling, (1, 2, 0))
+                y[i, ] = np.transpose(labelling, (1, 2, 0))
 
         return X, y
