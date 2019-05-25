@@ -93,8 +93,8 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                     chopped_sample_labels_slice = sample_labels_slice[:, :chop_idx]
 
                     # crop or pad depending on what is necessary
-                    if volume_slice.shape[0] < sample_size[0]:
-                        dif = sample_size[0] - volume_slice.shape[0]
+                    if chopped_volume_slices.shape[0] < sample_size[0]:
+                        dif = sample_size[0] - chopped_volume_slices.shape[0]
                         chopped_volume_slices = np.pad(chopped_volume_slices, ((0, dif), (0, 0)),
                                               mode="constant", constant_values=-5)
                         # detection_slice = np.pad(detection_slice, ((0, dif), (0, 0)),
@@ -102,8 +102,8 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                         chopped_sample_labels_slice = np.pad(chopped_sample_labels_slice, ((0, dif), (0, 0)),
                                                      mode="constant")
 
-                    if volume_slice.shape[1] < sample_size[1]:
-                        dif = sample_size[1] - volume_slice.shape[1]
+                    if chopped_volume_slices.shape[1] < sample_size[1]:
+                        dif = sample_size[1] - chopped_volume_slices.shape[1]
                         chopped_volume_slices = np.pad(chopped_volume_slices, ((0, 0), (0, dif)),
                                               mode="constant", constant_values=-5)
                         # detection_slice = np.pad(detection_slice, ((0, 0), (0, dif)),
@@ -116,7 +116,7 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                     # combines_slice = np.concatenate((volume_slice, detection_slice), axis=2)
                     j = 0
                     while True:
-                        random_area = chopped_volume_slices.shape[:2] - sample_size
+                        random_area = chopped_volume_slices.shape - sample_size
                         random_factor = np.random.rand(2)
                         random_position = np.round(random_area * random_factor).astype(int)
                         corner_a = random_position
@@ -129,7 +129,6 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spaci
                         j += 1
                         if care_about_labels > 500 or j > 100:
                             break
-
 
                     # save file
                     count += 1
