@@ -59,7 +59,7 @@ def six_conv_slices(kernel_size):
 def ignore_background_loss(y_true, y_pred):
     # y_true = K.maximum(y_true, K.epsilon())
     dont_cares = K.minimum(1.0, y_true)
-    return K.sum(K.maximum(K.abs(y_pred - y_true) - 0.5, 0.0) * dont_cares) / K.sum(dont_cares)
+    return K.sum(K.abs(y_pred - y_true) * dont_cares) / K.sum(dont_cares)
 
 
 def vertebrae_classification_rate(y_true, y_pred):
@@ -70,7 +70,7 @@ def vertebrae_classification_rate(y_true, y_pred):
 
 def unet_slices(input_shape, kernel_size, filters, learning_rate):
 
-    main_input = Input(shape=(None, None, 2))
+    main_input = Input(shape=(None, None, 1))
 
     # 80 x 320
     step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(main_input)
