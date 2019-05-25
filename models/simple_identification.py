@@ -70,7 +70,7 @@ def vertebrae_classification_rate(y_true, y_pred):
 
 def unet_slices(input_shape, kernel_size, filters, learning_rate):
 
-    main_input = Input(shape=(None, None, 1))
+    main_input = Input(shape=(None, None, 16))
 
     # 80 x 320
     step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(main_input)
@@ -156,7 +156,7 @@ def unet_slices(input_shape, kernel_size, filters, learning_rate):
     step_up_1 = BatchNormalization(momentum=0.1)(step_up_1)
     step_up_1 = Activation("relu")(step_up_1)
 
-    main_output = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same",
+    main_output = Conv2D(16, kernel_size=(1, 1), strides=(1, 1), padding="same",
                          activation='relu')(step_up_1)
 
     model = Model(inputs=main_input, outputs=main_output)
