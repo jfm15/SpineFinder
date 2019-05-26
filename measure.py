@@ -412,11 +412,11 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
         average_difference = total_difference / no
         print("average", average_difference)
-        axes[col].set_xlabel(str(average_difference) + "mm", fontsize=10)
+        axes[col].set_xlabel("{:.2f}".format(average_difference) + "mm", fontsize=10)
 
         i += 1
 
-    fig.subplots_adjust(wspace=-0.2, hspace=0.4)
+    fig.subplots_adjust(wspace=0.2, hspace=0.4)
     fig.savefig(plot_path + '/identification-complete.png')
 
 
