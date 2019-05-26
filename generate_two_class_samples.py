@@ -20,7 +20,11 @@ def generate_samples(dataset_dir, sample_dir,
 
     disk_indices = pre_compute_disks(spacing)
 
-    for data_path in glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True):
+    paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
+
+    for cnt, data_path in enumerate(paths):
+
+        print(str(cnt) + " / " + str(len(paths)))
 
         # get path to corresponding metadata
         data_path_without_ext = data_path[:-ext_len]
@@ -62,7 +66,6 @@ def generate_samples(dataset_dir, sample_dir,
         random_area = volume.shape - X_size_in_pixels
 
         name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
-        print(name)
         i = 0
         j = 0
         while i < no_of_samples:
@@ -97,10 +100,10 @@ def generate_samples(dataset_dir, sample_dir,
                     print(data_path, volume.shape)
 
 
-generate_samples(dataset_dir="datasets/spine-1",
+generate_samples(dataset_dir="datasets",
                  sample_dir="samples/two_class",
                  spacing=(1.0, 1.0, 1.0),
                  X_size=(68.0, 68.0, 84.0),
                  y_size=(28.0, 28.0, 44.0),
-                 no_of_samples=160,
-                 no_of_zero_samples=10)
+                 no_of_samples=60,
+                 no_of_zero_samples=6)
