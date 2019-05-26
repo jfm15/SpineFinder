@@ -347,7 +347,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
     identification_model_objects = {'ignore_background_loss': ignore_background_loss,
                                     'vertebrae_classification_rate': vertebrae_classification_rate}
 
-    fig, axes = plt.subplots(nrows=2, ncols=no_of_scan_paths, figsize=(30, 10), dpi=300)
+    fig, axes = plt.subplots(nrows=1, ncols=no_of_scan_paths, figsize=(30, 6), dpi=300)
 
     i = 1
 
@@ -362,12 +362,12 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
 
         scan_name = (scan_path.rsplit('/', 1)[-1])[:-len(".nii.gz")]
-        axes[0, col].set_title(scan_name, fontsize=10, pad=10)
+        axes[col].set_title(scan_name, fontsize=10, pad=10)
 
         detection_model_name = (detection_model_path.rsplit('/', 1)[-1])[:-len(".h5")]
         identification_model_name = (identification_model_path.rsplit('/', 1)[-1])[:-len(".h5")]
         name = detection_model_name + "\n" + identification_model_name
-        axes[0, 0].set_ylabel(name, rotation=0, labelpad=50, fontsize=10)
+        axes[0].set_ylabel(name, rotation=0, labelpad=50, fontsize=10)
 
         pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
             scan_path=scan_path,
@@ -387,21 +387,18 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
         masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
 
-        axes[0, col].imshow(volume_slice.T, cmap='gray', origin='lower')
-        axes[0, col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
-
-        axes[1, col].imshow(volume_slice.T, cmap='gray', origin='lower')
-        axes[1, col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
+        axes[col].imshow(volume_slice.T, cmap='gray', origin='lower')
+        axes[col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
 
         for label, centroid_idx in zip(labels, centroid_indexes):
             u, v = centroid_idx[1:3]
-            axes[0, col].annotate(label, (u, v), color="red", size=6)
-            axes[0, col].scatter(u, v, color="red", s=8)
+            axes[col].annotate(label, (u, v), color="white", size=6)
+            axes[col].scatter(u, v, color="white", s=8)
 
         for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
             u, v = pred_centroid_idx[1:3]
-            axes[1, col].annotate(pred_label, (u, v), color="red", size=6)
-            axes[1, col].scatter(u, v, color="red", s=8)
+            axes[col].annotate(pred_label, (u, v), color="red", size=6)
+            axes[col].scatter(u, v, color="red", s=8)
 
         # get average distance
         total_difference = 0.0
@@ -415,7 +412,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
         average_difference = total_difference / no
         print("average", average_difference)
-        axes[1, col].set_xlabel(str(average_difference) + "mm", fontsize=10)
+        axes[col].set_xlabel(str(average_difference) + "mm", fontsize=10)
 
         i += 1
 
@@ -426,6 +423,6 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 complete_identification_picture('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
-                                'saved_current_models/ident-16:12.h5', 'plots',
+                                'saved_current_models/ident-9:59-18e.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
 
