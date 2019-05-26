@@ -102,9 +102,9 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
         detections = apply_ideal_detection(volume, centroid_indexes)
 
     # get the largest island
-    _, largest_island_np = sampling_helper_functions.crop_labelling(detections)
-    # largest_island_np = np.transpose(np.nonzero(detections))
-    largest_island_np = np.transpose(np.nonzero(largest_island_np)).astype(int)
+    # _, largest_island_np = sampling_helper_functions.crop_labelling(detections)
+    largest_island_np = np.transpose(np.nonzero(detections))
+    # largest_island_np = np.transpose(np.nonzero(largest_island_np)).astype(int)
     i_min = np.min(largest_island_np[:, 0])
     i_max = np.max(largest_island_np[:, 0])
 
@@ -337,7 +337,7 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
 
 def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path,
                                     spacing=(2.0, 2.0, 2.0)):
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:10]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:3]
     no_of_scan_paths = len(scan_paths)
 
     weights = np.array([0.1, 0.9])
@@ -384,7 +384,8 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         volume = opening_files.read_nii(scan_path, spacing=spacing)
 
         volume_slice = volume[cut, :, :]
-        identifications_slice = pred_identifications[cut, :, :]
+        # identifications_slice = pred_identifications[cut, :, :]
+        identifications_slice = np.max(pred_identifications, axis=0)
 
         masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
 
