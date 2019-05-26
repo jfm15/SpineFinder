@@ -102,8 +102,9 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
         detections = apply_ideal_detection(volume, centroid_indexes)
 
     # get the largest island
-    # bounds, detections = sampling_helper_functions.crop_labelling(detections)
-    largest_island_np = np.transpose(np.nonzero(detections))
+    _, largest_island_np = sampling_helper_functions.crop_labelling(detections)
+    # largest_island_np = np.transpose(np.nonzero(detections))
+    largest_island_np = np.transpose(largest_island_np)
     i_min = np.min(largest_island_np[:, 0])
     i_max = np.max(largest_island_np[:, 0])
 
