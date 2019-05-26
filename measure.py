@@ -7,7 +7,7 @@ from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 from models.simple_identification import ignore_background_loss, vertebrae_classification_rate
 from losses_and_metrics.dsc import dice_coef_label
-from utility_functions.labels import LABELS
+from utility_functions.labels import LABELS_NO_L6
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
@@ -86,8 +86,6 @@ def apply_identification_model(volume, i_min, i_max, model, patch_size):
     return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
 
 
-
-
 def test_scan(scan_path, centroid_path, detection_model_path, detection_model_input_shape, detection_model_objects,
               identification_model_path, identification_model_input_shape, identification_model_objects,
               ideal_detection=False, spacing=(2.0, 2.0, 2.0)):
@@ -135,12 +133,13 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
     labels = []
     centroid_estimates = []
     for key in sorted(histogram.keys()):
-        if 0 <= key < len(LABELS):
+        if 0 <= key < len(LABELS_NO_L6):
             arr = np.array(histogram[key])
-            if arr.shape[0] > 1000:
+            print(arr.shape[0])
+            if arr.shape[0] > 3000:
                 centroid_estimate = np.median(arr, axis=0)
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
-                labels.append(LABELS[key])
+                labels.append(LABELS_NO_L6[key])
                 centroid_estimates.append(list(centroid_estimate))
 
     return labels, centroid_estimates, detections, identifications
