@@ -3,8 +3,8 @@ from models.simple_identification import simple_identification, unet_slices
 
 # inputs to the model
 model_params = {'kernel_size': (3, 3),
-                'filters': 32,
-                'learning_rate': 0.001}
+                'filters': 16,
+                'learning_rate': 0.00075}
 
 perform_learning(sample_dir="samples/slices",
                  training_val_split=0.5,
