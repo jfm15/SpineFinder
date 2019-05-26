@@ -403,6 +403,20 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             axes[1, col].annotate(pred_label, (u, v), color="red", size=6)
             axes[1, col].scatter(u, v, color="red", s=8)
 
+        # get average distance
+        total_difference = 0.0
+        no = 0.0
+        for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
+            if pred_label in labels:
+                label_idx = labels.index(pred_label)
+                print(pred_label, centroid_indexes[label_idx], pred_centroid_idx)
+                total_difference += np.linalg.norm(pred_centroid_idx - centroid_indexes[label_idx])
+                no += 1
+
+        average_difference = total_difference / no
+        print("average", average_difference)
+        axes[1, col].set_xlabel(str(average_difference) + "mm", fontsize=10)
+
         i += 1
 
     fig.subplots_adjust(wspace=-0.2, hspace=0.4)
