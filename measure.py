@@ -135,7 +135,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
     for key in sorted(histogram.keys()):
         if 0 <= key < len(LABELS_NO_L6):
             arr = np.array(histogram[key])
-            print(arr.shape[0])
+            print(LABELS_NO_L6[key], arr.shape[0])
             if arr.shape[0] > 3000:
                 centroid_estimate = np.median(arr, axis=0)
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
@@ -352,7 +352,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
     i = 1
 
     for col, scan_path in enumerate(scan_paths):
-        print(i)
+        print(i, scan_path)
         scan_path_without_ext = scan_path[:-len(".nii.gz")]
         centroid_path = scan_path_without_ext + ".lml"
 
