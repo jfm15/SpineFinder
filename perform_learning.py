@@ -7,7 +7,7 @@ import inspect
 import gc
 
 
-def perform_learning(sample_dir, training_val_split, sample_shape,
+def perform_learning(sample_dir, training_val_split, X_shape, y_shape,
                      batch_size, sample_channels, categorise, output_classes,
                      model_func, model_params, epochs, model_path, checkpoint_path,
                      log_name, log_description):
@@ -16,7 +16,8 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
     partition, labels = create_partition_and_labels(sample_dir, training_val_split, randomise=True)
 
     # generators
-    params = {'dim': sample_shape,
+    params = {'X_shape': X_shape,
+              'y_shape' : y_shape,
               'samples_dir': sample_dir,
               'batch_size': batch_size,
               'n_channels': sample_channels,
@@ -31,8 +32,7 @@ def perform_learning(sample_dir, training_val_split, sample_shape,
     checkpoint = ModelCheckpoint(checkpoint_path, period=3)
 
     # create model
-    model_input_shape = tuple(list(sample_shape) + [1])
-    model = model_func(input_shape=model_input_shape, **model_params)
+    model = model_func(**model_params)
 
     # tensorboard
     now = datetime.datetime.now()

@@ -6,10 +6,11 @@ import keras
 
 class DataGenerator(keras.utils.Sequence):
 
-    def __init__(self, ids_in_set, labels, dim, samples_dir, batch_size=32, n_channels=1, categorise=True, n_classes=1,
+    def __init__(self, ids_in_set, labels, X_shape, y_shape, samples_dir, batch_size=32, n_channels=1, categorise=True, n_classes=1,
                  shuffle=True):
 
-        self.dim = dim
+        self.X_shape = X_shape
+        self.y_shape = y_shape
         self.batch_size = batch_size
         self.labels = labels
         self.ids_in_set = ids_in_set
@@ -49,8 +50,8 @@ class DataGenerator(keras.utils.Sequence):
     def __data_generation(self, ids_in_set_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
         # Initialization
-        X = np.empty((self.batch_size, *self.dim, self.n_channels))
-        y = np.empty((self.batch_size, *self.dim, self.n_classes), dtype=int)
+        X = np.empty((self.batch_size, *self.X_shape, self.n_channels))
+        y = np.empty((self.batch_size, *self.y_shape, self.n_classes), dtype=int)
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):

@@ -158,7 +158,7 @@ def detection_unet(input_shape, filters, kernel_size, weights, learning_rate):
     return model
 
 
-def detection_unet_no_padding(input_shape, filters, kernel_size, weights, learning_rate):
+def detection_unet_no_padding(filters, kernel_size, weights, learning_rate):
     # Input
     main_input = Input(shape=(None, None, None, 1))
 
