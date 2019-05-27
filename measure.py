@@ -37,7 +37,6 @@ def apply_detection_model(volume, model, X_size, y_size):
     for x in range(0, volume_padded.shape[0] - X_size[0] + 1, y_size[0]):
         for y in range(0, volume_padded.shape[1] - X_size[1] + 1, y_size[1]):
             for z in range(0, volume_padded.shape[2] - X_size[2] + 1, y_size[2]):
-                print(x, y, z)
                 corner_a = [x, y, z]
                 corner_b = corner_a + X_size
                 corner_c = corner_a + border
@@ -47,8 +46,8 @@ def apply_detection_model(volume, model, X_size, y_size):
                 result = model.predict(patch)
                 result = np.squeeze(result, axis=0)
                 decat_result = np.argmax(result, axis=3)
-                #cropped_decat_result = decat_result[border[0]:-border[0], border[1]:-border[1], border[2]:-border[2]]
-                output[corner_c[0]:corner_d[0], corner_c[1]:corner_d[1], corner_c[2]:corner_d[2]] = decat_result
+                cropped_decat_result = decat_result[border[0]:-border[0], border[1]:-border[1], border[2]:-border[2]]
+                output[corner_c[0]:corner_d[0], corner_c[1]:corner_d[1], corner_c[2]:corner_d[2]] = cropped_decat_result
                 # print(x, y, z, np.bincount(decat_result.reshape(-1).astype(int)))
 
     return output[border[0]:border[0] + volume.shape[0],
@@ -73,28 +72,40 @@ def apply_ideal_detection(volume, centroid_indexes):
     return output
 
 
-def apply_identification_model(volume, i_min, i_max, model, patch_size):
+def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
 
-    # paddings = np.mod(patch_size - np.mod(volume.shape[1:3], patch_size), patch_size)
-    paddings = np.mod(16 - np.mod(volume.shape[1:3], 16), 16)
-    paddings = np.array(list(zip(np.zeros(3), [0] + list(paddings)))).astype(int)
-    volume_padded = np.pad(volume, paddings, mode="constant")
+    border = ((X_size - y_size) / 2.0).astype(int)
+    border = np.append(0, border)
+    border_paddings = np.array(list(zip(border, border))).astype(int)
+    volume_padded = np.pad(volume, border_paddings, mode="constant")
+
+    divisible_area = volume_padded.shape[1:3] - X_size
+    paddings = np.mod(y_size - np.mod(divisible_area.shape, y_size), y_size)
+    paddings = np.append(0, paddings)
+    paddings = np.array(list(zip(np.zeros(3), paddings))).astype(int)
+    volume_padded = np.pad(volume_padded, paddings, mode="constant")
+
     output = np.zeros(volume_padded.shape)
 
     for i in range(i_min, i_max):
+        cnt = (i - i_min) / (i_max - i_min) * 100
+        print(str(cnt))
         volume_slice_padded = volume_padded[i, :, :]
-        '''
-        for x in range(0, volume_slice_padded.shape[0], patch_size[0]):
-            for y in range(0, volume_slice_padded.shape[1], patch_size[1]):
+        for x in range(0, volume_padded.shape[0] - X_size[0] + 1, y_size[0]):
+            for y in range(0, volume_padded.shape[1] - X_size[1] + 1, y_size[1]):
                 corner_a = [x, y]
-                corner_b = corner_a + patch_size
+                corner_b = corner_a + X_size
+                corner_c = corner_a + border
+                corner_d = corner_c + y_size
                 patch = volume_slice_padded[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]]
-                patch = patch.reshape(1, *patch_size, 1)
+                patch = patch.reshape(1, *X_size, 1)
                 result = model.predict(patch)
                 result = np.squeeze(result, axis=0)
                 result = np.squeeze(result, axis=-1)
                 result = np.round(result)
-                output[i, corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]] = result
+                cropped_result = result[border[0]:-border[0], border[1]:-border[1]]
+                output[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] = cropped_result
+
         '''
         patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
         result = model.predict(patch)
@@ -102,12 +113,13 @@ def apply_identification_model(volume, i_min, i_max, model, patch_size):
         result = np.squeeze(result, axis=-1)
         result = np.round(result)
         output[i, :, :] = result
+        '''
 
-    return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
+    return output[:, border[0]:border[0] + volume.shape[0], border[1]:border[1] + volume.shape[1]]
 
 
 def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape, detection_y_shape, detection_model_objects,
-              identification_model_path, identification_model_input_shape, identification_model_objects,
+              identification_model_path, identification_X_shape, identification_y_shape, identification_model_objects,
               ideal_detection=False, spacing=(2.0, 2.0, 2.0)):
 
     volume = opening_files.read_nii(scan_path, spacing)
@@ -132,7 +144,8 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape,
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
     identifications = apply_identification_model(volume, i_min, i_max,
                                                  identification_model,
-                                                 identification_model_input_shape)
+                                                 identification_X_shape,
+                                                 identification_y_shape)
 
     # crop parts of slices
     identifications *= detections
@@ -394,11 +407,12 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             scan_path=scan_path,
             centroid_path=centroid_path,
             detection_model_path=detection_model_path,
-            detection_X_shape=np.array([68, 68, 84]),
-            detection_y_shape=np.array([28, 28, 44]),
+            detection_X_shape=np.array([64, 64, 80]),
+            detection_y_shape=np.array([16, 16, 20]),
             detection_model_objects=detection_model_objects,
             identification_model_path=identification_model_path,
-            identification_model_input_shape=np.array([80, 320]),
+            identification_X_shape=np.array([80, 320]),
+            identification_y_shape=np.array([40, 160]),
             identification_model_objects=identification_model_objects,
             spacing=spacing)
 
@@ -445,6 +459,6 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
-complete_identification_picture('datasets_test', 'saved_current_models/detec-21:28-c.h5',
+complete_identification_picture('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
                                 'saved_current_models/ident-9:59-18e.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
