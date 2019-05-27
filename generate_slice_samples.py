@@ -140,7 +140,7 @@ def generate_slice_samples(dataset_dir, sample_dir, X_size=(124, 332), y_size=(3
 
                 care_about_labels = np.count_nonzero(cropped_sample_labels_slice)
                 j += 1
-                if care_about_labels > 100 or j > 100:
+                if care_about_labels > 200 or j > 100:
                     break
 
             # save file
@@ -156,7 +156,7 @@ def generate_slice_samples(dataset_dir, sample_dir, X_size=(124, 332), y_size=(3
 generate_slice_samples(dataset_dir="datasets",
                        sample_dir="samples/slices",
                        X_size=(124, 332),
-                       y_size=(36, 84),
+                       y_size=(36, 244),
                        no_of_samples=240,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)
