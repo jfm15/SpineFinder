@@ -37,6 +37,7 @@ def apply_detection_model(volume, model, X_size, y_size):
     for x in range(0, volume_padded.shape[0] - X_size[0] + 1, y_size[0]):
         for y in range(0, volume_padded.shape[1] - X_size[1] + 1, y_size[1]):
             for z in range(0, volume_padded.shape[2] - X_size[2] + 1, y_size[2]):
+                print(x, y, z)
                 corner_a = [x, y, z]
                 corner_b = corner_a + X_size
                 corner_c = corner_a + border
@@ -408,7 +409,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             centroid_path=centroid_path,
             detection_model_path=detection_model_path,
             detection_X_shape=np.array([64, 64, 80]),
-            detection_y_shape=np.array([16, 16, 20]),
+            detection_y_shape=np.array([32, 32, 40]),
             detection_model_objects=detection_model_objects,
             identification_model_path=identification_model_path,
             identification_X_shape=np.array([80, 320]),
