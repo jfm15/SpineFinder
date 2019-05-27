@@ -157,6 +157,6 @@ generate_slice_samples(dataset_dir="datasets",
                        sample_dir="samples/slices",
                        X_size=(124, 332),
                        y_size=(36, 84),
-                       no_of_samples=160,
+                       no_of_samples=240,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)

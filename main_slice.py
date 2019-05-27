@@ -1,5 +1,5 @@
 from perform_learning import perform_learning
-from models.simple_identification import simple_identification, unet_slices
+from models.simple_identification import simple_identification, unet_slices_no_padding
 
 # inputs to the model
 model_params = {'kernel_size': (3, 3),
@@ -8,12 +8,13 @@ model_params = {'kernel_size': (3, 3),
 
 perform_learning(sample_dir="samples/slices",
                  training_val_split=0.5,
-                 sample_shape=(80, 320),
+                 X_shape=(124, 332),
+                 y_shape=(36, 84),
                  batch_size=32,
                  sample_channels=1,
                  categorise=False,
                  output_classes=1,
-                 model_func=unet_slices,
+                 model_func=unet_slices_no_padding,
                  model_params=model_params,
                  epochs=150,
                  model_path="slices_model.h5",
