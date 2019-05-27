@@ -116,7 +116,9 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
         output[i, :, :] = result
         '''
 
-    return output[:, border[0]:border[0] + volume.shape[0], border[1]:border[1] + volume.shape[1]]
+    output = output[:, border[0]:border[0] + volume.shape[0], border[1]:border[1] + volume.shape[1]]
+    print(output.shape)
+    return output
 
 
 def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape, detection_y_shape, detection_model_objects,
