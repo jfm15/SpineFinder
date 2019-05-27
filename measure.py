@@ -105,6 +105,7 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
                 result = np.squeeze(result, axis=0)
                 result = np.squeeze(result, axis=-1)
                 result = np.round(result)
+                print(np.unique(result))
                 cropped_result = result[border[0]:-border[0], border[1]:-border[1]]
                 output[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] = cropped_result
 
