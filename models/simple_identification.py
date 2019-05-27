@@ -243,7 +243,8 @@ def unet_slices_no_padding(kernel_size, filters, learning_rate):
 
     step_up_1 = UpSampling2D(size=(2, 2))(step_up_2)
     # 40 x 88
-    cropped_step_down_1 = Cropping2D(cropping=((40, 40), (120, 120)))(step_down_1)
+
+    cropped_step_down_1 = Cropping2D(cropping=((40, 40), (40, 40)))(step_down_1)
     step_up_1 = concatenate([cropped_step_down_1, step_up_1], axis=-1)
     step_up_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(step_up_1)
     # 38 x 86
