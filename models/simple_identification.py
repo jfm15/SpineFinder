@@ -175,44 +175,36 @@ def unet_slices_no_padding(kernel_size, filters, learning_rate):
     # 124 x 332
     step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(main_input)
     # 122 x 330
-    step_down_1 = BatchNormalization(momentum=0.1)(step_down_1)
     step_down_1 = Activation("relu")(step_down_1)
     step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(step_down_1)
     # 120 x 328
-    step_down_1 = BatchNormalization(momentum=0.1)(step_down_1)
     step_down_1 = Activation("relu")(step_down_1)
 
     step_down_2 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_1)
     # 60 x 164
     step_down_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1))(step_down_2)
     # 58 x 162
-    step_down_2 = BatchNormalization(momentum=0.1)(step_down_2)
     step_down_2 = Activation("relu")(step_down_2)
     step_down_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1))(step_down_2)
     # 56 x 160
-    step_down_2 = BatchNormalization(momentum=0.1)(step_down_2)
     step_down_2 = Activation("relu")(step_down_2)
 
     step_down_3 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_2)
     # 28 x 80
     step_down_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1))(step_down_3)
     # 26 x 78
-    step_down_3 = BatchNormalization(momentum=0.1)(step_down_3)
     step_down_3 = Activation("relu")(step_down_3)
     step_down_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1))(step_down_3)
     # 24 x 76
-    step_down_3 = BatchNormalization(momentum=0.1)(step_down_3)
     step_down_3 = Activation("relu")(step_down_3)
 
     floor = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_3)
     # 12 x 38
     floor = Conv2D(8 * filters, kernel_size=kernel_size, strides=(1, 1))(floor)
     # 10 x 36
-    floor = BatchNormalization(momentum=0.1)(floor)
     floor = Activation("relu")(floor)
     floor = Conv2D(8 * filters, kernel_size=kernel_size, strides=(1, 1))(floor)
     # 8 x 34
-    floor = BatchNormalization(momentum=0.1)(floor)
     floor = Activation("relu")(floor)
 
     step_up_3 = UpSampling2D(size=(2, 2))(floor)
@@ -221,11 +213,9 @@ def unet_slices_no_padding(kernel_size, filters, learning_rate):
     step_up_3 = concatenate([cropped_step_down_3, step_up_3], axis=-1)
     step_up_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1))(step_up_3)
     # 14 x 66
-    step_up_3 = BatchNormalization(momentum=0.1)(step_up_3)
     step_up_3 = Activation("relu")(step_up_3)
     step_up_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1))(step_up_3)
     # 12 x 64
-    step_up_3 = BatchNormalization(momentum=0.1)(step_up_3)
     step_up_3 = Activation("relu")(step_up_3)
 
     step_up_2 = UpSampling2D(size=(2, 2))(step_up_3)
@@ -234,11 +224,9 @@ def unet_slices_no_padding(kernel_size, filters, learning_rate):
     step_up_2 = concatenate([cropped_step_down_2, step_up_2], axis=-1)
     step_up_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1))(step_up_2)
     # 22 x 126
-    step_up_2 = BatchNormalization(momentum=0.1)(step_up_2)
     step_up_2 = Activation("relu")(step_up_2)
     step_up_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1))(step_up_2)
     # 20 x 124
-    step_up_2 = BatchNormalization(momentum=0.1)(step_up_2)
     step_up_2 = Activation("relu")(step_up_2)
 
     step_up_1 = UpSampling2D(size=(2, 2))(step_up_2)
@@ -248,11 +236,9 @@ def unet_slices_no_padding(kernel_size, filters, learning_rate):
     step_up_1 = concatenate([cropped_step_down_1, step_up_1], axis=-1)
     step_up_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(step_up_1)
     # 38 x 246
-    step_up_1 = BatchNormalization(momentum=0.1)(step_up_1)
     step_up_1 = Activation("relu")(step_up_1)
     step_up_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(step_up_1)
     # 36 x 244
-    step_up_1 = BatchNormalization(momentum=0.1)(step_up_1)
     step_up_1 = Activation("relu")(step_up_1)
 
     main_output = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), activation='relu')(step_up_1)
