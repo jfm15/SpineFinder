@@ -20,22 +20,23 @@ def apply_detection_model(volume, model, X_size, y_size):
     # Then iterate through in y_size + cropping steps
     # Then uncrop at the end
 
-    # pad to make it divisible to patch size
-    paddings = np.mod(y_size - np.mod(volume.shape, y_size), y_size)
-    paddings = np.array(list(zip(np.zeros(3), paddings))).astype(int)
-    volume_padded = np.pad(volume, paddings, mode="constant")
-
     border = ((X_size - y_size) / 2.0).astype(int)
     border_paddings = np.array(list(zip(border, border))).astype(int)
-    volume_padded = np.pad(volume_padded, border_paddings, mode="constant")
+    volume_padded = np.pad(volume, border_paddings, mode="constant")
+
+    # pad to make it divisible to patch size
+    divisible_area = volume.padding.shape - X_size
+    paddings = np.mod(y_size - np.mod(divisible_area.shape, y_size), y_size)
+    paddings = np.array(list(zip(np.zeros(3), paddings))).astype(int)
+    volume_padded = np.pad(volume_padded, paddings, mode="constant")
 
     output = np.zeros(volume_padded.shape)
 
     print(X_size, y_size, volume.shape, output.shape)
 
-    for x in range(0, volume_padded.shape[0] - X_size[0], y_size[0]):
-        for y in range(0, volume_padded.shape[1] - X_size[1], y_size[1]):
-            for z in range(0, volume_padded.shape[2] - X_size[2], y_size[2]):
+    for x in range(0, volume_padded.shape[0] - X_size[0] + 1, y_size[0]):
+        for y in range(0, volume_padded.shape[1] - X_size[1] + 1, y_size[1]):
+            for z in range(0, volume_padded.shape[2] - X_size[2] + 1, y_size[2]):
                 print(x, y, z)
                 corner_a = [x, y, z]
                 corner_b = corner_a + X_size
