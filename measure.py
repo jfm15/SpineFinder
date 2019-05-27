@@ -93,8 +93,8 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
         cnt = (i - i_min) / (i_max - i_min) * 100
         print(str(cnt))
         volume_slice_padded = volume_padded[i, :, :]
-        for x in range(0, volume_padded.shape[0] - X_size[0] + 1, y_size[0]):
-            for y in range(0, volume_padded.shape[1] - X_size[1] + 1, y_size[1]):
+        for x in range(0, volume_slice_padded.shape[0] - X_size[0] + 1, y_size[0]):
+            for y in range(0, volume_slice_padded.shape[1] - X_size[1] + 1, y_size[1]):
                 corner_a = [x, y]
                 corner_b = corner_a + X_size
                 corner_c = corner_a + border
