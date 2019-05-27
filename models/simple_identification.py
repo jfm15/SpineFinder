@@ -168,7 +168,7 @@ def unet_slices(input_shape, kernel_size, filters, learning_rate):
 
     return model
 
-def unet_slices_no_padding(input_shape, kernel_size, filters, learning_rate):
+def unet_slices_no_padding(kernel_size, filters, learning_rate):
 
     main_input = Input(shape=(None, None, 1))
 
