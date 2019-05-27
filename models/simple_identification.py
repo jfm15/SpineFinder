@@ -170,7 +170,7 @@ def unet_slices(input_shape, kernel_size, filters, learning_rate):
 
 def unet_slices_no_padding(kernel_size, filters, learning_rate):
 
-    main_input = Input(shape=(None, None, 1))
+    main_input = Input(shape=(124, 332, 1))
 
     # 124 x 332
     step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(main_input)
