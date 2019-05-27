@@ -12,28 +12,44 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 
-def apply_detection_model(volume, model, patch_size):
+def apply_detection_model(volume, model, X_size, y_size):
+
+    # E.g if X_size = 30 x 30 x 30 and y_size is 20 x 20 x 20
+    # Then cropping is ((5, 5), (5, 5), (5, 5)) pad the whole thing by cropping
+    # Then pad an additional amount to make it divisible by Y_size + cropping
+    # Then iterate through in y_size + cropping steps
+    # Then uncrop at the end
+
+    border = ((X_size - y_size) / 2.0).astype(int)
+    border_paddings = np.array(list(zip(border, border))).astype(int)
+    volume_padded = np.pad(volume, border_paddings, mode="constant")
 
     # pad to make it divisible to patch size
-    paddings = np.mod(patch_size - np.mod(volume.shape, patch_size), patch_size)
+    paddings = np.mod(y_size - np.mod(volume_padded.shape, y_size), y_size)
     paddings = np.array(list(zip(np.zeros(3), paddings))).astype(int)
-    volume_padded = np.pad(volume, paddings, mode="constant")
+    volume_padded = np.pad(volume_padded, paddings, mode="constant")
     output = np.zeros(volume_padded.shape)
 
-    for x in range(0, volume_padded.shape[0], patch_size[0]):
-        for y in range(0, volume_padded.shape[1], patch_size[1]):
-            for z in range(0, volume_padded.shape[2], patch_size[2]):
+    for x in range(0, volume_padded.shape[0], y_size[0]):
+        for y in range(0, volume_padded.shape[1], y_size[1]):
+            for z in range(0, volume_padded.shape[2], y_size[2]):
+                print(x, y, z)
                 corner_a = [x, y, z]
-                corner_b = corner_a + patch_size
+                corner_b = corner_a + X_size
+                corner_c = corner_a + border
+                corner_d = corner_c + y_size
                 patch = volume_padded[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]]
-                patch = patch.reshape(1, *patch_size, 1)
+                patch = patch.reshape(1, *X_size, 1)
                 result = model.predict(patch)
                 result = np.squeeze(result, axis=0)
                 decat_result = np.argmax(result, axis=3)
-                output[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = decat_result
+                cropped_decat_result = decat_result[border[0]:-border[0], border[1]:-border[1], border[2]:-border[2]]
+                output[corner_c[0]:corner_d[0], corner_c[1]:corner_d[1], corner_c[2]:corner_d[2]] = cropped_decat_result
                 # print(x, y, z, np.bincount(decat_result.reshape(-1).astype(int)))
 
-    return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
+    return output[border[0]:border[0] + volume.shape[0],
+           border[1]:border[1] + volume.shape[1],
+           border[2]:border[2] + volume.shape[2]]
 
 
 def apply_ideal_detection(volume, centroid_indexes):
@@ -86,7 +102,7 @@ def apply_identification_model(volume, i_min, i_max, model, patch_size):
     return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
 
 
-def test_scan(scan_path, centroid_path, detection_model_path, detection_model_input_shape, detection_model_objects,
+def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape, detection_y_shape, detection_model_objects,
               identification_model_path, identification_model_input_shape, identification_model_objects,
               ideal_detection=False, spacing=(2.0, 2.0, 2.0)):
 
@@ -95,7 +111,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_model_in
     # first stage is to put the volume through the detection model to find where vertebrae are
     if not ideal_detection:
         detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
-        detections = apply_detection_model(volume, detection_model, detection_model_input_shape)
+        detections = apply_detection_model(volume, detection_model, detection_X_shape, detection_y_shape)
     else:
         _, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
         centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
@@ -374,7 +390,8 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             scan_path=scan_path,
             centroid_path=centroid_path,
             detection_model_path=detection_model_path,
-            detection_model_input_shape=np.array([64, 64, 80]),
+            detection_X_shape=np.array([64, 64, 80]),
+            detection_y_shape=np.array([32, 32, 40]),
             detection_model_objects=detection_model_objects,
             identification_model_path=identification_model_path,
             identification_model_input_shape=np.array([80, 320]),
@@ -427,4 +444,3 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 complete_identification_picture('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
                                 'saved_current_models/ident-9:59-18e.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
-
