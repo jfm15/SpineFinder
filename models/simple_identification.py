@@ -1,7 +1,7 @@
 from keras import optimizers
 from keras import backend as K
 from keras.models import Sequential, Model
-from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate, Activation, BatchNormalization
+from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate, Activation, BatchNormalization, Cropping2D
 
 
 def simple_identification(input_shape, kernel_size, filters, learning_rate):
@@ -158,6 +158,103 @@ def unet_slices(input_shape, kernel_size, filters, learning_rate):
 
     main_output = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), padding="same",
                          activation='relu')(step_up_1)
+
+    model = Model(inputs=main_input, outputs=main_output)
+
+    # define optimizer
+    # sgd = optimizers.SGD(lr=learning_rate, decay=1e-6, momentum=0.9)
+    adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-4)
+    model.compile(optimizer=adam, loss=ignore_background_loss, metrics=[vertebrae_classification_rate])
+
+    return model
+
+def unet_slices_no_padding(input_shape, kernel_size, filters, learning_rate):
+
+    main_input = Input(shape=(None, None, 1))
+
+    # 124 x 332
+    step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(main_input)
+    # 122 x 330
+    step_down_1 = BatchNormalization(momentum=0.1)(step_down_1)
+    step_down_1 = Activation("relu")(step_down_1)
+    step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(step_down_1)
+    # 120 x 328
+    step_down_1 = BatchNormalization(momentum=0.1)(step_down_1)
+    step_down_1 = Activation("relu")(step_down_1)
+
+    step_down_2 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_1)
+    # 60 x 164
+    step_down_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1))(step_down_2)
+    # 58 x 82
+    step_down_2 = BatchNormalization(momentum=0.1)(step_down_2)
+    step_down_2 = Activation("relu")(step_down_2)
+    step_down_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1))(step_down_2)
+    # 56 x 80
+    step_down_2 = BatchNormalization(momentum=0.1)(step_down_2)
+    step_down_2 = Activation("relu")(step_down_2)
+
+    step_down_3 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_2)
+    # 28 x 40
+    step_down_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1))(step_down_3)
+    # 26 x 38
+    step_down_3 = BatchNormalization(momentum=0.1)(step_down_3)
+    step_down_3 = Activation("relu")(step_down_3)
+    step_down_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1))(step_down_3)
+    # 24 x 36
+    step_down_3 = BatchNormalization(momentum=0.1)(step_down_3)
+    step_down_3 = Activation("relu")(step_down_3)
+
+    floor = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_3)
+    # 12 x 18
+    floor = Conv2D(8 * filters, kernel_size=kernel_size, strides=(1, 1))(floor)
+    # 10 x 16
+    floor = BatchNormalization(momentum=0.1)(floor)
+    floor = Activation("relu")(floor)
+    floor = Conv2D(8 * filters, kernel_size=kernel_size, strides=(1, 1))(floor)
+    # 8 x 14
+    floor = BatchNormalization(momentum=0.1)(floor)
+    floor = Activation("relu")(floor)
+
+    step_up_3 = UpSampling2D(size=(2, 2))(floor)
+    # 16 x 28
+    cropped_step_down_3 = Cropping2D(cropping=((4, 4), (4, 4)))(step_down_3)
+    step_up_3 = concatenate([cropped_step_down_3, step_up_3], axis=-1)
+    step_up_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1))(step_up_3)
+    # 14 x 26
+    step_up_3 = BatchNormalization(momentum=0.1)(step_up_3)
+    step_up_3 = Activation("relu")(step_up_3)
+    step_up_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1))(step_up_3)
+    # 12 x 24
+    step_up_3 = BatchNormalization(momentum=0.1)(step_up_3)
+    step_up_3 = Activation("relu")(step_up_3)
+
+    step_up_2 = UpSampling2D(size=(2, 2))(step_up_3)
+    # 24 x 48
+    cropped_step_down_2 = Cropping2D(cropping=((16, 16), (16, 16)))(step_down_2)
+    step_up_2 = concatenate([cropped_step_down_2, step_up_2], axis=-1)
+    step_up_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1))(step_up_2)
+    # 22 x 46
+    step_up_2 = BatchNormalization(momentum=0.1)(step_up_2)
+    step_up_2 = Activation("relu")(step_up_2)
+    step_up_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1))(step_up_2)
+    # 20 x 44
+    step_up_2 = BatchNormalization(momentum=0.1)(step_up_2)
+    step_up_2 = Activation("relu")(step_up_2)
+
+    step_up_1 = UpSampling2D(size=(2, 2))(step_up_2)
+    # 40 x 88
+    cropped_step_down_1 = Cropping2D(cropping=((40, 40), (120, 120)))(step_down_1)
+    step_up_1 = concatenate([cropped_step_down_1, step_up_1], axis=-1)
+    step_up_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(step_up_1)
+    # 38 x 86
+    step_up_1 = BatchNormalization(momentum=0.1)(step_up_1)
+    step_up_1 = Activation("relu")(step_up_1)
+    step_up_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1))(step_up_1)
+    # 36 x 84
+    step_up_1 = BatchNormalization(momentum=0.1)(step_up_1)
+    step_up_1 = Activation("relu")(step_up_1)
+
+    main_output = Conv2D(1, kernel_size=(1, 1), strides=(1, 1), activation='relu')(step_up_1)
 
     model = Model(inputs=main_input, outputs=main_output)
 
