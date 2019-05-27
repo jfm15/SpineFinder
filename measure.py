@@ -25,7 +25,7 @@ def apply_detection_model(volume, model, X_size, y_size):
     volume_padded = np.pad(volume, border_paddings, mode="constant")
 
     # pad to make it divisible to patch size
-    divisible_area = volume_padding.shape - X_size
+    divisible_area = volume_padded.shape - X_size
     paddings = np.mod(y_size - np.mod(divisible_area.shape, y_size), y_size)
     paddings = np.array(list(zip(np.zeros(3), paddings))).astype(int)
     volume_padded = np.pad(volume_padded, paddings, mode="constant")
