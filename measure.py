@@ -86,6 +86,7 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
     paddings = np.array(list(zip(np.zeros(3), paddings))).astype(int)
     volume_padded = np.pad(volume_padded, paddings, mode="constant")
 
+    print(volume.shape, volume_padded.shape)
     output = np.zeros(volume_padded.shape)
 
     for i in range(i_min, i_max):
