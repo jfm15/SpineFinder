@@ -117,7 +117,7 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
         output[i, :, :] = result
         '''
 
-    output = output[:, border[0]:border[0] + volume.shape[0], border[1]:border[1] + volume.shape[1]]
+    output = output[:, border[0]:border[0] + volume.shape[1], border[1]:border[1] + volume.shape[2]]
     print(output.shape)
     return output
 
