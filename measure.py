@@ -25,6 +25,8 @@ def apply_detection_model(volume, model, X_size, y_size):
     paddings = np.array(list(zip(np.zeros(3), paddings))).astype(int)
     volume_padded = np.pad(volume, paddings, mode="constant")
 
+    print(volume_padded.shape)
+
     border = ((X_size - y_size) / 2.0).astype(int)
     border_paddings = np.array(list(zip(border, border))).astype(int)
     volume_padded = np.pad(volume_padded, border_paddings, mode="constant")
