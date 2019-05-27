@@ -47,8 +47,8 @@ def apply_detection_model(volume, model, X_size, y_size):
                 result = model.predict(patch)
                 result = np.squeeze(result, axis=0)
                 decat_result = np.argmax(result, axis=3)
-                cropped_decat_result = decat_result[border[0]:-border[0], border[1]:-border[1], border[2]:-border[2]]
-                output[corner_c[0]:corner_d[0], corner_c[1]:corner_d[1], corner_c[2]:corner_d[2]] = cropped_decat_result
+                #cropped_decat_result = decat_result[border[0]:-border[0], border[1]:-border[1], border[2]:-border[2]]
+                output[corner_c[0]:corner_d[0], corner_c[1]:corner_d[1], corner_c[2]:corner_d[2]] = decat_result
                 # print(x, y, z, np.bincount(decat_result.reshape(-1).astype(int)))
 
     return output[border[0]:border[0] + volume.shape[0],
@@ -394,8 +394,8 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             scan_path=scan_path,
             centroid_path=centroid_path,
             detection_model_path=detection_model_path,
-            detection_X_shape=np.array([64, 64, 80]),
-            detection_y_shape=np.array([32, 32, 40]),
+            detection_X_shape=np.array([68, 68, 84]),
+            detection_y_shape=np.array([28, 28, 44]),
             detection_model_objects=detection_model_objects,
             identification_model_path=identification_model_path,
             identification_model_input_shape=np.array([80, 320]),
@@ -445,6 +445,6 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
-complete_identification_picture('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
+complete_identification_picture('datasets_test', 'saved_current_models/detec-21:28-c.h5',
                                 'saved_current_models/ident-9:59-18e.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
