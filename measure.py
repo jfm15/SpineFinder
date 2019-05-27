@@ -31,7 +31,7 @@ def apply_detection_model(volume, model, X_size, y_size):
     volume_padded = np.pad(volume_padded, paddings, mode="constant")
     output = np.zeros(volume_padded.shape)
 
-    print(X_size, y_size, output.shape)
+    print(X_size, y_size, volume.shape, output.shape)
 
     for x in range(0, volume_padded.shape[0], y_size[0]):
         for y in range(0, volume_padded.shape[1], y_size[1]):
