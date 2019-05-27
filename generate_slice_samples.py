@@ -141,6 +141,7 @@ def generate_slice_samples(dataset_dir, sample_dir, X_size=(124, 332), y_size=(3
                 care_about_labels = np.count_nonzero(cropped_sample_labels_slice)
                 j += 1
                 if care_about_labels > 100 or j > 100:
+                    print(j)
                     break
 
             # save file
