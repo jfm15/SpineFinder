@@ -83,8 +83,8 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
     print(volume.shape, volume_padded.shape)
     output = np.zeros(volume_padded.shape)
 
-    x_positions = range(0, volume_padded.shape[1] - X_size[0], y_size[0])
-    y_positions = range(0, volume_padded.shape[2] - X_size[1], y_size[1])
+    x_positions = list(range(0, volume_padded.shape[1] - X_size[0], y_size[0])).append(volume_padded.shape[1] - X_size[0])
+    y_positions = list(range(0, volume_padded.shape[2] - X_size[1], y_size[1])).append(volume_padded.shape[2] - X_size[1])
 
     for i in range(i_min, i_max):
         cnt = round((i - i_min) / (i_max - i_min) * 100)
