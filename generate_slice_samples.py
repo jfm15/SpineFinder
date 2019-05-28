@@ -66,7 +66,7 @@ def generate_slice_samples(dataset_dir, sample_dir, spacing, no_of_samples, make
             np.save(labelling_path, sample_labels_slice)
 
 
-generate_slice_samples(dataset_dir="datasets/spine-1",
+generate_slice_samples(dataset_dir="datasets",
                        sample_dir="samples/slices",
                        spacing=(1.0, 1.0, 1.0),
                        no_of_samples=64,
