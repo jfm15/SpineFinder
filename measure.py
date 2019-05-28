@@ -82,6 +82,7 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
 
     print(volume.shape, volume_padded.shape)
     output = np.zeros(volume_padded.shape)
+    average_map = np.zeros(volume_padded.shape)
 
     x_positions = list(range(0, volume_padded.shape[1] - X_size[0], y_size[0]))
     x_positions.append(volume_padded.shape[1] - X_size[0] - 1)
@@ -103,9 +104,9 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
                 result = model.predict(patch)
                 result = np.squeeze(result, axis=0)
                 result = np.squeeze(result, axis=-1)
-                result = np.round(result)
                 #cropped_result = result[border[1]:-border[1], border[2]:-border[2]]
-                output[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] = result
+                output[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] += result
+                average_map[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] += 1
 
         '''
         patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
@@ -117,7 +118,9 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
         '''
 
     output = output[:, border[1]:border[1] + volume.shape[1], border[2]:border[2] + volume.shape[2]]
-    print(output.shape)
+    average_map = average_map[:, border[1]:border[1] + volume.shape[1], border[2]:border[2] + volume.shape[2]]
+    output /= average_map
+    output = np.round(output)
     return output
 
 
