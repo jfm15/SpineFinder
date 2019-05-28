@@ -215,7 +215,7 @@ def unet_slices_no_padding(kernel_size, filters, learning_rate):
     floor = BatchNormalization(momentum=0.1)(floor)
     floor = Activation("relu")(floor)
 
-    floor = Conv2D(8 * filters, kernel_size=(8, 34), padding="same", trides=(1, 1))(floor)
+    floor = Conv2D(8 * filters, kernel_size=(8, 34), padding="same", strides=(1, 1))(floor)
     floor = BatchNormalization(momentum=0.1)(floor)
     floor = Activation("relu")(floor)
     floor = Conv2D(8 * filters, kernel_size=(8, 34), padding="same", strides=(1, 1))(floor)
