@@ -106,8 +106,8 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
                 result = np.squeeze(result, axis=-1)
                 result = np.round(result)
                 print(np.unique(result))
-                cropped_result = result[border[1]:-border[1], border[2]:-border[2]]
-                output[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] = cropped_result
+                #cropped_result = result[border[1]:-border[1], border[2]:-border[2]]
+                output[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] = result
 
         '''
         patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
@@ -464,6 +464,6 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
-complete_identification_picture('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
-                                'saved_current_models/ident-9:59-18e.h5', 'plots',
+complete_identification_picture('datasets_test', 'saved_current_models/detec-21:28-c.h5',
+                                'saved_current_models/ident-00:36-c.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
