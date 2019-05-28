@@ -7,8 +7,8 @@ import inspect
 import gc
 
 
-def perform_learning(sample_dir, training_val_split, X_shape, y_shape,
-                     batch_size, sample_channels, categorise, output_classes,
+def perform_learning(sample_dir, training_val_split,
+                     batch_size, sample_channels, categorise, output_classes, shuffle,
                      model_func, model_params, epochs, model_path, checkpoint_path,
                      log_name, log_description):
 
@@ -16,14 +16,12 @@ def perform_learning(sample_dir, training_val_split, X_shape, y_shape,
     partition, labels = create_partition_and_labels(sample_dir, training_val_split, randomise=True)
 
     # generators
-    params = {'X_shape': X_shape,
-              'y_shape' : y_shape,
-              'samples_dir': sample_dir,
+    params = {'samples_dir': sample_dir,
               'batch_size': batch_size,
               'n_channels': sample_channels,
               'categorise': categorise,
               'n_classes': output_classes,
-              'shuffle': True}
+              'shuffle': shuffle}
 
     training_generator = DataGenerator(partition['train'], labels, **params)
     validation_generator = DataGenerator(partition['validation'], labels, **params)

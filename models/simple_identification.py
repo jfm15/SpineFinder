@@ -68,7 +68,7 @@ def vertebrae_classification_rate(y_true, y_pred):
     return K.sum(K.cast(K.equal(K.round(y_pred), y_true), 'float32') * dont_cares) / K.sum(dont_cares)
 
 
-def unet_slices(input_shape, kernel_size, filters, learning_rate):
+def unet_slices(kernel_size, filters, learning_rate):
 
     main_input = Input(shape=(None, None, 1))
 
@@ -167,6 +167,7 @@ def unet_slices(input_shape, kernel_size, filters, learning_rate):
     model.compile(optimizer=adam, loss=ignore_background_loss, metrics=[vertebrae_classification_rate])
 
     return model
+
 
 def unet_slices_no_padding(kernel_size, filters, learning_rate):
 
