@@ -70,4 +70,4 @@ generate_slice_samples(dataset_dir="datasets",
                        sample_dir="samples/slices",
                        spacing=(1.0, 1.0, 1.0),
                        no_of_samples=64,
-                       make_multiple=32)
+                       make_multiple=16)
