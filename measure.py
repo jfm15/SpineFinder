@@ -108,7 +108,7 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
                 output[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] += result
                 average_map[corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] += 1
 
-        output[i, :, :] /= average_map
+                output[i, :, :] = np.divide(output[i, :, :], average_map)
         '''
         patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
         result = model.predict(patch)
