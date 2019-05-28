@@ -90,7 +90,7 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
     output = np.zeros(volume_padded.shape)
 
     for i in range(i_min, i_max):
-        cnt = (i - i_min) / (i_max - i_min) * 100
+        cnt = round((i - i_min) / (i_max - i_min) * 100)
         print(str(cnt))
         volume_slice_padded = volume_padded[i, :, :]
         for x in range(0, volume_slice_padded.shape[0] - X_size[0] + 1, y_size[0]):
@@ -105,7 +105,6 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
                 result = np.squeeze(result, axis=0)
                 result = np.squeeze(result, axis=-1)
                 result = np.round(result)
-                print(np.unique(result))
                 #cropped_result = result[border[1]:-border[1], border[2]:-border[2]]
                 output[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] = result
 
@@ -375,7 +374,7 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
 
 def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path,
                                     spacing=(2.0, 2.0, 2.0)):
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:4]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:10]
     no_of_scan_paths = len(scan_paths)
 
     weights = np.array([0.1, 0.9])
@@ -424,8 +423,8 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         volume = opening_files.read_nii(scan_path, spacing=spacing)
 
         volume_slice = volume[cut, :, :]
-        # identifications_slice = pred_identifications[cut, :, :]
-        identifications_slice = np.max(pred_identifications, axis=0)
+        identifications_slice = pred_identifications[cut, :, :]
+        # identifications_slice = np.max(pred_identifications, axis=0)
 
         masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
 
