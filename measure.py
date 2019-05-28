@@ -412,12 +412,12 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             scan_path=scan_path,
             centroid_path=centroid_path,
             detection_model_path=detection_model_path,
-            detection_X_shape=np.array([64, 64, 80]),
-            detection_y_shape=np.array([32, 32, 40]),
+            detection_X_shape=np.array([68, 68, 84]),
+            detection_y_shape=np.array([28, 28, 44]),
             detection_model_objects=detection_model_objects,
             identification_model_path=identification_model_path,
-            identification_X_shape=np.array([80, 320]),
-            identification_y_shape=np.array([40, 160]),
+            identification_X_shape=np.array([124, 332]),
+            identification_y_shape=np.array([36, 244]),
             identification_model_objects=identification_model_objects,
             spacing=spacing)
 
