@@ -80,21 +80,18 @@ def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
     border_paddings = np.array(list(zip(border, border))).astype(int)
     volume_padded = np.pad(volume, border_paddings, mode="constant")
 
-    divisible_area = volume_padded.shape[1:3] - X_size
-    paddings = np.mod(y_size - np.mod(divisible_area.shape, y_size), y_size)
-    paddings = np.append(0, paddings)
-    paddings = np.array(list(zip(np.zeros(3), paddings))).astype(int)
-    volume_padded = np.pad(volume_padded, paddings, mode="constant")
-
     print(volume.shape, volume_padded.shape)
     output = np.zeros(volume_padded.shape)
+
+    x_positions = range(0, volume_padded.shape[1] - X_size[0], y_size[1])
+    y_positions = range(0, volume_padded.shape[2] - X_size[1], y_size[2])
 
     for i in range(i_min, i_max):
         cnt = round((i - i_min) / (i_max - i_min) * 100)
         print(str(cnt))
         volume_slice_padded = volume_padded[i, :, :]
-        for x in range(0, volume_slice_padded.shape[0] - X_size[0] + 1, y_size[0]):
-            for y in range(0, volume_slice_padded.shape[1] - X_size[1] + 1, y_size[1]):
+        for x in x_positions:
+            for y in y_positions:
                 corner_a = [x, y]
                 corner_b = corner_a + X_size
                 corner_c = corner_a + border[1:3]
@@ -374,7 +371,7 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
 
 def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path,
                                     spacing=(2.0, 2.0, 2.0)):
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:10]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[2:4]
     no_of_scan_paths = len(scan_paths)
 
     weights = np.array([0.1, 0.9])
