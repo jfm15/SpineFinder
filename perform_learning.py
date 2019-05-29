@@ -23,7 +23,7 @@ def perform_learning(sample_dir, training_val_split,
               'n_classes': output_classes,
               'shuffle': shuffle}
 
-    training_generator = DataGenerator(partition['validation'], labels, **params)
+    training_generator = DataGenerator(partition['train'], labels, **params)
     validation_generator = DataGenerator(partition['validation'], labels, **params)
 
     # set checkpoint
@@ -67,7 +67,7 @@ def perform_learning(sample_dir, training_val_split,
 
     # train the mode
     model.fit_generator(generator=training_generator,
-                        validation_data=training_generator,
+                        validation_data=validation_generator,
                         use_multiprocessing=True,
                         workers=0,
                         epochs=epochs,

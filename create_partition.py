@@ -22,7 +22,7 @@ def create_partition_and_labels(samples_dir, training_percentage, randomise=True
 
     for i, scan_path in enumerate(scans):
 
-        if i > no_of_training_scans:
+        if i >= no_of_training_scans:
             add_to_training = False
 
         for label_path in glob.glob(scan_path + "*-labelling.npy", recursive=True):
