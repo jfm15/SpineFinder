@@ -4,11 +4,11 @@ from keras.models import Sequential, Model
 from keras.layers import Input, Conv2D, UpSampling2D, MaxPooling2D, concatenate, Activation, BatchNormalization, Cropping2D
 
 
-def simple_identification(input_shape, kernel_size, filters, learning_rate):
+def simple_identification(kernel_size, filters, learning_rate):
 
     model = Sequential()
     model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same",
-                     input_shape=input_shape))
+                     input_shape=(None, None, 1)))
     model.add(BatchNormalization(momentum=0.1))
     model.add(Activation("relu"))
     model.add(Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same"))
