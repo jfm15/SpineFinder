@@ -69,7 +69,7 @@ def perform_learning(sample_dir, training_val_split,
 
     # train the mode
     model.fit_generator(generator=training_generator,
-                        validation_data=validation_generator,
+                        validation_data=training_generator,
                         use_multiprocessing=True,
                         workers=0,
                         epochs=epochs,
