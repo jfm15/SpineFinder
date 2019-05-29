@@ -57,6 +57,7 @@ class DataGenerator(keras.utils.Sequence):
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
+            print(ID)
             # Store sample
             sample = np.load(self.samples_dir + '/' + ID + '-sample.npy')
 
