@@ -71,7 +71,7 @@ def perform_learning(sample_dir, training_val_split,
     model.fit_generator(generator=training_generator,
                         validation_data=validation_generator,
                         use_multiprocessing=True,
-                        workers=1,
+                        workers=0,
                         epochs=epochs,
                         callbacks=[checkpoint, tensorboard])
 
