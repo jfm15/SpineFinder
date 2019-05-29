@@ -71,7 +71,8 @@ def perform_learning(sample_dir, training_val_split,
                         use_multiprocessing=True,
                         workers=0,
                         epochs=epochs,
-                        callbacks=[checkpoint, tensorboard])
+                        callbacks=[checkpoint, tensorboard],
+                        shuffle=False)
 
     model.save(model_path)
 
