@@ -26,7 +26,7 @@ def perform_learning(sample_dir, training_val_split,
               'shuffle': shuffle}
 
     training_generator = DataGenerator(partition['train'], labels, **params)
-    validation_generator = DataGenerator(partition['validation'], labels, **params)
+    validation_generator = DataGenerator(partition['train'], labels, **params)
 
     # set checkpoint
     checkpoint = ModelCheckpoint(checkpoint_path, period=3)
