@@ -15,6 +15,8 @@ def perform_learning(sample_dir, training_val_split,
     # create partition
     partition, labels = create_partition_and_labels(sample_dir, training_val_split, randomise=True)
 
+    print(partition['validation'])
+
     # generators
     params = {'samples_dir': sample_dir,
               'batch_size': batch_size,
