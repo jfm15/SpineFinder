@@ -113,14 +113,6 @@ def unet_slices(kernel_size, filters, learning_rate):
     floor = Activation("relu")(floor)
     floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = Activation("relu")(floor)
-    floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
-    floor = Activation("relu")(floor)
-    floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
-    floor = Activation("relu")(floor)
-    floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
-    floor = Activation("relu")(floor)
-    floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
-    floor = Activation("relu")(floor)
 
     # 10 x 40
     step_up_4 = UpSampling2D(size=(2, 2))(floor)
@@ -161,7 +153,7 @@ def unet_slices(kernel_size, filters, learning_rate):
 
     # define optimizer
     # sgd = optimizers.SGD(lr=learning_rate, decay=1e-6, momentum=0.9)
-    adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-6)
+    adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-4)
     model.compile(optimizer=adam, loss=ignore_background_loss, metrics=[vertebrae_classification_rate])
 
     return model
