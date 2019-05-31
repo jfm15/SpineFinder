@@ -2,7 +2,7 @@ import glob
 import numpy as np
 import matplotlib.pyplot as plt
 from utility_functions import opening_files
-from utility_functions.labels import LABELS_NO_B, LABELS_NO_B_OR_L6
+from utility_functions.labels import LABELS_NO_B, LABELS_NO_B_OR_L6, LABELS_NO_L6
 
 
 def vertebrae_frequencies(dataset_dir, file_ext=".lml"):
@@ -40,5 +40,22 @@ def vertebrae_frequencies_in_samples(samples_dir, plot_path, file_ext="-labellin
     plt.savefig(plot_path + '/vertebrae_frequencies_in_samples.png')
 
 
+def vertebrae_pixel_frequencies_in_samples(samples_dir, plot_path, file_ext="-labelling.npy"):
+    paths = glob.glob(samples_dir + "/**/*" + file_ext, recursive=True)
+
+    frequencies = np.zeros(len(LABELS_NO_B_OR_L6))
+
+    for labelling_path in paths:
+        labelling = np.load(labelling_path)
+        bincounts = np.bincount(labelling.reshape(-1).astype(int), minlength=len(LABELS_NO_L6))
+        frequencies += bincounts[1:]
+
+    x = np.arange(len(LABELS_NO_B_OR_L6))
+    plt.bar(x, frequencies, 0.5)
+    plt.xticks(x, LABELS_NO_B_OR_L6)
+    plt.savefig(plot_path + '/vertebrae_pixel_frequencies_in_samples.png')
+
+
 # vertebrae_frequencies('datasets')
-vertebrae_frequencies_in_samples('samples/slices', 'plots')
+# vertebrae_frequencies_in_samples('samples/slices', 'plots')
+vertebrae_pixel_frequencies_in_samples('samples/slices', 'plots')
