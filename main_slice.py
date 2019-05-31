@@ -2,7 +2,7 @@ from perform_learning import perform_learning
 from models.simple_identification import simple_identification, unet_slices
 
 # inputs to the model
-model_params = {'kernel_size': (3, 3),
+model_params = {'kernel_size': (3, 5),
                 'filters': 16,
                 'learning_rate': 0.00005}
 

@@ -72,47 +72,60 @@ def unet_slices(kernel_size, filters, learning_rate):
 
     main_input = Input(shape=(None, None, 1))
 
-    # 80 x 320
+    # 268 x 268 520
     step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(main_input)
     step_down_1 = Activation("relu")(step_down_1)
+    # 266 x 266 516
     step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_1)
     step_down_1 = Activation("relu")(step_down_1)
 
-    # 40 x 160
+    # 264 x 264 512 316
     step_down_2 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_1)
+    # 132 x 132 256 158
     step_down_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_2)
     step_down_2 = Activation("relu")(step_down_2)
+    # 130 x 130 252 153
     step_down_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_2)
     step_down_2 = Activation("relu")(step_down_2)
 
-    # 20 x 80
+    # 128 x 128 248 148
     step_down_3 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_2)
+    # 64 x 64 124 74
     step_down_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_3)
     step_down_3 = Activation("relu")(step_down_3)
+    # 62 x 62 120 69
     step_down_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_3)
     step_down_3 = Activation("relu")(step_down_3)
 
-    # 10 x 40
+    # 60 x 60 116 64
     step_down_4 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_3)
+    # 30 x 30 58 32
     step_down_4 = Conv2D(8 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_4)
     step_down_4 = Activation("relu")(step_down_4)
+    # 28 x 28 54 27
     step_down_4 = Conv2D(8 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_4)
     step_down_4 = Activation("relu")(step_down_4)
 
-    # 5 x 20
+    # 26 x 26 50 22
     floor = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_4)
     floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = Activation("relu")(floor)
+    # 13 x 13 25 11
     floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = Activation("relu")(floor)
+    # 11 x 11 21 6
     floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = Activation("relu")(floor)
+    # 9 x 9 17
     floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = Activation("relu")(floor)
+    # 7 x 7 13
     floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = Activation("relu")(floor)
+    # 5 x 5 9
     floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = Activation("relu")(floor)
+    # 3 x 3 5
 
     # 10 x 40
     step_up_4 = UpSampling2D(size=(2, 2))(floor)
