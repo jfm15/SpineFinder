@@ -46,7 +46,6 @@ class DataGenerator(keras.utils.Sequence):
             inds = np.arange(no_of_ids).reshape(-1, self.batch_size)
             np.random.shuffle(inds)
             self.indexes = inds.flatten()
-            print(self.indexes)
 
     def __data_generation(self, ids_in_set_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
@@ -60,7 +59,6 @@ class DataGenerator(keras.utils.Sequence):
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
-            # print(ID)
             # Store sample
             sample = np.load(self.samples_dir + '/' + ID + '-sample.npy')
 
