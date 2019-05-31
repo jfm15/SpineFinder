@@ -166,7 +166,7 @@ def unet_slices(kernel_size, filters, learning_rate):
 
     # define optimizer
     # sgd = optimizers.SGD(lr=learning_rate, decay=1e-6, momentum=0.9)
-    adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-4)
+    adam = optimizers.Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=None, decay=1e-6)
     model.compile(optimizer=adam, loss=ignore_background_loss, metrics=[vertebrae_classification_rate])
 
     return model
