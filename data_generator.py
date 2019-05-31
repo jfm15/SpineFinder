@@ -42,6 +42,10 @@ class DataGenerator(keras.utils.Sequence):
         'Updates indexes after each epoch'
         no_of_ids = len(self.ids_in_set)
         self.indexes = np.arange(no_of_ids)
+        if self.shuffle:
+            inds = np.arange(no_of_ids).reshape(-1, self.batch_size)
+            np.random.shuffle(inds)
+            self.indexes = inds.flatten()
 
     def __data_generation(self, ids_in_set_temp):
         'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)

@@ -13,7 +13,7 @@ def perform_learning(sample_dir, training_val_split,
                      log_name, log_description):
 
     # create partition
-    partition, labels = create_partition_and_labels(sample_dir, training_val_split, randomise=False)
+    partition, labels = create_partition_and_labels(sample_dir, training_val_split, randomise=True)
 
     # generators
     params = {'samples_dir': sample_dir,
