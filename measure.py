@@ -81,7 +81,7 @@ def apply_identification_model(volume, i_min, i_max, model):
     volume_padded = np.pad(volume, paddings, mode="constant")
     output = np.zeros(volume_padded.shape)
 
-    for i in range(i_min, i_max):
+    for i in range(i_min, i_max, 2):
         volume_slice_padded = volume_padded[i, :, :]
         patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
         result = model.predict(patch)
@@ -142,9 +142,9 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape,
         if 0 <= key < len(LABELS_NO_L6):
             arr = np.array(histogram[key])
             print(LABELS_NO_L6[key], arr.shape[0])
-            if arr.shape[0] > 3000:
+            if arr.shape[0] > 1500:
                 centroid_estimate = np.median(arr, axis=0)
-                ms = MeanShift(min_bin_freq=3000)
+                ms = MeanShift(bin_seeding=True, min_bin_freq=3000)
                 ms.fit(arr)
                 print(ms.cluster_centers_)
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
