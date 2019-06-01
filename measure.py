@@ -10,6 +10,7 @@ from losses_and_metrics.dsc import dice_coef_label
 from utility_functions.labels import LABELS_NO_L6
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+from sklearn.cluster import MeanShift
 
 
 def apply_detection_model(volume, model, X_size, y_size):
@@ -143,6 +144,8 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape,
             print(LABELS_NO_L6[key], arr.shape[0])
             if arr.shape[0] > 3000:
                 centroid_estimate = np.median(arr, axis=0)
+                print(arr.shape)
+                clustering = MeanShift().fit(arr)
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
                 labels.append(LABELS_NO_L6[key])
                 centroid_estimates.append(list(centroid_estimate))
