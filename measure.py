@@ -75,7 +75,7 @@ def apply_ideal_detection(volume, centroid_indexes):
 
 def apply_identification_model(volume, i_min, i_max, model):
 
-    paddings = np.mod(8 - np.mod(volume.shape[1:3], 8), 8)
+    paddings = np.mod(16 - np.mod(volume.shape[1:3], 16), 16)
     paddings = np.array(list(zip(np.zeros(3), [0] + list(paddings)))).astype(int)
     volume_padded = np.pad(volume, paddings, mode="constant")
     output = np.zeros(volume_padded.shape)
