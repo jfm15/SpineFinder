@@ -47,8 +47,8 @@ def apply_detection_model(volume, model, X_size, y_size):
                 result = model.predict(patch)
                 result = np.squeeze(result, axis=0)
                 decat_result = np.argmax(result, axis=3)
-                #cropped_decat_result = decat_result[border[0]:-border[0], border[1]:-border[1], border[2]:-border[2]]
-                output[corner_c[0]:corner_d[0], corner_c[1]:corner_d[1], corner_c[2]:corner_d[2]] = decat_result
+                cropped_decat_result = decat_result[border[0]:-border[0], border[1]:-border[1], border[2]:-border[2]]
+                output[corner_c[0]:corner_d[0], corner_c[1]:corner_d[1], corner_c[2]:corner_d[2]] = cropped_decat_result
                 # print(x, y, z, np.bincount(decat_result.reshape(-1).astype(int)))
 
     return output[border[0]:border[0] + volume.shape[0],
@@ -73,58 +73,27 @@ def apply_ideal_detection(volume, centroid_indexes):
     return output
 
 
-def apply_identification_model(volume, i_min, i_max, model, X_size, y_size):
+def apply_identification_model(volume, i_min, i_max, model):
 
-    border = ((X_size - y_size) / 2.0).astype(int)
-    border = np.append(0, border)
-    border_paddings = np.array(list(zip(border, border))).astype(int)
-    volume_padded = np.pad(volume, border_paddings, mode="constant")
-
-    print(volume.shape, volume_padded.shape)
+    paddings = np.mod(8 - np.mod(volume.shape[1:3], 8), 8)
+    paddings = np.array(list(zip(np.zeros(3), [0] + list(paddings)))).astype(int)
+    volume_padded = np.pad(volume, paddings, mode="constant")
     output = np.zeros(volume_padded.shape)
 
-    x_positions = list(range(0, volume_padded.shape[1] - X_size[0], y_size[0]))
-    x_positions.append(volume_padded.shape[1] - X_size[0] - 1)
-    y_positions = list(range(0, volume_padded.shape[2] - X_size[1], y_size[1]))
-    y_positions.append(volume_padded.shape[2] - X_size[1] - 1)
-
     for i in range(i_min, i_max):
-        cnt = round((i - i_min) / (i_max - i_min) * 100)
-        print(str(cnt))
         volume_slice_padded = volume_padded[i, :, :]
-        average_map = np.zeros(volume_slice_padded.shape)
-        for x in x_positions:
-            for y in y_positions:
-                corner_a = [x, y]
-                corner_b = corner_a + X_size
-                corner_c = corner_a + border[1:3]
-                corner_d = corner_c + y_size
-                patch = volume_slice_padded[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1]]
-                patch = patch.reshape(1, *X_size, 1)
-                result = model.predict(patch)
-                result = np.squeeze(result, axis=0)
-                result = np.squeeze(result, axis=-1)
-                #cropped_result = result[border[1]:-border[1], border[2]:-border[2]]
-                output[i, corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] += result
-                average_map[corner_c[0]:corner_d[0], corner_c[1]:corner_d[1]] += 1
-
-                output[i, :, :] = np.divide(output[i, :, :], average_map)
-        '''
         patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
         result = model.predict(patch)
         result = np.squeeze(result, axis=0)
         result = np.squeeze(result, axis=-1)
         result = np.round(result)
         output[i, :, :] = result
-        '''
 
-    output = output[:, border[1]:border[1] + volume.shape[1], border[2]:border[2] + volume.shape[2]]
-    output = np.round(output)
-    return output
+    return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
 
 
 def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape, detection_y_shape, detection_model_objects,
-              identification_model_path, identification_X_shape, identification_y_shape, identification_model_objects,
+              identification_model_path, identification_model_objects,
               ideal_detection=False, spacing=(2.0, 2.0, 2.0)):
 
     volume = opening_files.read_nii(scan_path, spacing)
@@ -147,10 +116,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape,
 
     # second stage is to pass slices of this to the identification network
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
-    identifications = apply_identification_model(volume, i_min, i_max,
-                                                 identification_model,
-                                                 identification_X_shape,
-                                                 identification_y_shape)
+    identifications = apply_identification_model(volume, i_min, i_max, identification_model)
 
     # crop parts of slices
     identifications *= detections
@@ -416,8 +382,6 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             detection_y_shape=np.array([28, 28, 44]),
             detection_model_objects=detection_model_objects,
             identification_model_path=identification_model_path,
-            identification_X_shape=np.array([124, 332]),
-            identification_y_shape=np.array([36, 244]),
             identification_model_objects=identification_model_objects,
             spacing=spacing)
 
@@ -464,6 +428,6 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
-complete_identification_picture('datasets_test', 'saved_current_models/detec-21:28-c.h5',
-                                'saved_current_models/ident-00:36-c.h5', 'plots',
+complete_identification_picture('datasets_test', 'saved_current_models/detec-15:59-20e',
+                                'saved_current_models/ident-18:07.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
