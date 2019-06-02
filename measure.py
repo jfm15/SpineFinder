@@ -95,7 +95,7 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
     # second stage is to pass slices of this to the identification network
     print("apply identification")
     identifications = apply_identification_model(volume, i_min, i_max, identification_model)
-    print("finished detection")
+    print("finished identification")
 
     # crop parts of slices
     identifications *= detections
@@ -358,6 +358,8 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
                     thoracic_correct += 1
                 elif label[0] == 'L':
                     lumbar_correct += 1
+
+            print(label, min_label)
 
         for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
             if pred_label in labels:
