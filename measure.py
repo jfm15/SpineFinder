@@ -56,23 +56,6 @@ def apply_detection_model(volume, model, X_size, y_size):
            border[2]:border[2] + volume.shape[2]]
 
 
-def apply_ideal_detection(volume, centroid_indexes):
-
-    output = np.zeros(volume.shape)
-
-    for centroid_idx in centroid_indexes:
-        for i in range(-10, 10):
-            for j in range(-10, 10):
-                for k in range(-10, 10):
-                    point = np.array(centroid_idx) + np.array([i, j, k])
-                    point = np.clip(point, a_min=np.zeros(3), a_max=volume.shape - np.ones(3))
-                    dist = np.linalg.norm(point - centroid_idx)
-                    if dist < 10:
-                        point = point.astype(int)
-                        output[point[0], point[1], point[2]] = 1
-    return output
-
-
 def apply_identification_model(volume, i_min, i_max, model):
 
     paddings = np.mod(16 - np.mod(volume.shape[1:3], 16), 16)
@@ -93,19 +76,13 @@ def apply_identification_model(volume, i_min, i_max, model):
 
 
 def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape, detection_y_shape, detection_model_objects,
-              identification_model_path, identification_model_objects,
-              ideal_detection=False, spacing=(2.0, 2.0, 2.0)):
+              identification_model_path, identification_model_objects, spacing=(2.0, 2.0, 2.0)):
 
     volume = opening_files.read_nii(scan_path, spacing)
 
     # first stage is to put the volume through the detection model to find where vertebrae are
-    if not ideal_detection:
-        detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
-        detections = apply_detection_model(volume, detection_model, detection_X_shape, detection_y_shape)
-    else:
-        _, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
-        centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
-        detections = apply_ideal_detection(volume, centroid_indexes)
+    detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
+    detections = apply_detection_model(volume, detection_model, detection_X_shape, detection_y_shape)
 
     # get the largest island
     # _, largest_island_np = sampling_helper_functions.crop_labelling(detections)
@@ -142,141 +119,15 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape,
             arr = np.array(histogram[key])
             print(LABELS_NO_L6[key], arr.shape[0])
             if arr.shape[0] > 1500:
-                #centroid_estimate = np.median(arr, axis=0)
-                ms = MeanShift(bin_seeding=True, min_bin_freq=300)
-                ms.fit(arr)
-                centroid_estimate = ms.cluster_centers_[0]
+                centroid_estimate = np.median(arr, axis=0)
+                #ms = MeanShift(bin_seeding=True, min_bin_freq=300)
+                #ms.fit(arr)
+                #centroid_estimate = ms.cluster_centers_[0]
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
                 labels.append(LABELS_NO_L6[key])
                 centroid_estimates.append(list(centroid_estimate))
 
     return labels, centroid_estimates, detections, identifications
-
-
-def test_individual_scan(scan_path, centroid_path, print_centroids=True, save_centroids=False, centroids_path="",
-                         plot_detections=False, detections_path="",
-                         save_identifications=False, identifications_path="",
-                         save_plots=False, plots_path="", ideal_detection=False,
-                         spacing=(2.0, 2.0, 2.0)):
-    sub_path = scan_path.split('/', 1)[1]
-    sub_path = sub_path[:-len(".nii.gz")]
-    sub_path_split = sub_path.split('/')
-    dir_path = '/'.join(sub_path_split[:-1])
-    name = sub_path_split[-1]
-
-    # print identification_map
-    weights = np.array([0.1, 0.9])
-    detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
-                             'binary_recall': km.binary_recall()}
-    identification_model_objects = {'ignore_background_loss': ignore_background_loss}
-    pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
-        scan_path=scan_path,
-        centroid_path=centroid_path,
-        detection_model_path="model_files/two_class_model.h5",
-        detection_model_input_shape=np.array([30, 30, 36]),
-        detection_model_objects=detection_model_objects,
-        identification_model_path="model_files/slices_model.h5",
-        identification_model_objects=identification_model_objects,
-        ideal_detection=ideal_detection)
-
-
-    # options
-    if print_centroids:
-        for label, centroid in zip(pred_labels, pred_centroid_estimates):
-            print(label, centroid)
-
-    if save_centroids:
-        file_dir_path = '/'.join([centroids_path, dir_path])
-        if not os.path.exists(file_dir_path):
-            os.makedirs(file_dir_path)
-        file_path = file_dir_path + "/" + name + "-pred-centroids"
-        file = open(file_path + ".txt", "w")
-        for label, centroid in zip(pred_labels, pred_centroid_estimates):
-            file.write(" ".join([label, str(centroid[0]), str(centroid[1]), str(centroid[2]), "\n"]))
-        file.close()
-
-    pred_centroid_estimates = np.array(pred_centroid_estimates)
-    pred_centroid_estimates = pred_centroid_estimates / np.array(spacing)
-
-    if plot_detections:
-        detections_dir_path = '/'.join([detections_path, dir_path])
-        if not os.path.exists(detections_dir_path):
-            os.makedirs(detections_dir_path)
-
-        detection_plot = detections_dir_path + "/" + name + "-detection-plot.png"
-
-        volume = opening_files.read_nii(scan_path)
-
-        # get cuts
-        cut = np.mean(pred_centroid_estimates[:, 0])
-        cut = np.round(cut).astype(int)
-
-        volume_slice = volume[cut, :, :]
-        detections_slice = pred_detections[cut, :, :]
-
-        masked_data = np.ma.masked_where(detections_slice == 0, detections_slice)
-
-        plt.imshow(volume_slice.T)
-        plt.imshow(masked_data.T, cmap=cm.jet, alpha=0.3)
-        plt.savefig(detection_plot)
-        plt.close()
-
-    if save_identifications:
-        identifications_dir_path = '/'.join([identifications_path, dir_path])
-        if not os.path.exists(identifications_dir_path):
-            os.makedirs(identifications_dir_path)
-        file_path = identifications_dir_path + "/" + name + "-identifications"
-        np.save(file_path, pred_identifications)
-
-    if save_plots:
-        plots_dir_path = '/'.join([plots_path, dir_path])
-        if not os.path.exists(plots_dir_path):
-            os.makedirs(plots_dir_path)
-        identification_plot = plots_dir_path + "/" + name + "-id-plot.png"
-        centroid_plot = plots_dir_path + "/" + name + "-centroid-plot.png"
-
-        # make plots
-        volume = opening_files.read_nii(scan_path)
-
-        # get cuts
-        cut = np.mean(pred_centroid_estimates[:, 0])
-        cut = np.round(cut).astype(int)
-
-        volume_slice = volume[cut, :, :]
-        identifications_slice = pred_identifications[cut, :, :]
-
-        # first plot
-        fig1, ax1 = plt.subplots()
-        ax1.imshow(volume_slice.T)
-        ax1.imshow(identifications_slice.T, cmap=cm.jet, alpha=0.3)
-        fig1.savefig(identification_plot)
-        plt.close(fig1)
-
-        # second plot
-        fig2, ax2 = plt.subplots()
-        ax2.imshow(volume_slice.T)
-
-        for label, centroid in zip(pred_labels, pred_centroid_estimates):
-            ax2.annotate(label, (centroid[1], centroid[2]), color="red")
-            ax2.scatter(centroid[1], centroid[2], s=2, color="red")
-
-        fig2.savefig(centroid_plot)
-        plt.close(fig2)
-
-
-def test_multiple_scans(scans_dir, print_centroids=True, save_centroids=True, plot_detections=True,
-                        detections_path="results/detections", centroids_path="results/centroids",
-                        save_plots=True, plots_path="results/plots"):
-
-    for scan_path in glob.glob(scans_dir + "/**/*.nii.gz", recursive=True):
-        scan_path_without_ext = scan_path[:-len(".nii.gz")]
-        centroid_path = scan_path_without_ext + ".lml"
-
-        test_individual_scan(scan_path=scan_path, centroid_path=centroid_path,
-                             plot_detections=plot_detections, detections_path=detections_path,
-                             print_centroids=print_centroids, save_centroids=save_centroids,
-                             centroids_path=centroids_path, save_plots=save_plots, plots_path=plots_path,
-                             ideal_detection=False)
 
 
 def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.0, 2.0)):
@@ -429,8 +280,79 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
     fig.savefig(plot_path + '/identification-complete.png')
 
 
+def get_stats(scans_dir, detection_model_path, identification_model_path, spacing=(1.0, 1.0, 1.0)):
+
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)
+
+    weights = np.array([0.1, 0.9])
+    detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
+                     'binary_recall': km.binary_recall(),
+                     'dice_coef': dice_coef_label(label=1)}
+
+    identification_model_objects = {'ignore_background_loss': ignore_background_loss,
+                                    'vertebrae_classification_rate': vertebrae_classification_rate}
+
+    all_difference = []
+    cervical_difference = []
+    thoracic_difference = []
+    lumbar_difference = []
+
+    for i, scan_path in enumerate(scan_paths):
+        print(i, scan_path)
+        scan_path_without_ext = scan_path[:-len(".nii.gz")]
+        centroid_path = scan_path_without_ext + ".lml"
+
+        labels, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
+        centroid_indexes = centroids / np.array(spacing)
+
+        pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
+            scan_path=scan_path,
+            centroid_path=centroid_path,
+            detection_model_path=detection_model_path,
+            detection_X_shape=np.array([64, 64, 80]),
+            detection_y_shape=np.array([32, 32, 40]),
+            detection_model_objects=detection_model_objects,
+            identification_model_path=identification_model_path,
+            identification_model_objects=identification_model_objects,
+            spacing=spacing)
+
+        for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
+            if pred_label in labels:
+                label_idx = labels.index(pred_label)
+                print(pred_label, centroid_indexes[label_idx], pred_centroid_idx)
+                difference = np.linalg.norm(pred_centroid_idx - centroid_indexes[label_idx])
+                # Add to total difference
+                all_difference.append(difference)
+                if pred_label[0] == 'C':
+                    cervical_difference.append(difference)
+                elif pred_label[0] == 'T':
+                    thoracic_difference.append(difference)
+                elif pred_label[0] == 'L':
+                    lumbar_difference.append(difference)
+
+        print("\n")
+
+    all_mean = np.mean(all_difference)
+    all_std = np.std(all_difference)
+    cervical_mean = np.mean(cervical_difference)
+    cervical_std = np.std(cervical_difference)
+    thoracic_mean = np.mean(thoracic_difference)
+    thoracic_std = np.std(thoracic_difference)
+    lumbar_mean = np.mean(lumbar_difference)
+    lumbar_std = np.std(lumbar_difference)
+    print("All mean:" + str(all_mean) + "  std:" + str(all_std) + "\n")
+    print("Cervical mean:" + str(cervical_mean) + "  std:" + str(cervical_std) + "\n")
+    print("Thoracic mean:" + str(thoracic_mean) + "  std:" + str(thoracic_std) + "\n")
+    print("Lumbar mean:" + str(lumbar_mean) + "  std:" + str(lumbar_std) + "\n")
+
+
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
+'''
 complete_identification_picture('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
                                 'saved_current_models/ident-9:59-18e.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
+'''
+
+get_stats('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
+          'saved_current_models/ident-9:59-18e.h5', spacing=(1.0, 1.0, 1.0))
