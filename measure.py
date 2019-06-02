@@ -75,14 +75,15 @@ def apply_identification_model(volume, i_min, i_max, model):
     return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
 
 
-def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape, detection_y_shape, detection_model_objects,
-              identification_model_path, identification_model_objects, spacing=(2.0, 2.0, 2.0)):
+def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
+              identification_model, spacing=(2.0, 2.0, 2.0)):
 
     volume = opening_files.read_nii(scan_path, spacing)
 
     # first stage is to put the volume through the detection model to find where vertebrae are
-    detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
+    print("apply detection")
     detections = apply_detection_model(volume, detection_model, detection_X_shape, detection_y_shape)
+    print("finished detection")
 
     # get the largest island
     # _, largest_island_np = sampling_helper_functions.crop_labelling(detections)
@@ -92,13 +93,16 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape,
     i_max = np.max(largest_island_np[:, 0])
 
     # second stage is to pass slices of this to the identification network
-    identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
+    print("apply identification")
     identifications = apply_identification_model(volume, i_min, i_max, identification_model)
+    print("finished detection")
 
     # crop parts of slices
     identifications *= detections
+    print("finished multiplying")
 
     # aggregate the predictions
+    print("start aggregating")
     identifications = np.round(identifications).astype(int)
     histogram = {}
     for i in range(identifications.shape[0]):
@@ -110,14 +114,16 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape,
                         histogram[key] = histogram[key] + [[i, j, k]]
                     else:
                         histogram[key] = [[i, j, k]]
+    print("finish aggregating")
 
+    print("start averages")
     # find averages
     labels = []
     centroid_estimates = []
     for key in sorted(histogram.keys()):
         if 0 <= key < len(LABELS_NO_L6):
             arr = np.array(histogram[key])
-            print(LABELS_NO_L6[key], arr.shape[0])
+            # print(LABELS_NO_L6[key], arr.shape[0])
             if arr.shape[0] > 1500:
                 centroid_estimate = np.median(arr, axis=0)
                 #ms = MeanShift(bin_seeding=True, min_bin_freq=300)
@@ -126,6 +132,7 @@ def test_scan(scan_path, centroid_path, detection_model_path, detection_X_shape,
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
                 labels.append(LABELS_NO_L6[key])
                 centroid_estimates.append(list(centroid_estimate))
+    print("finish averages")
 
     return labels, centroid_estimates, detections, identifications
 
@@ -289,8 +296,21 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
                      'binary_recall': km.binary_recall(),
                      'dice_coef': dice_coef_label(label=1)}
 
+    detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
+
     identification_model_objects = {'ignore_background_loss': ignore_background_loss,
                                     'vertebrae_classification_rate': vertebrae_classification_rate}
+
+    identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
+
+    all_correct = 0.0
+    all_no = 0.0
+    cervical_correct = 0.0
+    cervical_no = 0.0
+    thoracic_correct = 0.0
+    thoracic_no = 0.0
+    lumbar_correct = 0.0
+    lumbar_no = 0.0
 
     all_difference = []
     cervical_difference = []
@@ -307,14 +327,37 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
         pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
             scan_path=scan_path,
-            centroid_path=centroid_path,
-            detection_model_path=detection_model_path,
+            detection_model=detection_model,
             detection_X_shape=np.array([64, 64, 80]),
             detection_y_shape=np.array([32, 32, 40]),
-            detection_model_objects=detection_model_objects,
-            identification_model_path=identification_model_path,
-            identification_model_objects=identification_model_objects,
+            identification_model=identification_model,
             spacing=spacing)
+
+        for label, centroid_idx in zip(labels, centroid_indexes):
+            min_dist = 20
+            min_label = ''
+            for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
+                dist = np.linalg.norm(pred_centroid_idx - centroid_idx)
+                if dist <= min_dist:
+                    min_dist = dist
+                    min_label = pred_label
+
+            all_no += 1
+            if label[0] == 'C':
+                cervical_no += 1
+            elif label[0] == 'T':
+                thoracic_no += 1
+            elif label[0] == 'L':
+                lumbar_no += 1
+
+            if label == min_label:
+                all_correct += 1
+                if label[0] == 'C':
+                    cervical_correct += 1
+                elif label[0] == 'T':
+                    thoracic_correct += 1
+                elif label[0] == 'L':
+                    lumbar_correct += 1
 
         for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
             if pred_label in labels:
@@ -332,19 +375,23 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
         print("\n")
 
-    all_mean = np.mean(all_difference)
-    all_std = np.std(all_difference)
-    cervical_mean = np.mean(cervical_difference)
-    cervical_std = np.std(cervical_difference)
-    thoracic_mean = np.mean(thoracic_difference)
-    thoracic_std = np.std(thoracic_difference)
-    lumbar_mean = np.mean(lumbar_difference)
-    lumbar_std = np.std(lumbar_difference)
-    print("All mean:" + str(all_mean) + "  std:" + str(all_std) + "\n")
-    print("Cervical mean:" + str(cervical_mean) + "  std:" + str(cervical_std) + "\n")
-    print("Thoracic mean:" + str(thoracic_mean) + "  std:" + str(thoracic_std) + "\n")
-    print("Lumbar mean:" + str(lumbar_mean) + "  std:" + str(lumbar_std) + "\n")
+    all_rate = np.around(100.0 * all_correct / all_no, decimals=1)
+    all_mean = np.around(np.mean(all_difference), decimals=2)
+    all_std = np.around(np.std(all_difference), decimals=2)
+    cervical_rate = np.around(100.0 * cervical_correct / cervical_no, decimals=1)
+    cervical_mean = np.around(np.mean(cervical_difference), decimals=2)
+    cervical_std = np.around(np.std(cervical_difference), decimals=2)
+    thoracic_rate = np.around(100.0 * thoracic_correct / thoracic_no, decimals=1)
+    thoracic_mean = np.around(np.mean(thoracic_difference), decimals=2)
+    thoracic_std = np.around(np.std(thoracic_difference), decimals=2)
+    lumbar_rate = np.around(100.0 * lumbar_correct / lumbar_no, decimals=1)
+    lumbar_mean = np.around(np.mean(lumbar_difference), decimals=2)
+    lumbar_std = np.around(np.std(lumbar_difference), decimals=2)
 
+    print("All Id rate: " + str(all_rate) + "%  mean: " + str(all_mean) + "  std: " + str(all_std) + "\n")
+    print("Cervical Id rate: " + str(cervical_rate) + "%  mean:" + str(cervical_mean) + "  std:" + str(cervical_std) + "\n")
+    print("Thoracic Id rate: " + str(thoracic_rate) + "%  mean:" + str(thoracic_mean) + "  std:" + str(thoracic_std) + "\n")
+    print("Lumbar Id rate: " + str(lumbar_rate) + "%  mean:" + str(lumbar_mean) + "  std:" + str(lumbar_std) + "\n")
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
