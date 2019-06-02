@@ -38,7 +38,6 @@ def generate_samples(dataset_dir, sample_dir,
         dense_labelling = densely_label(labels=labels,
                                         volume_shape=volume.shape,
                                         centroids=centroid_indexes,
-                                        spacing=spacing,
                                         use_labels=use_labels)
 
         sample_size_in_pixels = (sample_size / np.array(spacing)).astype(int)
