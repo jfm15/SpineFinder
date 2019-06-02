@@ -129,10 +129,10 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
             arr = histogram[key]
             # print(LABELS_NO_L6[key], arr.shape[0])
             if arr.shape[0] > 3000:
-                centroid_estimate = np.median(arr, axis=0)
-                #ms = MeanShift(bin_seeding=True, min_bin_freq=300)
-                #ms.fit(arr)
-                #centroid_estimate = ms.cluster_centers_[0]
+                # centroid_estimate = np.median(arr, axis=0)
+                ms = MeanShift(bin_seeding=True, min_bin_freq=300)
+                ms.fit(arr)
+                centroid_estimate = ms.cluster_centers_[0]
                 centroid_estimate = np.around(centroid_estimate, decimals=2)
                 labels.append(LABELS_NO_L6[key])
                 centroid_estimates.append(list(centroid_estimate))
