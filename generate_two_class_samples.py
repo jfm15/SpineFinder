@@ -94,5 +94,5 @@ generate_samples(dataset_dir="datasets/",
                  sample_dir="samples/two_class/training",
                  spacing=(1.0, 1.0, 1.0),
                  sample_size=(64.0, 64.0, 80.0),
-                 no_of_samples=20,
-                 no_of_zero_samples=2)
+                 no_of_samples=5,
+                 no_of_zero_samples=1)

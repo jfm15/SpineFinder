@@ -2,7 +2,7 @@ import glob
 import numpy as np
 
 
-def create_partition_and_labels(samples_dir, training_percentage, randomise=True):
+def create_partition_and_labels(training_samples_dir, val_samples_dir):
 
     partition = {}
     training_labels = []
@@ -10,34 +10,27 @@ def create_partition_and_labels(samples_dir, training_percentage, randomise=True
     labels = {}
 
     ext_len = len("-labelling.npy")
-    paths = glob.glob(samples_dir + "/**/*labelling.npy", recursive=True)
-    scans = list(map(lambda x: x.split('-')[0], paths))
-    scans = np.unique(np.array(scans))
-    no_of_training_scans = round(scans.shape[0] * training_percentage)
+    training_paths = glob.glob(training_samples_dir + "/**/*labelling.npy", recursive=True)
+    val_paths = glob.glob(val_samples_dir + "/**/*labelling.npy", recursive=True)
 
-    if randomise:
-        np.random.shuffle(scans)
+    for training_path in training_paths:
 
-    add_to_training = True
+        sample_path_without_ext = training_path[:-ext_len]
+        label = sample_path_without_ext.rsplit('/', 1)[1]
 
-    for i, scan_path in enumerate(scans):
+        training_labels.append(label)
 
-        if i >= no_of_training_scans:
-            add_to_training = False
+        # read file and assign to labels
+        labels[label] = label + "-labelling"
 
-        for label_path in glob.glob(scan_path + "*-labelling.npy", recursive=True):
+    for val_path in val_paths:
+        sample_path_without_ext = val_path[:-ext_len]
+        label = sample_path_without_ext.rsplit('/', 1)[1]
 
-            sample_path_without_ext = label_path[:-ext_len]
-            label = sample_path_without_ext.rsplit('/', 1)[1]
+        training_labels.append(label)
 
-            # assign to lists for partition
-            if add_to_training:
-                training_labels.append(label)
-            else:
-                validation_labels.append(label)
-
-            # read file and assign to labels
-            labels[label] = label + "-labelling"
+        # read file and assign to labels
+        labels[label] = label + "-labelling"
 
     partition["train"] = training_labels
     partition["validation"] = validation_labels

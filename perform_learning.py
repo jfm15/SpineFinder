@@ -7,24 +7,23 @@ import inspect
 import gc
 
 
-def perform_learning(sample_dir, training_val_split,
+def perform_learning(training_sample_dir, val_sample_dir,
                      batch_size, sample_channels, categorise, output_classes, shuffle,
                      model_func, model_params, epochs, model_path, checkpoint_path,
                      log_name, log_description):
 
     # create partition
-    partition, labels = create_partition_and_labels(sample_dir, training_val_split, randomise=True)
+    partition, labels = create_partition_and_labels(training_sample_dir, val_sample_dir)
 
     # generators
-    params = {'samples_dir': sample_dir,
-              'batch_size': batch_size,
+    params = {'batch_size': batch_size,
               'n_channels': sample_channels,
               'categorise': categorise,
               'n_classes': output_classes,
               'shuffle': shuffle}
 
-    training_generator = DataGenerator(partition['train'], labels, **params)
-    validation_generator = DataGenerator(partition['validation'], labels, **params)
+    training_generator = DataGenerator(partition['train'], labels, training_sample_dir, **params)
+    validation_generator = DataGenerator(partition['validation'], labels, val_sample_dir, **params)
 
     # set checkpoint
     checkpoint = ModelCheckpoint(checkpoint_path, period=3)
