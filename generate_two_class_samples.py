@@ -1,26 +1,18 @@
 import glob
-from utility_functions import opening_files, processing
+from utility_functions import opening_files
 import numpy as np
-import scipy.ndimage
-from utility_functions.labels import LABELS
-from utility_functions.sampling_helper_functions import densely_label
+from utility_functions.sampling_helper_functions import densely_label, pre_compute_disks
 
 
 def generate_samples(dataset_dir, sample_dir,
                      spacing, sample_size,
                      no_of_samples, no_of_zero_samples,
-                     use_labels=False, file_ext=".nii.gz"):
+                     file_ext=".nii.gz"):
 
     # numpy these so they can be divided later on
     sample_size = np.array(sample_size)
 
     ext_len = len(file_ext)
-
-    # track quantities of various labels using this histogram
-    no_of_values = 2
-    if use_labels:
-        no_of_values = len(LABELS)
-    values_histogram = np.zeros(no_of_values)
 
     for data_path in glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True):
 
@@ -35,10 +27,12 @@ def generate_samples(dataset_dir, sample_dir,
         volume = opening_files.read_nii(data_path, spacing=spacing)
 
         # densely populate
-        dense_labelling = densely_label(labels=labels,
-                                        volume_shape=volume.shape,
-                                        centroids=centroid_indexes,
-                                        use_labels=use_labels)
+        disk_indices = pre_compute_disks(spacing)
+        dense_labelling = densely_label(volume.shape,
+                                        disk_indices,
+                                        labels,
+                                        centroid_indexes,
+                                        use_labels=False)
 
         sample_size_in_pixels = (sample_size / np.array(spacing)).astype(int)
 
@@ -87,24 +81,13 @@ def generate_samples(dataset_dir, sample_dir,
                     j += 1
                 i += 1
 
-                # update histogram
-                values_histogram += np.bincount(labelling.reshape(-1).astype(int), minlength=no_of_values)
-
                 # save file
                 name_plus_id = name + "-" + str(i)
                 path = '/'.join([sample_dir, name_plus_id])
                 sample_path = path + "-sample"
                 labelling_path = path + "-labelling"
-                if np.all(sample.shape == sample_size_in_pixels):
-                    np.save(sample_path, sample)
-                    np.save(labelling_path, labelling)
-                else:
-                    print(data_path, volume.shape)
-
-    values_histogram = np.sum(values_histogram) - values_histogram
-    values_histogram /= np.sum(values_histogram)
-    values_histogram = np.around(values_histogram, decimals=4)
-    print(values_histogram)
+                np.save(sample_path, sample)
+                np.save(labelling_path, labelling)
 
 
 generate_samples(dataset_dir="datasets/",
@@ -112,5 +95,4 @@ generate_samples(dataset_dir="datasets/",
                  spacing=(1.0, 1.0, 1.0),
                  sample_size=(64.0, 64.0, 80.0),
                  no_of_samples=20,
-                 no_of_zero_samples=2,
-                 use_labels=False)
+                 no_of_zero_samples=2)
