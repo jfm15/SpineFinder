@@ -5,6 +5,18 @@ from utility_functions import opening_files
 from utility_functions.labels import LABELS_NO_B, LABELS_NO_B_OR_L6, LABELS_NO_L6
 
 
+def vertebrae_counts(dataset_dir, file_ext=".lml"):
+    paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
+
+    frequencies = np.zeros(len(LABELS_NO_B))
+
+    for labelling_path in paths:
+        labels, centroids = opening_files.extract_centroid_info_from_lml(labelling_path)
+        idx = len(labels) - 1
+        frequencies[idx] += 1
+
+    print(frequencies)
+
 def vertebrae_frequencies(dataset_dir, file_ext=".lml"):
     paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
 
@@ -56,6 +68,7 @@ def vertebrae_pixel_frequencies_in_samples(samples_dir, plot_path, file_ext="-la
     plt.savefig(plot_path + '/vertebrae_pixel_frequencies_in_samples.png')
 
 
+vertebrae_counts('datasets')
 # vertebrae_frequencies('datasets')
 # vertebrae_frequencies_in_samples('samples/slices', 'plots')
-vertebrae_pixel_frequencies_in_samples('samples/slices', 'plots')
+# vertebrae_pixel_frequencies_in_samples('samples/slices', 'plots')
