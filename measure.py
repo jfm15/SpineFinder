@@ -63,7 +63,7 @@ def apply_identification_model(volume, i_min, i_max, model):
     volume_padded = np.pad(volume, paddings, mode="constant")
     output = np.zeros(volume_padded.shape)
 
-    for i in range(i_min, i_max, 2):
+    for i in range(i_min, i_max, 1):
         volume_slice_padded = volume_padded[i, :, :]
         patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
         result = model.predict(patch)
@@ -105,6 +105,9 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
     print("start aggregating")
     identifications = np.round(identifications).astype(int)
     histogram = {}
+    for key in range(1, len(LABELS_NO_L6)):
+        histogram[key] = np.where(identifications == key)
+    '''
     for i in range(identifications.shape[0]):
         for j in range(identifications.shape[1]):
             for k in range(identifications.shape[2]):
@@ -114,6 +117,7 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
                         histogram[key] = histogram[key] + [[i, j, k]]
                     else:
                         histogram[key] = [[i, j, k]]
+    '''
     print("finish aggregating")
 
     print("start averages")
