@@ -27,7 +27,7 @@ def create_partition_and_labels(training_samples_dir, val_samples_dir):
         sample_path_without_ext = val_path[:-ext_len]
         label = sample_path_without_ext.rsplit('/', 1)[1]
 
-        training_labels.append(label)
+        validation_labels.append(label)
 
         # read file and assign to labels
         labels[label] = label + "-labelling"
