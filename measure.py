@@ -106,7 +106,7 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
     identifications = np.round(identifications).astype(int)
     histogram = {}
     for key in range(1, len(LABELS_NO_L6)):
-        histogram[key] = np.where(identifications == key)
+        histogram[key] = np.argwhere(identifications == key)
     '''
     for i in range(identifications.shape[0]):
         for j in range(identifications.shape[1]):
@@ -126,9 +126,9 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
     centroid_estimates = []
     for key in sorted(histogram.keys()):
         if 0 <= key < len(LABELS_NO_L6):
-            arr = np.array(histogram[key])
+            arr = histogram[key]
             # print(LABELS_NO_L6[key], arr.shape[0])
-            if arr.shape[0] > 1500:
+            if arr.shape[0] > 3000:
                 centroid_estimate = np.median(arr, axis=0)
                 #ms = MeanShift(bin_seeding=True, min_bin_freq=300)
                 #ms.fit(arr)
