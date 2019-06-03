@@ -6,8 +6,9 @@ model_params = {'kernel_size': (3, 3),
                 'filters': 16,
                 'learning_rate': 0.001}
 
-perform_learning(sample_dir="samples/slices",
-                 batch_size=8,
+perform_learning(training_sample_dir="samples/slices/training",
+                 val_sample_dir="samples/slices/testing",
+                 batch_size=32,
                  sample_channels=1,
                  categorise=False,
                  output_classes=1,
