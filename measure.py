@@ -365,11 +365,16 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
             print(label, min_label)
 
+        # get average distance
+        total_difference = 0.0
+        no = 0.0
         for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
             if pred_label in labels:
                 label_idx = labels.index(pred_label)
                 print(pred_label, centroid_indexes[label_idx], pred_centroid_idx)
                 difference = np.linalg.norm(pred_centroid_idx - centroid_indexes[label_idx])
+                total_difference += difference
+                no += 1
                 # Add to total difference
                 all_difference.append(difference)
                 if pred_label[0] == 'C':
@@ -379,7 +384,8 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
                 elif pred_label[0] == 'L':
                     lumbar_difference.append(difference)
 
-        print("\n")
+        average_difference = total_difference / no
+        print("average", average_difference, "\n")
 
     all_rate = np.around(100.0 * all_correct / all_no, decimals=1)
     all_mean = np.around(np.mean(all_difference), decimals=2)
