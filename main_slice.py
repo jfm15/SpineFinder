@@ -7,7 +7,6 @@ model_params = {'kernel_size': (3, 3),
                 'learning_rate': 0.001}
 
 perform_learning(sample_dir="samples/slices",
-                 training_val_split=0.5,
                  batch_size=8,
                  sample_channels=1,
                  categorise=False,
