@@ -1,0 +1,12 @@
+All 60 scans in spine-test-data
+
+'saved_current_models/detec-20:06.h5'
+'saved_current_models/ident-10:20.h5'
+
+All Id rate: 82.8%  mean: 6.02  std: 7.63
+
+Cervical Id rate: 84.3%  mean:4.21  std:5.96
+
+Thoracic Id rate: 78.5%  mean:6.9  std:7.63
+
+Lumbar Id rate: 88.5%  mean:6.47  std:9.82
