@@ -407,5 +407,5 @@ complete_identification_picture('datasets_test', 'saved_current_models/detec-15:
                                 spacing=(1.0, 1.0, 1.0))
 '''
 
-get_stats('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
-          'saved_current_models/ident-9:59-18e.h5', spacing=(1.0, 1.0, 1.0))
+get_stats('datasets_test', 'saved_current_models/detec-20:06.h5',
+          'saved_current_models/ident-10:20.h5', spacing=(1.0, 1.0, 1.0))
