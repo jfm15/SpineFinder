@@ -15,7 +15,7 @@ def vertebrae_counts(dataset_dir, file_ext=".lml"):
         idx = len(labels) - 1
         frequencies[idx] += 1
 
-    print(frequencies)
+    print(np.sum(frequencies), frequencies)
 
 def vertebrae_frequencies(dataset_dir, file_ext=".lml"):
     paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
