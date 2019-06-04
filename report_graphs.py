@@ -8,14 +8,16 @@ from utility_functions.labels import LABELS_NO_B, LABELS_NO_B_OR_L6, LABELS_NO_L
 def vertebrae_counts(dataset_dir, file_ext=".lml"):
     paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
 
+    total_count = 0
     frequencies = np.zeros(len(LABELS_NO_B))
 
     for labelling_path in paths:
         labels, centroids = opening_files.extract_centroid_info_from_lml(labelling_path)
         idx = len(labels) - 1
+        total_count += idx
         frequencies[idx] += 1
 
-    print(np.sum(frequencies), frequencies)
+    print(total_count, frequencies)
 
 def vertebrae_frequencies(dataset_dir, file_ext=".lml"):
     paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
