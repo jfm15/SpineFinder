@@ -58,20 +58,9 @@ def apply_detection_model(volume, model, X_size, y_size):
 
 def apply_identification_model(volume, i_min, i_max, model):
 
-    original_volume_shape = volume.shape
-    if volume.shape[1] < 80:
-        dif = 80 - volume.shape[1]
-        volume = np.pad(volume, ((0, 0), (0, dif), (0, 0)),
-                              mode="constant", constant_values=-5)
-
-    if volume.shape[2] < 320:
-        dif = 320 - volume.shape[2]
-        volume = np.pad(volume, ((0, 0), (0, 0), (0, dif)),
-                              mode="constant", constant_values=-5)
-
     paddings = np.mod(16 - np.mod(volume.shape[1:3], 16), 16)
     paddings = np.array(list(zip(np.zeros(3), [0] + list(paddings)))).astype(int)
-    volume_padded = np.pad(volume, paddings, mode="constant", constant_values=-5)
+    volume_padded = np.pad(volume, paddings, mode="constant")
     output = np.zeros(volume_padded.shape)
     i_min = max(i_min, 4)
     i_max = min(i_max, volume_padded.shape[0] - 4)
@@ -86,7 +75,7 @@ def apply_identification_model(volume, i_min, i_max, model):
         result = np.round(result)
         output[i, :, :] = result
 
-    return output[:original_volume_shape[0], :original_volume_shape[1], :original_volume_shape[2]]
+    return output[:volume.shape[0], :volume.shape[1], :volume.shape[2]]
 
 
 def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
@@ -423,12 +412,12 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 
-'''
+
 complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
                                 'saved_current_models/ident-18:19.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
+
 '''
-
-
 get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
           'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
+'''
