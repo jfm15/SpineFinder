@@ -58,9 +58,19 @@ def apply_detection_model(volume, model, X_size, y_size):
 
 def apply_identification_model(volume, i_min, i_max, model):
 
+    if volume.shape[1] < 80:
+        dif = 80 - volume.shape[1]
+        volume = np.pad(volume, ((0, 0), (0, dif), (0, 0)),
+                              mode="constant", constant_values=-5)
+
+    if volume.shape[2] < 320:
+        dif = 320 - volume.shape[2]
+        volume = np.pad(volume, ((0, 0), (0, 0), (0, dif)),
+                              mode="constant", constant_values=-5)
+
     paddings = np.mod(16 - np.mod(volume.shape[1:3], 16), 16)
     paddings = np.array(list(zip(np.zeros(3), [0] + list(paddings)))).astype(int)
-    volume_padded = np.pad(volume, paddings, mode="constant")
+    volume_padded = np.pad(volume, paddings, mode="constant", constant_values=-5)
     output = np.zeros(volume_padded.shape)
     i_min = max(i_min, 4)
     i_max = min(i_max, volume_padded.shape[0] - 4)
