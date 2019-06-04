@@ -214,11 +214,15 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
     weights = np.array([0.1, 0.9])
     detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
-                     'binary_recall': km.binary_recall(),
-                     'dice_coef': dice_coef_label(label=1)}
+                               'binary_recall': km.binary_recall(),
+                               'dice_coef': dice_coef_label(label=1)}
+
+    detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
 
     identification_model_objects = {'ignore_background_loss': ignore_background_loss,
                                     'vertebrae_classification_rate': vertebrae_classification_rate}
+
+    identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
 
     fig, axes = plt.subplots(nrows=1, ncols=no_of_scan_paths, figsize=(30, 6), dpi=300)
 
@@ -244,13 +248,10 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
         pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
             scan_path=scan_path,
-            centroid_path=centroid_path,
-            detection_model_path=detection_model_path,
+            detection_model=detection_model,
             detection_X_shape=np.array([64, 64, 80]),
             detection_y_shape=np.array([32, 32, 40]),
-            detection_model_objects=detection_model_objects,
-            identification_model_path=identification_model_path,
-            identification_model_objects=identification_model_objects,
+            identification_model=identification_model,
             spacing=spacing)
 
         volume = opening_files.read_nii(scan_path, spacing=spacing)
@@ -410,11 +411,13 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
-'''
-complete_identification_picture('datasets_test', 'saved_current_models/detec-15:59-20e.h5',
-                                'saved_current_models/ident-9:59-18e.h5', 'plots',
-                                spacing=(1.0, 1.0, 1.0))
-'''
 
+
+complete_identification_picture('datasets_test', 'saved_current_models/detec-20:06.h5',
+                                'saved_current_models/ident-18:19.h5', 'plots',
+                                spacing=(1.0, 1.0, 1.0))
+
+'''
 get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
           'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
+'''
