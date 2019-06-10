@@ -29,15 +29,13 @@ def generate_samples(dataset_dir, sample_dir,
         volume = opening_files.read_nii(data_path, spacing=spacing)
 
         # densely populate
-        # disk_indices = pre_compute_disks(spacing)
-        '''
+        disk_indices = pre_compute_disks(spacing)
         dense_labelling = densely_label(volume.shape,
                                         disk_indices,
                                         labels,
                                         centroid_indexes,
                                         use_labels=False)
-        '''
-        dense_labelling = spherical_densely_label(volume.shape, 14.0, labels, centroid_indexes, use_labels=False)
+        # dense_labelling = spherical_densely_label(volume.shape, 14.0, labels, centroid_indexes, use_labels=False)
 
         sample_size_in_pixels = (sample_size / np.array(spacing)).astype(int)
 
