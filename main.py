@@ -1,6 +1,6 @@
 import numpy as np
 from perform_learning import perform_learning
-from models.simple_detection import detection_unet
+from models.simple_detection import detection_unet, simple_detection
 
 # inputs to the model
 model_params = {'kernel_size': (3, 3, 3),
@@ -14,7 +14,7 @@ perform_learning(training_sample_dir="samples/two_class/training",
                  sample_channels=1,
                  categorise=True,
                  output_classes=2,
-                 model_func=detection_unet,
+                 model_func=simple_detection,
                  model_params=model_params,
                  epochs=150,
                  model_path="two_class_model.h5",

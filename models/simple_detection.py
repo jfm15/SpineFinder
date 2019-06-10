@@ -8,21 +8,21 @@ from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_
 from losses_and_metrics.dsc import dice_coef_label
 
 
-def simple_detection(input_shape, filters, kernel_size, weights, learning_rate):
+def simple_detection(filters, kernel_size, weights, learning_rate):
     # Input
     model = Sequential()
     model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same",
-                     input_shape=input_shape))
-    model.add(BatchNormalization(momentum=0.1))
+                     input_shape=(None, None, None, 1)))
+    # model.add(BatchNormalization(momentum=0.1))
     model.add(Activation("relu"))
     model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same"))
-    model.add(BatchNormalization(momentum=0.1))
+    # model.add(BatchNormalization(momentum=0.1))
     model.add(Activation("relu"))
     model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same"))
-    model.add(BatchNormalization(momentum=0.1))
+    # model.add(BatchNormalization(momentum=0.1))
     model.add(Activation("relu"))
     model.add(Conv3D(filters, kernel_size=kernel_size, strides=(1, 1, 1), padding="same"))
-    model.add(BatchNormalization(momentum=0.1))
+    # model.add(BatchNormalization(momentum=0.1))
     model.add(Activation("relu"))
     model.add(Conv3D(2, kernel_size=kernel_size, strides=(1, 1, 1), activation='softmax', padding="same"))
 
