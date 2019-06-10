@@ -10,7 +10,8 @@ import sys
 sys.path.append(base_directory)
 
 from legacy import global_variables
-from utility_functions import opening_files, dense_labeler
+from utility_functions import opening_files
+from legacy_3 import dense_labeler
 
 """EXTRACT INFORMATION FROM FILES"""
 scans_directory = global_variables.spine_dataset_path
@@ -41,7 +42,8 @@ for patient_file in (next(os.walk(scans_directory))[1]):
 
             """GET DENSE LABELLING"""
             cut_indices.append(best_transverse_cut)
-            dense_labels.append(dense_labeler.generate_dense_labelling_2D(scan, best_transverse_cut, centroids, radii, scales, False))
+            dense_labels.append(
+                dense_labeler.generate_dense_labelling_2D(scan, best_transverse_cut, centroids, radii, scales, False))
 
         patient_folder_path = mask_directory + patient_file
 

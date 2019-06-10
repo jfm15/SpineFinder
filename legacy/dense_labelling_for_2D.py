@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-from utility_functions import opening_files as of, dense_labeler as dl
+from utility_functions import opening_files as of
+from legacy_3 import dense_labeler as dl
 
 """EXTRACT INFORMATION FROM FILES"""
 dir = '/vol/bitbucket2/jfm15/spine-1/patient0013/4511471/4511471'

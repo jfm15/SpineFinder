@@ -80,21 +80,17 @@ def get_island(point, explored, predictions):
 
 
 # NOTE old function
-'''
-def densely_label(labels, volume_shape, centroid_indexes, spacing, radius, use_labels):
-
-    diameter_in_pixels = radius / np.array(spacing)
-    radius_in_pixels = ((diameter_in_pixels - np.ones(3)) / 2.0).astype(int)
+def spherical_densely_label(volume_shape, radius, labels, centroids, use_labels):
 
     dense_labelling = np.zeros(volume_shape)
 
     upper_clip = volume_shape - np.ones(3)
 
-    for label, centroid_idx in zip(labels, centroid_indexes):
+    for label, centroid in zip(labels, centroids):
 
-        corner_a = centroid_idx - radius_in_pixels
+        corner_a = centroid - radius
         corner_a = np.clip(corner_a, a_min=np.zeros(3), a_max=upper_clip).astype(int)
-        corner_b = centroid_idx + radius_in_pixels
+        corner_b = centroid + radius
         corner_b = np.clip(corner_b, a_min=np.zeros(3), a_max=upper_clip).astype(int)
 
         label_value = 1
@@ -103,10 +99,14 @@ def densely_label(labels, volume_shape, centroid_indexes, spacing, radius, use_l
                 print("has L6 vertebrae")
             label_value = LABELS.index(label)
 
-        dense_labelling[corner_a[0]:corner_b[0], corner_a[1]:corner_b[1], corner_a[2]:corner_b[2]] = label_value
+        for x in range(corner_a[0], corner_b[0]):
+            for y in range(corner_a[1], corner_b[1]):
+                for z in range(corner_a[2], corner_b[2]):
+                    point = np.array([x, y, z])
+                    if np.linalg.norm(point - centroid) <= radius:
+                        dense_labelling[x, y, z] = label_value
 
     return dense_labelling
-'''
 
 
 def densely_label(volume_shape, disk_indices, labels, centroids, use_labels):

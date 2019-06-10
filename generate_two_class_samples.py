@@ -1,7 +1,7 @@
 import glob
 from utility_functions import opening_files
 import numpy as np
-from utility_functions.sampling_helper_functions import densely_label, pre_compute_disks
+from utility_functions.sampling_helper_functions import densely_label, spherical_densely_label, pre_compute_disks
 
 
 def generate_samples(dataset_dir, sample_dir,
@@ -14,8 +14,10 @@ def generate_samples(dataset_dir, sample_dir,
 
     ext_len = len(file_ext)
 
-    for data_path in glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True):
+    paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
 
+    for i, data_path in enumerate(paths):
+        print(str(i) + "/" + str(len(paths)))
         # get path to corresponding metadata
         data_path_without_ext = data_path[:-ext_len]
         metadata_path = data_path_without_ext + ".lml"
@@ -27,12 +29,15 @@ def generate_samples(dataset_dir, sample_dir,
         volume = opening_files.read_nii(data_path, spacing=spacing)
 
         # densely populate
-        disk_indices = pre_compute_disks(spacing)
+        # disk_indices = pre_compute_disks(spacing)
+        '''
         dense_labelling = densely_label(volume.shape,
                                         disk_indices,
                                         labels,
                                         centroid_indexes,
                                         use_labels=False)
+        '''
+        dense_labelling = spherical_densely_label(volume.shape, 7.0, labels, centroid_indexes, use_labels=False)
 
         sample_size_in_pixels = (sample_size / np.array(spacing)).astype(int)
 
@@ -61,7 +66,6 @@ def generate_samples(dataset_dir, sample_dir,
         random_area = volume.shape - sample_size_in_pixels
 
         name = (data_path.rsplit('/', 1)[-1])[:-ext_len]
-        print(name)
         i = 0
         j = 0
         while i < no_of_samples:
@@ -90,9 +94,9 @@ def generate_samples(dataset_dir, sample_dir,
                 np.save(labelling_path, labelling)
 
 
-generate_samples(dataset_dir="datasets/",
+generate_samples(dataset_dir="datasets/spine-1",
                  sample_dir="samples/two_class/training",
-                 spacing=(1.0, 1.0, 1.0),
+                 spacing=(2.0, 2.0, 2.0),
                  sample_size=(64.0, 64.0, 80.0),
                  no_of_samples=5,
                  no_of_zero_samples=1)

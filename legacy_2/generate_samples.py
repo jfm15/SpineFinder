@@ -1,9 +1,7 @@
 import glob, os
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as plt_patches
-from utility_functions import opening_files, dense_labeler
-import SimpleITK as sitk
+from utility_functions import opening_files
+from legacy_3 import dense_labeler
 
 root_path = os.getcwd()
 dataset_dir = "/".join([root_path, "datasets", "spine-1"])
