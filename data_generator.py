@@ -55,8 +55,10 @@ class DataGenerator(keras.utils.Sequence):
         first_sample = np.load(self.samples_dir + '/' + first_id + '-sample.npy')
 
         # Initialization
-        X = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_channels))
-        y = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_classes), dtype=int)
+        #X = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_channels))
+        #y = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_classes), dtype=int)
+        X = np.empty((self.batch_size, *first_sample.shape, self.n_channels))
+        y = np.empty((self.batch_size, *first_sample.shape, self.n_classes), dtype=int)
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
