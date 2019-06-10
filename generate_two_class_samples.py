@@ -37,7 +37,7 @@ def generate_samples(dataset_dir, sample_dir,
                                         centroid_indexes,
                                         use_labels=False)
         '''
-        dense_labelling = spherical_densely_label(volume.shape, 7.0, labels, centroid_indexes, use_labels=False)
+        dense_labelling = spherical_densely_label(volume.shape, 14.0, labels, centroid_indexes, use_labels=False)
 
         sample_size_in_pixels = (sample_size / np.array(spacing)).astype(int)
 
