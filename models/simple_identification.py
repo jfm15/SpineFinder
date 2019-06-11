@@ -108,10 +108,12 @@ def unet_slices(kernel_size, filters, learning_rate):
 
     # 5 x 20
     floor = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_4)
-    floor = Conv2D(16 * filters, kernel_size=(5, 20), strides=(1, 1), padding="same")(floor)
+    #floor = Conv2D(16 * filters, kernel_size=(5, 20), strides=(1, 1), padding="same")(floor)
+    floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = BatchNormalization(momentum=0.1)(floor)
     floor = Activation("relu")(floor)
-    floor = Conv2D(16 * filters, kernel_size=(5, 20), strides=(1, 1), padding="same")(floor)
+    #floor = Conv2D(16 * filters, kernel_size=(5, 20), strides=(1, 1), padding="same")(floor)
+    floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = BatchNormalization(momentum=0.1)(floor)
     floor = Activation("relu")(floor)
 
