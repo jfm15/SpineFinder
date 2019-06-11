@@ -141,6 +141,6 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), s
 generate_slice_samples(dataset_dir="datasets",
                        sample_dir="samples/slices/training",
                        sample_size=(80, 320),
-                       no_of_samples=100,
+                       no_of_samples=50,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)
