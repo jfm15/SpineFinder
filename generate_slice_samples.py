@@ -25,9 +25,9 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), s
         labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
         centroid_indexes = np.round(centroids / np.array(spacing)).astype(int)
 
-        #disk_indices = pre_compute_disks(spacing)
-        #dense_labelling = densely_label(volume.shape, disk_indices, labels, centroid_indexes, use_labels=True)
-        dense_labelling = spherical_densely_label(volume.shape, 14.0, labels, centroid_indexes, use_labels=True)
+        disk_indices = pre_compute_disks(spacing)
+        dense_labelling = densely_label(volume.shape, disk_indices, labels, centroid_indexes, use_labels=True)
+        # dense_labelling = spherical_densely_label(volume.shape, 14.0, labels, centroid_indexes, use_labels=True)
 
         # dense_labelling_squashed = np.any(dense_labelling, axis=(1, 2))
         # lower_i = np.min(np.where(dense_labelling_squashed == 1))
@@ -61,6 +61,9 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), s
             '''
             # get vertebrae identification map
             # detection_slice = (sample_labels_slice > 0).astype(int)
+
+            [volume_slice, sample_labels_slice] = elasticdeform.deform_random_grid(
+                [volume_slice, sample_labels_slice], sigma=5, points=3, order=0)
 
             '''
             [volume_slice, sample_labels_slice] = elasticdeform.deform_random_grid(

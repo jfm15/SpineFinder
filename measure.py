@@ -299,6 +299,8 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
 def get_stats(scans_dir, detection_model_path, identification_model_path, spacing=(1.0, 1.0, 1.0)):
 
+    print("detection model: ", detection_model_path)
+    print("identification model: ", identification_model_path)
     scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)
 
     weights = np.array([0.1, 0.9])
