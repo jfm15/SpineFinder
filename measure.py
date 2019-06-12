@@ -459,7 +459,7 @@ complete_identification_picture('spine-test-data', 'saved_current_models/detec-2
 
 
 get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
-          'final_models/ident-new-decomp.h5', spacing=(1.0, 1.0, 1.0))
+          'final_models/ident-new.h5', spacing=(1.0, 1.0, 1.0))
 
 
 '''
