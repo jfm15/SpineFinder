@@ -5,7 +5,7 @@ from utility_functions import processing
 def read_nii(dir, spacing=(2.0, 2.0, 2.0)):
     sitk_dir = sitk.ReadImage(dir)
     sitk_dir = processing.resample_image(sitk_dir, out_spacing=spacing)
-    sitk_dir = processing.zero_mean_unit_var(sitk_dir)
+    # sitk_dir = processing.zero_mean_unit_var(sitk_dir)
     return sitk.GetArrayFromImage(sitk_dir).T
 
 
