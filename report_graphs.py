@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.cm as cm
+import elasticdeform
 from utility_functions import opening_files
 from utility_functions.labels import LABELS_NO_B, LABELS_NO_B_OR_L6, LABELS_NO_L6
 from utility_functions.sampling_helper_functions import densely_label, spherical_densely_label, pre_compute_disks
@@ -117,7 +118,7 @@ def old_dense_label_method_with_boxes(scan_path, box_coords, ext=".nii.gz"):
 
     fig, ax = plt.subplots(1)
 
-    ax.imshow(volume_slice.T, interpolation="none", origin='lower', cmap='gray', vmin=-2)
+    ax.imshow(volume_slice.T, interpolation="none", origin='lower', cmap='gray')
     ax.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26, alpha=0.4)
 
     for coords in box_coords:
@@ -136,20 +137,29 @@ def old_dense_label_method_patch(scan_path, coords, ext=".nii.gz"):
     labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
 
     disk_indices = pre_compute_disks((1.0, 1.0, 1.0))
-    # dense_labelling = densely_label(volume.shape, disk_indices, labels, centroids, True)
-    dense_labelling = spherical_densely_label(volume.shape, 13, labels, centroids, True)
+    dense_labelling = densely_label(volume.shape, disk_indices, labels, centroids, True)
+    # dense_labelling = spherical_densely_label(volume.shape, 13, labels, centroids, True)
 
     cut = np.round(np.mean(np.array(centroids)[:, 0])).astype(int)
     # cut = np.round(np.array(centroids)[1, 2]).astype(int)
 
-    volume_slice = volume[cut, coords[0]:coords[0]+coords[2], coords[1]:coords[1]+coords[3]]
-    labelling_slice = dense_labelling[cut, coords[0]:coords[0]+coords[2], coords[1]:coords[1]+coords[3]]
+    volume_slice = volume[cut]
+    labelling_slice = dense_labelling[cut]
+
+    '''
+    [volume_slice, labelling_slice] = elasticdeform.deform_random_grid(
+        [volume_slice, labelling_slice], sigma=7, points=3, order=0)
+    '''
+
+
+    volume_slice = volume_slice[coords[0]:coords[0]+coords[2], coords[1]:coords[1]+coords[3]]
+    labelling_slice = labelling_slice[coords[0]:coords[0]+coords[2], coords[1]:coords[1]+coords[3]]
 
     masked_data = np.ma.masked_where(labelling_slice == 0, labelling_slice)
 
     fig, ax = plt.subplots(1)
 
-    ax.imshow(volume_slice.T, interpolation="none", origin='lower', cmap='gray', vmin=-2)
+    ax.imshow(volume_slice.T, interpolation="none", origin='lower', cmap='gray')
     ax.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26, alpha=0.4)
 
     '''
@@ -227,12 +237,14 @@ def show_labels(scan_path, ext=".nii.gz"):
 # vertebrae_frequencies_in_samples('samples/slices', 'plots')
 # vertebrae_pixel_frequencies_in_samples('samples/slices', 'plots')
 # old_dense_label_method("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
-'''
+
 old_dense_label_method_with_boxes("datasets/spine-1/patient0088/2684937/2684937.nii.gz", 
-                                  np.array([[10, 10, 64, 80], [80, 220, 64, 80], [75, 350, 64, 80]]))
+                                  np.array([[10, 150, 140, 140]]))
+
 '''
-old_dense_label_method_patch("datasets/spine-2/patient0091/4524941/4524941.nii.gz",
-                                  np.array([40, 240, 80, 320]))
+old_dense_label_method_patch("datasets/spine-5/patient0396/4655766/4655766.nii.gz",
+                                  np.array([0, 0, 80, 320]))
+'''
 
 
 #plot_relu()

@@ -73,45 +73,57 @@ def unet_slices(kernel_size, filters, learning_rate):
     main_input = Input(shape=(None, None, 1))
 
     # 80 x 320
+    # 204 1340
     step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(main_input)
     step_down_1 = BatchNormalization(momentum=0.1)(step_down_1)
     step_down_1 = Activation("relu")(step_down_1)
+    # 202 1338
     step_down_1 = Conv2D(filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_1)
     step_down_1 = BatchNormalization(momentum=0.1)(step_down_1)
     step_down_1 = Activation("relu")(step_down_1)
 
     # 40 x 160
+    # 200 1336
     step_down_2 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_1)
+    # 100 668
     step_down_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_2)
     step_down_2 = BatchNormalization(momentum=0.1)(step_down_2)
     step_down_2 = Activation("relu")(step_down_2)
+    # 98 666
     step_down_2 = Conv2D(2 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_2)
     step_down_2 = BatchNormalization(momentum=0.1)(step_down_2)
     step_down_2 = Activation("relu")(step_down_2)
 
     # 20 x 80
+    # 96 664
     step_down_3 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_2)
+    # 48 332
     step_down_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_3)
     step_down_3 = BatchNormalization(momentum=0.1)(step_down_3)
     step_down_3 = Activation("relu")(step_down_3)
+    # 46 328
     step_down_3 = Conv2D(4 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_3)
     step_down_3 = BatchNormalization(momentum=0.1)(step_down_3)
     step_down_3 = Activation("relu")(step_down_3)
 
-    # 10 x 40
+    # 44 164
     step_down_4 = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_3)
+    # 22 82
     step_down_4 = Conv2D(8 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_4)
     step_down_4 = BatchNormalization(momentum=0.1)(step_down_4)
+    # 20 80
     step_down_4 = Conv2D(8 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(step_down_4)
     step_down_4 = BatchNormalization(momentum=0.1)(step_down_4)
     step_down_4 = Activation("relu")(step_down_4)
 
-    # 5 x 20
+    # 18 78
     floor = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(step_down_4)
+    # 9 39
     floor = Conv2D(16 * filters, kernel_size=(5, 20), strides=(1, 1), padding="same")(floor)
     #floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = BatchNormalization(momentum=0.1)(floor)
     floor = Activation("relu")(floor)
+    # 5 20
     floor = Conv2D(16 * filters, kernel_size=(5, 20), strides=(1, 1), padding="same")(floor)
     #floor = Conv2D(16 * filters, kernel_size=kernel_size, strides=(1, 1), padding="same")(floor)
     floor = BatchNormalization(momentum=0.1)(floor)
