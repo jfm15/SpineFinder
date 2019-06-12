@@ -468,5 +468,5 @@ get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
 '''
 
 
-single_detection("datasets/spine-1/patient0088/2684937/2684937.nii.gz",
+single_detection("datasets/spine-2/patient0090/3155447/3155447.nii.gz",
                  'final_models/detec-unet-better-samples.h5', 'plots')
