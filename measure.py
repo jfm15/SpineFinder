@@ -212,7 +212,7 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
 
 def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path,
                                     spacing=(2.0, 2.0, 2.0)):
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[:8]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[42:46]
     no_of_scan_paths = len(scan_paths)
 
     weights = np.array([0.1, 0.9])
@@ -451,11 +451,11 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 
-'''
+
 complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
                                 'saved_current_models/ident-18:19.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
-'''
+
 
 
 '''
@@ -470,6 +470,7 @@ get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
 '''
 
 
-
+'''
 single_detection("spine-test-data/4617014.nii.gz",
                  'final_models/detec-unet-better-samples.h5', 'plots')
+'''
