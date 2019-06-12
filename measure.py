@@ -443,7 +443,7 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
 
     ax.imshow(volume_slice.T, cmap='gray')
     ax.imshow(masked_data.T, cmap=cm.autumn, alpha=0.4)
-    fig.savefig(plot_path + '/identification-complete.png')
+    fig.savefig(plot_path + '/single_detection.png')
 
 
 
