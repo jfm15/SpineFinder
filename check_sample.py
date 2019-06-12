@@ -47,14 +47,14 @@ def check_slice_sample(sample_path):
     sample = np.load(sample_path)
     labelling = np.load(labelling_path)
 
-    #sample_slice = sample[5]
+    sample_slice = sample[1]
 
     masked_data = np.ma.masked_where(labelling == 0, labelling)
 
-    plt.imshow(sample.T, interpolation="none", origin='lower', cmap='gray')
+    plt.imshow(sample_slice.T, interpolation="none", origin='lower', cmap='gray')
     plt.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26,  alpha=0.4)
     plt.show()
 
 
 # check_multi_class_sample("samples/two_class/training/2804506-1-sample.npy")
-check_slice_sample("samples/slices/training/2684937-3-sample.npy")
+check_slice_sample("samples/slices/training/2684937-1-sample.npy")
