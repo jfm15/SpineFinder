@@ -458,8 +458,10 @@ complete_identification_picture('spine-test-data', 'saved_current_models/detec-2
 '''
 
 
+'''
 get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
           'final_models/ident-new.h5', spacing=(1.0, 1.0, 1.0))
+'''
 
 
 '''
@@ -468,7 +470,6 @@ get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
 '''
 
 
-'''
-single_detection("datasets/spine-4/patient0280/4555219/4555219.nii.gz",
+
+single_detection("spine-test-data/4617014.nii.gz",
                  'final_models/detec-unet-better-samples.h5', 'plots')
-'''
