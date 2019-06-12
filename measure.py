@@ -432,7 +432,7 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
 
     volume = opening_files.read_nii(scan_path, spacing=spacing)
 
-    detections = apply_detection_model(volume, detection_model, np.array([64, 64, 80]), np.array([32, 32, 40]))
+    detections = apply_detection_model(volume, detection_model, np.array([64, 64, 80]), np.array([64, 64, 80]))
 
     volume_slice = volume[cut, :, :]
     detections_slice = detections[cut, :, :]
