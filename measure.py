@@ -63,15 +63,15 @@ def apply_identification_model(volume, i_min, i_max, model):
     paddings = np.array(list(zip(np.zeros(3), [0] + list(paddings)))).astype(int)
     volume_padded = np.pad(volume, paddings, mode="constant")
     output = np.zeros(volume_padded.shape)
-    i_min = max(i_min, 4)
-    i_max = min(i_max, volume_padded.shape[0] - 4)
+    # i_min = max(i_min, 4)
+    # i_max = min(i_max, volume_padded.shape[0] - 4)
 
     for i in range(i_min, i_max, 1):
-        volume_slice_padded = volume_padded[i-4:i+4, :, :]
-        volume_slice_padded = np.transpose(volume_slice_padded, (1, 2, 0))
-        # volume_slice_padded = volume_padded[i, :, :]
-        patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape)
-        # patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
+        #volume_slice_padded = volume_padded[i-4:i+4, :, :]
+        #volume_slice_padded = np.transpose(volume_slice_padded, (1, 2, 0))
+        volume_slice_padded = volume_padded[i, :, :]
+        #patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape)
+        patch = volume_slice_padded.reshape(1, *volume_slice_padded.shape, 1)
         result = model.predict(patch)
         result = np.squeeze(result, axis=0)
         result = np.squeeze(result, axis=-1)
@@ -459,7 +459,7 @@ complete_identification_picture('spine-test-data', 'saved_current_models/detec-2
 
 
 get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
-          'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
+          'saved_current_models/ident-10:20.h5', spacing=(1.0, 1.0, 1.0))
 
 
 '''
