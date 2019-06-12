@@ -238,8 +238,12 @@ def show_labels(scan_path, ext=".nii.gz"):
 # vertebrae_pixel_frequencies_in_samples('samples/slices', 'plots')
 # old_dense_label_method("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
 
+print(np.linalg.norm(np.array([86.4649, 59.1895, 41.1719]) - np.array([88.3036,60.6322,50.42])))
+
+'''
 old_dense_label_method_with_boxes("datasets/spine-1/patient0088/2684937/2684937.nii.gz", 
                                   np.array([[10, 150, 140, 140]]))
+'''
 
 '''
 old_dense_label_method_patch("datasets/spine-5/patient0396/4655766/4655766.nii.gz",
