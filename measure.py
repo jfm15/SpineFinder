@@ -427,5 +427,5 @@ get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
           'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
 '''
 
-get_stats('spine-test-data', 'final_models/detec-unet.h5',
-          'final_models/ident-basic.h5', spacing=(1.0, 1.0, 1.0))
+get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
+          'final_models/ident-LK.h5', spacing=(1.0, 1.0, 1.0))
