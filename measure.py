@@ -413,6 +413,40 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
     print("Thoracic Id rate: " + str(thoracic_rate) + "%  mean:" + str(thoracic_mean) + "  std:" + str(thoracic_std) + "\n")
     print("Lumbar Id rate: " + str(lumbar_rate) + "%  mean:" + str(lumbar_mean) + "  std:" + str(lumbar_std) + "\n")
 
+
+def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1.0, 1.0)):
+    scan_path_without_ext = scan_path[:-len(".nii.gz")]
+    centroid_path = scan_path_without_ext + ".lml"
+
+    labels, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
+    centroid_indexes = centroids / np.array(spacing)
+
+    cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
+
+    weights = np.array([0.1, 0.9])
+    detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
+                               'binary_recall': km.binary_recall(),
+                               'dice_coef': dice_coef_label(label=1)}
+
+    detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
+
+    volume = opening_files.read_nii(scan_path, spacing=spacing)
+
+    detections = apply_detection_model(volume, detection_model, np.array([64, 64, 80]), np.array([32, 32, 40]))
+
+    volume_slice = volume[cut, :, :]
+    detections_slice = detections[cut, :, :]
+
+    masked_data = np.ma.masked_where(detections_slice == 0, detections_slice)
+
+    fig, ax = plt.subplots(1)
+
+    ax.imshow(volume_slice.T, cmap='gray')
+    ax.imshow(masked_data.T, cmap=cm.autumn, alpha=0.4)
+    fig.savefig(plot_path + '/single_detection.png')
+
+
+
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 
@@ -427,5 +461,11 @@ get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
           'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
 '''
 
+'''
 get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
           'final_models/ident-LK.h5', spacing=(1.0, 1.0, 1.0))
+'''
+
+
+single_detection("datasets/spine-1/patient0088/2684937/2684937.nii.gz",
+                 'final_models/detec-unet-better-samples.h5', 'plots')
