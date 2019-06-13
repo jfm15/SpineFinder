@@ -412,6 +412,7 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
             labels_used.append(label)
             data.append(differences_per_vertebrae[label])
 
+    plt.figure(figsize=(20, 10))
     plt.boxplot(data, labels=labels_used)
     plt.savefig('plots/boxplot.png')
 

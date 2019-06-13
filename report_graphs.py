@@ -27,17 +27,19 @@ def vertebrae_counts(dataset_dir, file_ext=".lml"):
 def vertebrae_frequencies(dataset_dir, file_ext=".lml"):
     paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
 
-    frequencies = np.zeros(len(LABELS_NO_B))
+    frequencies = np.zeros(len(LABELS_NO_B_OR_L6))
 
     for labelling_path in paths:
         labels, centroids = opening_files.extract_centroid_info_from_lml(labelling_path)
         for label in labels:
-            idx = LABELS_NO_B.index(label)
-            frequencies[idx] += 1
+            if label != 'L6':
+                idx = LABELS_NO_B_OR_L6.index(label)
+                frequencies[idx] += 1
 
-    x = np.arange(len(LABELS_NO_B))
-    plt.bar(x, frequencies, 0.5)
-    plt.xticks(x, LABELS_NO_B)
+    x = np.arange(len(LABELS_NO_B_OR_L6))
+    plt.figure(figsize=(20, 10))
+    plt.bar(x, frequencies, 0.7)
+    plt.xticks(x, LABELS_NO_B_OR_L6)
     plt.show()
 
 
@@ -240,8 +242,8 @@ def test_box_plot():
     plt.show()
 
 
-vertebrae_counts('datasets')
-# vertebrae_frequencies('datasets')
+#vertebrae_counts('datasets')
+vertebrae_frequencies('datasets')
 # vertebrae_frequencies_in_samples('samples/slices', 'plots')
 # vertebrae_pixel_frequencies_in_samples('samples/slices', 'plots')
 # old_dense_label_method("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
