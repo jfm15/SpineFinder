@@ -342,7 +342,7 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
             scan_path=scan_path,
             detection_model=detection_model,
             detection_X_shape=np.array([64, 64, 80]),
-            detection_y_shape=np.array([64, 64, 80]),
+            detection_y_shape=np.array([32, 32, 40]),
             identification_model=identification_model,
             spacing=spacing)
 
