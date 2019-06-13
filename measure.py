@@ -302,7 +302,7 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
     print("detection model: ", detection_model_path)
     print("identification model: ", identification_model_path)
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[:2]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)
 
     weights = np.array([0.1, 0.9])
     detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
