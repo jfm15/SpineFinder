@@ -411,8 +411,8 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
         if label in differences_per_vertebrae:
             labels_used.append(label)
             data.append(differences_per_vertebrae[label])
-            
-    plt.boxplot(data, labels_used)
+
+    plt.boxplot(data, labels=labels_used)
     plt.savefig('plots/boxplot.png')
 
     all_rate = np.around(100.0 * all_correct / all_no, decimals=1)
