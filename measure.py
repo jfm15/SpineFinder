@@ -405,6 +405,8 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
         average_difference = total_difference / no
         print("average", average_difference, "\n")
 
+    print(differences_per_vertebrae)
+
     all_rate = np.around(100.0 * all_correct / all_no, decimals=1)
     all_mean = np.around(np.mean(all_difference), decimals=2)
     all_std = np.around(np.std(all_difference), decimals=2)
@@ -417,8 +419,6 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
     lumbar_rate = np.around(100.0 * lumbar_correct / lumbar_no, decimals=1)
     lumbar_mean = np.around(np.mean(lumbar_difference), decimals=2)
     lumbar_std = np.around(np.std(lumbar_difference), decimals=2)
-
-    print(differences_per_vertebrae)
 
     print("All Id rate: " + str(all_rate) + "%  mean: " + str(all_mean) + "  std: " + str(all_std) + "\n")
     print("Cervical Id rate: " + str(cervical_rate) + "%  mean:" + str(cervical_mean) + "  std:" + str(cervical_std) + "\n")
