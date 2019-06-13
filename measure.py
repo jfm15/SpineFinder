@@ -302,7 +302,7 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
     print("detection model: ", detection_model_path)
     print("identification model: ", identification_model_path)
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[:2]
 
     weights = np.array([0.1, 0.9])
     detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
@@ -374,6 +374,8 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
             print(label, min_label)
 
+        differences_per_vertebrae = {}
+
         # get average distance
         total_difference = 0.0
         no = 0.0
@@ -384,6 +386,13 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
                 difference = np.linalg.norm(pred_centroid_idx - centroid_indexes[label_idx])
                 total_difference += difference
                 no += 1
+
+                # Add to specific vertebrae hash
+                if pred_label in differences_per_vertebrae:
+                    differences_per_vertebrae[pred_label].append(difference)
+                else:
+                    differences_per_vertebrae[pred_label] = [difference]
+
                 # Add to total difference
                 all_difference.append(difference)
                 if pred_label[0] == 'C':
@@ -408,6 +417,8 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
     lumbar_rate = np.around(100.0 * lumbar_correct / lumbar_no, decimals=1)
     lumbar_mean = np.around(np.mean(lumbar_difference), decimals=2)
     lumbar_std = np.around(np.std(lumbar_difference), decimals=2)
+
+    print(differences_per_vertebrae)
 
     print("All Id rate: " + str(all_rate) + "%  mean: " + str(all_mean) + "  std: " + str(all_std) + "\n")
     print("Cervical Id rate: " + str(cervical_rate) + "%  mean:" + str(cervical_mean) + "  std:" + str(cervical_std) + "\n")

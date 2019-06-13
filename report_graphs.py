@@ -232,13 +232,22 @@ def show_labels(scan_path, ext=".nii.gz"):
 
     plt.show()
 
+
+def test_box_plot():
+    data1 = np.random.rand(50) * 100
+    data2 = np.random.rand(50) * 100
+    fig1, ax1 = plt.subplots()
+    ax1.boxplot([data1, data2])
+    plt.show()
+
 # vertebrae_counts('datasets')
 # vertebrae_frequencies('datasets')
 # vertebrae_frequencies_in_samples('samples/slices', 'plots')
 # vertebrae_pixel_frequencies_in_samples('samples/slices', 'plots')
 # old_dense_label_method("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
 
-print(np.linalg.norm(np.array([86.4649, 59.1895, 41.1719]) - np.array([88.3036,60.6322,50.42])))
+
+test_box_plot()
 
 '''
 old_dense_label_method_with_boxes("datasets/spine-1/patient0088/2684937/2684937.nii.gz", 
