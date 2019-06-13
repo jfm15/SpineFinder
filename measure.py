@@ -330,6 +330,8 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
     thoracic_difference = []
     lumbar_difference = []
 
+    differences_per_vertebrae = {}
+
     for i, scan_path in enumerate(scan_paths):
         print(i, scan_path)
         scan_path_without_ext = scan_path[:-len(".nii.gz")]
@@ -374,8 +376,6 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
             print(label, min_label)
 
-        differences_per_vertebrae = {}
-
         # get average distance
         total_difference = 0.0
         no = 0.0
@@ -405,7 +405,12 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
         average_difference = total_difference / no
         print("average", average_difference, "\n")
 
-    print(differences_per_vertebrae)
+    data = []
+    for label in LABELS_NO_L6:
+        if label in differences_per_vertebrae:
+            data.append(differences_per_vertebrae[label])
+
+    print(data)
 
     all_rate = np.around(100.0 * all_correct / all_no, decimals=1)
     all_mean = np.around(np.mean(all_difference), decimals=2)
