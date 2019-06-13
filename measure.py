@@ -210,9 +210,9 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
     fig.savefig(plot_path + '/detection-complete.png')
 
 
-def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path,
+def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path, start, end,
                                     spacing=(2.0, 2.0, 2.0)):
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[:3]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[start:end]
     no_of_scan_paths = len(scan_paths)
 
     weights = np.array([0.1, 0.9])
@@ -282,6 +282,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             axes[col].annotate(pred_label, (u, v), color="red", size=6)
             axes[col].scatter(u, v, color="red", s=8)
 
+        pred_centroid_estimates = np.array(pred_centroid_estimates)
         axes[col].plot(pred_centroid_estimates[:, 1], pred_centroid_estimates[:, 2], color="red")
 
         # get average distance
@@ -301,7 +302,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         i += 1
 
     fig.subplots_adjust(wspace=0.2, hspace=0.4)
-    fig.savefig(plot_path + '/centroids_to_3.png')
+    fig.savefig(plot_path + '/centroids_' + start + '_' + end + '.png')
 
 
 def get_stats(scans_dir, detection_model_path, identification_model_path, spacing=(1.0, 1.0, 1.0)):
@@ -477,11 +478,11 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 
+for i in range(0, 57, 3):
+    complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
+                                    'saved_current_models/ident-18:19.h5', 'plots', i, i + 3,
+                                    spacing=(1.0, 1.0, 1.0))
 
-
-complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
-                                'saved_current_models/ident-18:19.h5', 'plots',
-                                spacing=(1.0, 1.0, 1.0))
 
 '''
 get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
