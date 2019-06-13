@@ -212,7 +212,7 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
 
 def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path,
                                     spacing=(2.0, 2.0, 2.0)):
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[:6]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[:3]
     no_of_scan_paths = len(scan_paths)
 
     weights = np.array([0.1, 0.9])
@@ -301,7 +301,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         i += 1
 
     fig.subplots_adjust(wspace=0.2, hspace=0.4)
-    fig.savefig(plot_path + '/centroids_to_6.png')
+    fig.savefig(plot_path + '/centroids_to_3.png')
 
 
 def get_stats(scans_dir, detection_model_path, identification_model_path, spacing=(1.0, 1.0, 1.0)):
