@@ -264,25 +264,26 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         identifications_slice = pred_identifications[cut, :, :]
         # identifications_slice = np.max(pred_identifications, axis=0)
 
-        masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
+        # masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
         # masked_data = np.ma.masked_where(detections_slice == 0, detections_slice)
 
         axes[col].imshow(volume_slice.T, cmap='gray', origin='lower')
-        axes[col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
+        # axes[col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
 
-        '''
         for label, centroid_idx in zip(labels, centroid_indexes):
             u, v = centroid_idx[1:3]
             axes[col].annotate(label, (u, v), color="white", size=6)
             axes[col].scatter(u, v, color="white", s=8)
 
+        axes[col].plot(centroid_indexes[:, 1:3], color="white")
+
         for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
             u, v = pred_centroid_idx[1:3]
             axes[col].annotate(pred_label, (u, v), color="red", size=6)
             axes[col].scatter(u, v, color="red", s=8)
-        '''
 
-        '''
+        axes[col].plot(pred_centroid_estimates[:, 1:3], color="red")
+
         # get average distance
         total_difference = 0.0
         no = 0.0
@@ -296,12 +297,11 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         average_difference = total_difference / no
         print("average", average_difference)
         axes[col].set_xlabel("{:.2f}".format(average_difference) + "mm", fontsize=10)
-        '''
 
         i += 1
 
     fig.subplots_adjust(wspace=0.2, hspace=0.4)
-    fig.savefig(plot_path + '/detection_to_6.png')
+    fig.savefig(plot_path + '/centroids_to_6.png')
 
 
 def get_stats(scans_dir, detection_model_path, identification_model_path, spacing=(1.0, 1.0, 1.0)):
