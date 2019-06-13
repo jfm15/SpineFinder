@@ -463,16 +463,15 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 
 
+'''
 complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
                                 'saved_current_models/ident-18:19.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
-
-
-
 '''
-get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
-          'final_models/ident-new.h5', spacing=(1.0, 1.0, 1.0))
-'''
+
+get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
+          'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
+
 
 
 '''
