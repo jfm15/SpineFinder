@@ -275,14 +275,14 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             axes[col].annotate(label, (u, v), color="white", size=6)
             axes[col].scatter(u, v, color="white", s=8)
 
-        axes[col].plot(centroid_indexes[:, 1:3], color="white")
+        axes[col].plot(centroid_indexes[:, 1], centroid_indexes[:, 2], color="white")
 
         for pred_label, pred_centroid_idx in zip(pred_labels, pred_centroid_estimates):
             u, v = pred_centroid_idx[1:3]
             axes[col].annotate(pred_label, (u, v), color="red", size=6)
             axes[col].scatter(u, v, color="red", s=8)
 
-        axes[col].plot(pred_centroid_estimates[:, 1:3], color="red")
+        axes[col].plot(pred_centroid_estimates[:, 1], pred_centroid_estimates[:, 2], color="red")
 
         # get average distance
         total_difference = 0.0
