@@ -239,14 +239,15 @@ def test_box_plot():
     plt.boxplot([data1, data2], labels=["hello", "world"])
     plt.show()
 
-# vertebrae_counts('datasets')
+
+vertebrae_counts('datasets')
 # vertebrae_frequencies('datasets')
 # vertebrae_frequencies_in_samples('samples/slices', 'plots')
 # vertebrae_pixel_frequencies_in_samples('samples/slices', 'plots')
 # old_dense_label_method("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
 
 
-test_box_plot()
+# test_box_plot()
 
 '''
 old_dense_label_method_with_boxes("datasets/spine-1/patient0088/2684937/2684937.nii.gz", 
