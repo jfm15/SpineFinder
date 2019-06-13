@@ -302,7 +302,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         i += 1
 
     fig.subplots_adjust(wspace=0.2, hspace=0.4)
-    fig.savefig(plot_path + '/centroids_' + start + '_' + end + '.png')
+    fig.savefig(plot_path + '/centroids_' + str(start) + '_' + str(end) + '.png')
 
 
 def get_stats(scans_dir, detection_model_path, identification_model_path, spacing=(1.0, 1.0, 1.0)):
