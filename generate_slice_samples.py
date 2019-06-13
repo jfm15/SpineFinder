@@ -63,8 +63,10 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), s
             # get vertebrae identification map
             # detection_slice = (sample_labels_slice > 0).astype(int)
 
+            '''
             [volume_slice, sample_labels_slice] = elasticdeform.deform_random_grid(
                 [volume_slice, sample_labels_slice], sigma=7, points=3, order=0)
+            '''
 
             '''
             [volume_slice, sample_labels_slice] = elasticdeform.deform_random_grid(
@@ -142,9 +144,9 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), s
             np.save(labelling_path, cropped_sample_labels_slice)
 
 
-generate_slice_samples(dataset_dir="datasets",
+generate_slice_samples(dataset_dir="datasets/spine-1",
                        sample_dir="samples/slices/training",
                        sample_size=(80, 320),
-                       no_of_samples=100,
+                       no_of_samples=5,
                        spacing=(1.0, 1.0, 1.0),
                        no_of_vertebrae_in_each=1)
