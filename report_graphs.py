@@ -236,8 +236,7 @@ def show_labels(scan_path, ext=".nii.gz"):
 def test_box_plot():
     data1 = np.random.rand(50) * 100
     data2 = np.random.rand(50) * 100
-    fig1, ax1 = plt.subplots()
-    ax1.boxplot([data1, data2])
+    plt.boxplot([data1, data2], labels=["hello", "world"])
     plt.show()
 
 # vertebrae_counts('datasets')

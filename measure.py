@@ -406,11 +406,14 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
         print("average", average_difference, "\n")
 
     data = []
+    labels_used = []
     for label in LABELS_NO_L6:
         if label in differences_per_vertebrae:
+            labels_used.append(label)
             data.append(differences_per_vertebrae[label])
-
-    print(data)
+            
+    plt.boxplot(data, labels_used)
+    plt.savefig('plots/boxplot.png')
 
     all_rate = np.around(100.0 * all_correct / all_no, decimals=1)
     all_mean = np.around(np.mean(all_difference), decimals=2)
