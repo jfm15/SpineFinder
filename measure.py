@@ -212,7 +212,7 @@ def compete_detection_picture(scans_dir, models_dir, plot_path, spacing=(2.0, 2.
 
 def complete_identification_picture(scans_dir, detection_model_path, identification_model_path, plot_path,
                                     spacing=(2.0, 2.0, 2.0)):
-    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[42:46]
+    scan_paths = glob.glob(scans_dir + "/**/*.nii.gz", recursive=True)[:6]
     no_of_scan_paths = len(scan_paths)
 
     weights = np.array([0.1, 0.9])
@@ -260,14 +260,17 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         volume = opening_files.read_nii(scan_path, spacing=spacing)
 
         volume_slice = volume[cut, :, :]
-        identifications_slice = pred_identifications[cut, :, :]
+        detections_slice = pred_detections[cut, :, :]
+        # identifications_slice = pred_identifications[cut, :, :]
         # identifications_slice = np.max(pred_identifications, axis=0)
 
-        masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
+        # masked_data = np.ma.masked_where(identifications_slice == 0, identifications_slice)
+        masked_data = np.ma.masked_where(detections_slice == 0, detections_slice)
 
         axes[col].imshow(volume_slice.T, cmap='gray', origin='lower')
         axes[col].imshow(masked_data.T, vmin=1, vmax=27, cmap=cm.jet, alpha=0.4, origin='lower')
 
+        '''
         for label, centroid_idx in zip(labels, centroid_indexes):
             u, v = centroid_idx[1:3]
             axes[col].annotate(label, (u, v), color="white", size=6)
@@ -277,7 +280,9 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
             u, v = pred_centroid_idx[1:3]
             axes[col].annotate(pred_label, (u, v), color="red", size=6)
             axes[col].scatter(u, v, color="red", s=8)
+        '''
 
+        '''
         # get average distance
         total_difference = 0.0
         no = 0.0
@@ -291,11 +296,12 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         average_difference = total_difference / no
         print("average", average_difference)
         axes[col].set_xlabel("{:.2f}".format(average_difference) + "mm", fontsize=10)
+        '''
 
         i += 1
 
     fig.subplots_adjust(wspace=0.2, hspace=0.4)
-    fig.savefig(plot_path + '/identification-complete.png')
+    fig.savefig(plot_path + '/detection_to_6.png')
 
 
 def get_stats(scans_dir, detection_model_path, identification_model_path, spacing=(1.0, 1.0, 1.0)):
@@ -413,7 +419,7 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
             data.append(differences_per_vertebrae[label])
 
     plt.figure(figsize=(20, 10))
-    plt.boxplot(data, labels=labels_used, fontsize=20)
+    plt.boxplot(data, labels=labels_used)
     plt.savefig('plots/boxplot.png')
 
     all_rate = np.around(100.0 * all_correct / all_no, decimals=1)
@@ -472,14 +478,15 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 
 
-'''
+
 complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
                                 'saved_current_models/ident-18:19.h5', 'plots',
                                 spacing=(1.0, 1.0, 1.0))
-'''
 
+'''
 get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
           'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
+'''
 
 
 
@@ -488,8 +495,7 @@ get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
           'final_models/ident-LK.h5', spacing=(1.0, 1.0, 1.0))
 '''
 
-
 '''
 single_detection("spine-test-data/4617014.nii.gz",
-                 'final_models/detec-unet-better-samples.h5', 'plots')
+                 'saved_current_models/detec-20:06.h5', 'plots')
 '''
