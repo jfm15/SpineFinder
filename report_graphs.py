@@ -40,7 +40,7 @@ def vertebrae_frequencies(dataset_dir, file_ext=".lml"):
     plt.figure(figsize=(20, 10))
     plt.bar(x, frequencies, 0.7)
     plt.xticks(x, LABELS_NO_B_OR_L6)
-    plt.show()
+    plt.savefig('plots/vertebrae_frequencies_in_dataset.png')
 
 
 def vertebrae_frequencies_in_samples(samples_dir, plot_path, file_ext="-labelling.npy"):
