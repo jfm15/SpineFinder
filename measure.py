@@ -7,7 +7,7 @@ from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
 from models.simple_identification import ignore_background_loss, vertebrae_classification_rate
 from losses_and_metrics.dsc import dice_coef_label
-from utility_functions.labels import LABELS_NO_L6
+from utility_functions.labels import LABELS_NO_L6, VERTEBRAE_SIZES
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from sklearn.cluster import MeanShift
@@ -134,7 +134,7 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
         if 0 <= key < len(LABELS_NO_L6):
             arr = histogram[key]
             # print(LABELS_NO_L6[key], arr.shape[0])
-            if arr.shape[0] > 3000:
+            if arr.shape[0] > VERTEBRAE_SIZES[key]**3 * 0.5:
                 print(LABELS_NO_L6[key], arr.shape[0])
                 centroid_estimate = np.median(arr, axis=0)
                 # ms = MeanShift(bin_seeding=True, min_bin_freq=300)
