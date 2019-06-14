@@ -134,7 +134,7 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
         if 0 <= key < len(LABELS_NO_L6):
             arr = histogram[key]
             # print(LABELS_NO_L6[key], arr.shape[0])
-            if arr.shape[0] > VERTEBRAE_SIZES[LABELS_NO_L6[key]]**3 * 0.4:
+            if arr.shape[0] > max(VERTEBRAE_SIZES[LABELS_NO_L6[key]]**3 * 0.4, 3000):
                 print(LABELS_NO_L6[key], arr.shape[0])
                 centroid_estimate = np.median(arr, axis=0)
                 # ms = MeanShift(bin_seeding=True, min_bin_freq=300)
