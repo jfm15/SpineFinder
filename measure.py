@@ -135,6 +135,7 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
             arr = histogram[key]
             # print(LABELS_NO_L6[key], arr.shape[0])
             if arr.shape[0] > 3000:
+                print(LABELS_NO_L6[key], arr.shape[0])
                 centroid_estimate = np.median(arr, axis=0)
                 # ms = MeanShift(bin_seeding=True, min_bin_freq=300)
                 # ms.fit(arr)
@@ -339,7 +340,10 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
     differences_per_vertebrae = {}
 
-    for i, scan_path in enumerate(scan_paths):
+    scan_indices = [8, 11, 18, 20, 22, 25, 26]
+
+    for i, idx in enumerate(scan_indices):
+        scan_path = scan_paths[idx]
         print(i, scan_path)
         scan_path_without_ext = scan_path[:-len(".nii.gz")]
         centroid_path = scan_path_without_ext + ".lml"
@@ -478,16 +482,18 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 
+'''
 for i in range(0, 57, 3):
     complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
                                     'saved_current_models/ident-18:19.h5', 'plots', i, i + 3,
                                     spacing=(1.0, 1.0, 1.0))
-
-
 '''
+
+
+
 get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
           'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
-'''
+
 
 
 
