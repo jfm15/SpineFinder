@@ -134,7 +134,7 @@ def test_scan(scan_path, detection_model, detection_X_shape, detection_y_shape,
         if 0 <= key < len(LABELS_NO_L6):
             arr = histogram[key]
             # print(LABELS_NO_L6[key], arr.shape[0])
-            if arr.shape[0] > VERTEBRAE_SIZES[LABELS_NO_L6[key]]**3 * 0.5:
+            if arr.shape[0] > VERTEBRAE_SIZES[LABELS_NO_L6[key]]**3 * 0.4:
                 print(LABELS_NO_L6[key], arr.shape[0])
                 centroid_estimate = np.median(arr, axis=0)
                 # ms = MeanShift(bin_seeding=True, min_bin_freq=300)
@@ -482,17 +482,17 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 
-'''
+
 for i in range(0, 57, 3):
     complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
                                     'saved_current_models/ident-18:19.h5', 'plots', i, i + 3,
                                     spacing=(1.0, 1.0, 1.0))
+
+
 '''
-
-
-
 get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
           'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
+'''
 
 
 
