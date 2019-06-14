@@ -227,7 +227,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
 
     identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
 
-    fig, axes = plt.subplots(nrows=1, ncols=no_of_scan_paths, figsize=(30, 6), dpi=300)
+    fig, axes = plt.subplots(nrows=1, ncols=no_of_scan_paths, figsize=(15, 6), dpi=300)
 
     i = 1
 
@@ -247,7 +247,7 @@ def complete_identification_picture(scans_dir, detection_model_path, identificat
         detection_model_name = (detection_model_path.rsplit('/', 1)[-1])[:-len(".h5")]
         identification_model_name = (identification_model_path.rsplit('/', 1)[-1])[:-len(".h5")]
         name = detection_model_name + "\n" + identification_model_name
-        axes[0].set_ylabel(name, rotation=0, labelpad=50, fontsize=10)
+        # axes[0].set_ylabel(name, rotation=0, labelpad=50, fontsize=10)
 
         pred_labels, pred_centroid_estimates, pred_detections, pred_identifications = test_scan(
             scan_path=scan_path,
