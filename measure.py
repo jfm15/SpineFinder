@@ -478,7 +478,8 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
     fig.savefig(plot_path + '/single_detection.png')
 
 
-def single_identification(scan_path, identification_model_path, plot_path, spacing=(1.0, 1.0, 1.0)):
+def single_identification(scan_path, detection_model_path, identification_model_path,
+                          plot_path, spacing=(1.0, 1.0, 1.0)):
     scan_path_without_ext = scan_path[:-len(".nii.gz")]
     centroid_path = scan_path_without_ext + ".lml"
 
@@ -487,6 +488,13 @@ def single_identification(scan_path, identification_model_path, plot_path, spaci
 
     cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
 
+    weights = np.array([0.1, 0.9])
+    detection_model_objects = {'loss': weighted_categorical_crossentropy(weights),
+                               'binary_recall': km.binary_recall(),
+                               'dice_coef': dice_coef_label(label=1)}
+
+    detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
+
     identification_model_objects = {'ignore_background_loss': ignore_background_loss,
                                     'vertebrae_classification_rate': vertebrae_classification_rate}
 
@@ -494,17 +502,21 @@ def single_identification(scan_path, identification_model_path, plot_path, spaci
 
     volume = opening_files.read_nii(scan_path, spacing=spacing)
 
+    detections = apply_detection_model(volume, detection_model, np.array([64, 64, 80]), np.array([32, 32, 40]))
     identification = apply_identification_model(volume, cut - 1, cut + 1, identification_model)
 
     volume_slice = volume[cut, :, :]
+    detection_slice = detections[cut, :, :]
     identification_slice = identification[cut, :, :]
 
-    #masked_data = np.ma.masked_where(identification_slice == 0, identification_slice)
+    identification_slice *= detection_slice
+
+    masked_data = np.ma.masked_where(identification_slice == 0, identification_slice)
 
     fig, ax = plt.subplots(1)
 
     ax.imshow(volume_slice.T, cmap='gray', origin='lower')
-    ax.imshow(identification_slice.T, cmap=cm.jet, vmin=1, vmax=27, alpha=0.4, origin='lower')
+    ax.imshow(masked_data.T, cmap=cm.jet, vmin=1, vmax=27, alpha=0.4)
     fig.savefig(plot_path + '/single_identification.png')
 
 
@@ -535,13 +547,12 @@ get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
 '''
 
 
-
+'''
 single_detection("spine-test-data/4595338.nii.gz",
                  'saved_current_models/detec-20:06.h5', 'plots')
-
-
 '''
-single_identification("spine-test-data/4595338.nii.gz",
+
+single_identification("spine-test-data/4595338.nii.gz", 'saved_current_models/detec-20:06.h5',
                  'saved_current_models/ident-18:19.h5', 'plots')
-'''
+
 
