@@ -515,8 +515,8 @@ def single_identification(scan_path, detection_model_path, identification_model_
 
     fig, ax = plt.subplots(1)
 
-    ax.imshow(volume_slice.T, cmap='gray', origin='lower')
-    ax.imshow(masked_data.T, cmap=cm.jet, vmin=1, vmax=27, alpha=0.4)
+    ax.imshow(volume_slice.T, cmap='gray')
+    ax.imshow(masked_data.T, cmap=cm.jet, vmin=1, vmax=27, alpha=0.4, origin='lower')
     fig.savefig(plot_path + '/single_identification.png')
 
 
