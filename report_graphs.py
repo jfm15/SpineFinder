@@ -83,23 +83,23 @@ def old_dense_label_method(scan_path, ext=".nii.gz"):
     
     volume = opening_files.read_nii(scan_path, spacing=(1.0, 1.0, 1.0))
     labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
-    # dense_labelling = spherical_densely_label(volume.shape, 13, labels, centroids, True)
+    dense_labelling = spherical_densely_label(volume.shape, 13, labels, centroids, True)
 
-    disk_indices = pre_compute_disks((1.0, 1.0, 1.0))
-    dense_labelling = densely_label(volume.shape, disk_indices, labels, centroids, True)
+    # disk_indices = pre_compute_disks((1.0, 1.0, 1.0))
+    # dense_labelling = densely_label(volume.shape, disk_indices, labels, centroids, True)
 
-    # cut = np.round(np.mean(np.array(centroids)[:, 0])).astype(int)
-    cut = np.round(np.array(centroids)[10, 2]).astype(int)
+    cut = np.round(np.mean(np.array(centroids)[:, 0])).astype(int)
+    # cut = np.round(np.array(centroids)[10, 2]).astype(int)
 
-    volume_slice = volume[:, :, cut]
-    labelling_slice = dense_labelling[:, :, cut]
+    volume_slice = volume[cut, :, :]
+    labelling_slice = dense_labelling[cut, :, :]
 
     masked_data = np.ma.masked_where(labelling_slice == 0, labelling_slice)
 
     fig, ax = plt.subplots(1)
 
     ax.imshow(volume_slice.T, interpolation="none", origin='lower', cmap='gray', vmin=-2)
-    ax.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26, alpha=0.4)
+    # ax.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26, alpha=0.4)
     plt.show()
 
 
@@ -138,9 +138,9 @@ def old_dense_label_method_patch(scan_path, coords, ext=".nii.gz"):
     volume = opening_files.read_nii(scan_path, spacing=(1.0, 1.0, 1.0))
     labels, centroids = opening_files.extract_centroid_info_from_lml(metadata_path)
 
-    disk_indices = pre_compute_disks((1.0, 1.0, 1.0))
-    dense_labelling = densely_label(volume.shape, disk_indices, labels, centroids, True)
-    # dense_labelling = spherical_densely_label(volume.shape, 13, labels, centroids, True)
+    # disk_indices = pre_compute_disks((1.0, 1.0, 1.0))
+    # dense_labelling = densely_label(volume.shape, disk_indices, labels, centroids, True)
+    dense_labelling = spherical_densely_label(volume.shape, 13, labels, centroids, True)
 
     cut = np.round(np.mean(np.array(centroids)[:, 0])).astype(int)
     # cut = np.round(np.array(centroids)[1, 2]).astype(int)
@@ -162,7 +162,7 @@ def old_dense_label_method_patch(scan_path, coords, ext=".nii.gz"):
     fig, ax = plt.subplots(1)
 
     ax.imshow(volume_slice.T, interpolation="none", origin='lower', cmap='gray')
-    ax.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26, alpha=0.4)
+    # ax.imshow(masked_data.T, interpolation="none", origin='lower', cmap=cm.jet, vmin=1, vmax=26, alpha=0.4)
 
     '''
     for label, centroid in zip(labels, centroids):
@@ -200,6 +200,7 @@ def show_labels(scan_path, ext=".nii.gz"):
 
     plt.imshow(volume_slice.T, interpolation="none", origin='lower', cmap='gray', vmin=-2)
 
+    '''
     b = (centroids[0] + centroids[1]) / 2.0
     a = 2 * centroids[0] - b
     middles = [a]
@@ -225,12 +226,14 @@ def show_labels(scan_path, ext=".nii.gz"):
         plt.scatter(X, Y, color="red", s=16)
 
     '''
+
     for label, centroid in zip(labels, centroids):
         X = centroid[1]
         Y = centroid[2]
-        # plt.annotate(label, (X, Y), color="red", fontsize=6)
-        plt.scatter(X, Y, color="red", s=16)
-    '''
+        plt.annotate(label, (X, Y), color="red", fontsize=6)
+        plt.scatter(X, Y, color="red", s=8)
+
+    plt.plot(centroids[:, 1], centroids[:, 2], linewidth=1.0, color="red")
 
     plt.show()
 
@@ -243,10 +246,10 @@ def test_box_plot():
 
 
 #vertebrae_counts('datasets')
-vertebrae_frequencies('datasets')
+#vertebrae_frequencies('datasets')
 # vertebrae_frequencies_in_samples('samples/slices', 'plots')
 # vertebrae_pixel_frequencies_in_samples('samples/slices', 'plots')
-# old_dense_label_method("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
+old_dense_label_method("datasets/spine-2/patient0099/2902226/2902226.nii.gz")
 
 
 # test_box_plot()
@@ -257,14 +260,14 @@ old_dense_label_method_with_boxes("datasets/spine-1/patient0088/2684937/2684937.
 '''
 
 '''
-old_dense_label_method_patch("datasets/spine-5/patient0396/4655766/4655766.nii.gz",
-                                  np.array([0, 0, 80, 320]))
+old_dense_label_method_patch("datasets/spine-4/patient0295/3058244/3058244.nii.gz",
+                                  np.array([20, 30, 80, 320]))
 '''
 
 
 #plot_relu()
 
-#show_labels("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
+# show_labels("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
 # old_dense_label_method("datasets/spine-1/patient0088/2684937/2684937.nii.gz")
 
 # 5 vertebrae in datasets/spine-1/patient0003/4614554/4614554.nii.gz

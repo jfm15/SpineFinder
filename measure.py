@@ -478,6 +478,36 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
     fig.savefig(plot_path + '/single_detection.png')
 
 
+def single_identification(scan_path, identification_model_path, plot_path, spacing=(1.0, 1.0, 1.0)):
+    scan_path_without_ext = scan_path[:-len(".nii.gz")]
+    centroid_path = scan_path_without_ext + ".lml"
+
+    labels, centroids = opening_files.extract_centroid_info_from_lml(centroid_path)
+    centroid_indexes = centroids / np.array(spacing)
+
+    cut = np.round(np.mean(centroid_indexes[:, 0])).astype(int)
+
+    identification_model_objects = {'ignore_background_loss': ignore_background_loss,
+                                    'vertebrae_classification_rate': vertebrae_classification_rate}
+
+    identification_model = load_model(identification_model_path, custom_objects=identification_model_objects)
+
+    volume = opening_files.read_nii(scan_path, spacing=spacing)
+
+    identification = apply_identification_model(volume, cut - 1, cut + 1, identification_model)
+
+    volume_slice = volume[cut, :, :]
+    identification_slice = identification[cut, :, :]
+
+    #masked_data = np.ma.masked_where(identification_slice == 0, identification_slice)
+
+    fig, ax = plt.subplots(1)
+
+    ax.imshow(volume_slice.T, cmap='gray')
+    ax.imshow(identification_slice.T, cmap=cm.autumn, alpha=0.4)
+    fig.savefig(plot_path + '/single_detection.png')
+
+
 
 # test_multiple_scans("datasets_test")
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
@@ -502,7 +532,12 @@ get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
           'final_models/ident-LK.h5', spacing=(1.0, 1.0, 1.0))
 '''
 
+
 '''
 single_detection("spine-test-data/4617014.nii.gz",
                  'saved_current_models/detec-20:06.h5', 'plots')
 '''
+
+single_identification("spine-test-data/4617014.nii.gz",
+                 'saved_current_models/ident-18:19.h5', 'plots')
+
