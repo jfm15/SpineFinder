@@ -504,7 +504,7 @@ def single_identification(scan_path, identification_model_path, plot_path, spaci
     fig, ax = plt.subplots(1)
 
     ax.imshow(volume_slice.T, cmap='gray')
-    ax.imshow(identification_slice.T, cmap=cm.autumn, alpha=0.4)
+    ax.imshow(identification_slice.T, cmap=cm.autumn, vmin=1, vmax=27, alpha=0.4)
     fig.savefig(plot_path + '/single_identification.png')
 
 
