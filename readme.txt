@@ -1,3 +1,5 @@
+This is the 'dynamic_batches' branch and contains the final solution
+
 To run on lab computers
 
 source /vol/cuda/9.0.176/setup.sh && export CUDA_VISIBLE_DEVICES=0
