@@ -505,7 +505,7 @@ def single_identification(scan_path, identification_model_path, plot_path, spaci
 
     ax.imshow(volume_slice.T, cmap='gray')
     ax.imshow(identification_slice.T, cmap=cm.autumn, alpha=0.4)
-    fig.savefig(plot_path + '/single_detection.png')
+    fig.savefig(plot_path + '/single_identification.png')
 
 
 
@@ -513,10 +513,12 @@ def single_identification(scan_path, identification_model_path, plot_path, spaci
 # compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
 
 
+'''
 for i in range(0, 57, 3):
     complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
                                     'saved_current_models/ident-18:19.h5', 'plots', i, i + 3,
                                     spacing=(1.0, 1.0, 1.0))
+'''
 
 
 '''
