@@ -504,7 +504,7 @@ def single_identification(scan_path, identification_model_path, plot_path, spaci
     fig, ax = plt.subplots(1)
 
     ax.imshow(volume_slice.T, cmap='gray', origin='lower')
-    # ax.imshow(identification_slice.T, cmap=cm.jet, vmin=1, vmax=27, alpha=0.4, origin='lower')
+    ax.imshow(identification_slice.T, cmap=cm.jet, vmin=1, vmax=27, alpha=0.4, origin='lower')
     fig.savefig(plot_path + '/single_identification.png')
 
 
@@ -535,11 +535,13 @@ get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
 '''
 
 
-'''
-single_detection("spine-test-data/4617014.nii.gz",
-                 'saved_current_models/detec-20:06.h5', 'plots')
-'''
 
+single_detection("spine-test-data/4595338.nii.gz",
+                 'saved_current_models/detec-20:06.h5', 'plots')
+
+
+'''
 single_identification("spine-test-data/4595338.nii.gz",
                  'saved_current_models/ident-18:19.h5', 'plots')
+'''
 
