@@ -540,6 +540,6 @@ single_detection("spine-test-data/4617014.nii.gz",
                  'saved_current_models/detec-20:06.h5', 'plots')
 '''
 
-single_identification("spine-test-data/4617014.nii.gz",
+single_identification("spine-test-data/4595338.nii.gz",
                  'saved_current_models/ident-18:19.h5', 'plots')
 
