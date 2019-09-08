@@ -460,22 +460,22 @@ def single_detection(scan_path, detection_model_path, plot_path, spacing=(1.0, 1
                                'binary_recall': km.binary_recall(),
                                'dice_coef': dice_coef_label(label=1)}
 
-    detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
+    #detection_model = load_model(detection_model_path, custom_objects=detection_model_objects)
 
     volume = opening_files.read_nii(scan_path, spacing=spacing)
 
-    detections = apply_detection_model(volume, detection_model, np.array([64, 64, 80]), np.array([32, 32, 40]))
+    #detections = apply_detection_model(volume, detection_model, np.array([64, 64, 80]), np.array([32, 32, 40]))
 
     volume_slice = volume[cut, :, :]
-    detections_slice = detections[cut, :, :]
+    #detections_slice = detections[cut, :, :]
 
-    masked_data = np.ma.masked_where(detections_slice == 0, detections_slice)
+    # masked_data = np.ma.masked_where(detections_slice == 0, detections_slice)
 
     fig, ax = plt.subplots(1)
 
     ax.imshow(volume_slice.T, cmap='gray')
-    ax.imshow(masked_data.T, cmap=cm.jet, alpha=0.4, origin='lower')
-    fig.savefig(plot_path + '/single_detection.png')
+    # ax.imshow(masked_data.T, cmap=cm.jet, alpha=0.4, origin='lower')
+    fig.savefig(plot_path + '/single.png')
 
 
 def single_identification(scan_path, detection_model_path, identification_model_path,
@@ -552,7 +552,12 @@ single_detection("spine-test-data/4595338.nii.gz",
                  'saved_current_models/detec-20:06.h5', 'plots')
 '''
 
+single_detection("spine-test-data/4595338.nii.gz",
+                 'saved_current_models/detec-20:06.h5', 'plots')
+
+'''
 single_identification("spine-test-data/4595338.nii.gz", 'saved_current_models/detec-20:06.h5',
                  'saved_current_models/ident-18:19.h5', 'plots')
+'''
 
 
