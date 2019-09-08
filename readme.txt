@@ -1,30 +1,14 @@
-This is the 'dynamic_batches' branch and contains the final solution
+This repo contains the code I used to produce results for my masters project
+at Imperial College London which uses deep learning to detect and localise
+vertebrae centroids from CT scans.
+(dataset: https://biomedia.doc.ic.ac.uk/data/spine/)
 
-To run on lab computers
+A paper was subsequently written explaining my results and was accepted into
+the MICCAI 2019 conference in the MSKI workshop.
 
-source /vol/cuda/9.0.176/setup.sh && export CUDA_VISIBLE_DEVICES=0
+The purpose of this repository is so that other researchers can reproduce the
+results.
 
-ssh into the graphics machine by doing
-ssh jfm15@shell1.doc.ic.ac.uk
-ssh jfm15@graphic10.doc.ic.ac.uk
-
-Useful commands:
-ssh jfm15@spine-finder.westeurope.cloudapp.azure.com
-scp -r jfm15@spine-finder.westeurope.cloudapp.azure.com:SpineFinder/main-model.h5 /Users/James/SpineFinder
-nohup python main.py &> main-output.txt &
-(top and kill)
-scp -r jfm15@spine-finder.westeurope.cloudapp.azure.com:SpineFinder/results /Users/James/SpineFinder/
-scp -r jfm15@spine-finder.westeurope.cloudapp.azure.com:SpineFinder/plots/identification-complete.png /Users/James/SpineFinder/plots
-tensorboard --logdir=logs/
-ls . | wc -l
-
-File Structure
-|- main.py
-|-
-|- datasets
-|   |- spine-1
-|   |   |- patient0001
-|   |   |   |- 2804506
-|   |   |   |   |- 2804506.lml
-|   |   |   |   |- 2804506.nii.gz
-|   |   | etc...
+This repository is currently going through a clean up phase to make it easier
+for others to use but that process will be finished by the 17th October when
+the MSKI workshop takes place.
