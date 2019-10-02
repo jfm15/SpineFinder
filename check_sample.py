@@ -48,7 +48,7 @@ def check_slice_sample(sample_path):
     sample = np.load(sample_path)
     labelling = np.load(labelling_path)
 
-    #sample_slice = sample[1]
+    sample = sample[4]
 
     masked_data = np.ma.masked_where(labelling == 0, labelling)
 
@@ -57,5 +57,5 @@ def check_slice_sample(sample_path):
     plt.show()
 
 
-check_multi_class_sample("samples/two_class/training/2804506-4-sample.npy")
-# check_slice_sample("samples/slices/training/4613319-3-sample.npy")
+# check_multi_class_sample("samples/two_class/training/2804506-4-sample.npy")
+check_slice_sample("samples/slices/training/2684937-2-sample.npy")
