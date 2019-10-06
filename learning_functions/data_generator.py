@@ -6,10 +6,11 @@ import keras
 
 class DataGenerator(keras.utils.Sequence):
 
-    def __init__(self, ids_in_set, labels, samples_dir, batch_size=32, n_channels=1, categorise=True, n_classes=1,
-                 shuffle=True):
+    def __init__(self, ids_in_set, labels, samples_dir, batch_size=32, three_d=True, n_channels=1, categorise=True,
+                 n_classes=1, shuffle=True):
 
         self.batch_size = batch_size
+        self.three_d = three_d
         self.labels = labels
         self.ids_in_set = ids_in_set
         self.n_channels = n_channels
@@ -55,10 +56,12 @@ class DataGenerator(keras.utils.Sequence):
         first_sample = np.load(self.samples_dir + '/' + first_id + '-sample.npy')
 
         # Initialization
-        X = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_channels))
-        y = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_classes), dtype=int)
-        #X = np.empty((self.batch_size, *first_sample.shape, self.n_channels))
-        #y = np.empty((self.batch_size, *first_sample.shape, self.n_classes), dtype=int)
+        if self.three_d:
+            X = np.empty((self.batch_size, *first_sample.shape, self.n_channels))
+            y = np.empty((self.batch_size, *first_sample.shape, self.n_classes), dtype=int)
+        else:
+            X = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_channels))
+            y = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_classes), dtype=int)
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
@@ -69,8 +72,10 @@ class DataGenerator(keras.utils.Sequence):
             label_id = self.labels[ID]
             labelling = np.load(self.samples_dir + '/' + label_id + '.npy')
 
-            # X[i, ] = np.expand_dims(sample, axis=-1)
-            X[i, ] = np.transpose(sample, (1, 2, 0))
+            if self.three_d:
+                X[i, ] = np.expand_dims(sample, axis=-1)
+            else:
+                X[i, ] = np.transpose(sample, (1, 2, 0))
 
             if self.categorise:
                 categorical_labelling = keras.utils.to_categorical(labelling, self.n_classes)

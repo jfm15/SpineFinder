@@ -8,7 +8,7 @@ import gc
 
 
 def perform_learning(training_sample_dir, val_sample_dir,
-                     batch_size, sample_channels, categorise, output_classes, shuffle,
+                     batch_size, three_d, sample_channels, categorise, output_classes, shuffle,
                      model_func, model_params, epochs, model_path, checkpoint_path,
                      log_name, log_description):
 
@@ -17,6 +17,7 @@ def perform_learning(training_sample_dir, val_sample_dir,
 
     # generators
     params = {'batch_size': batch_size,
+              'three_d': three_d,
               'n_channels': sample_channels,
               'categorise': categorise,
               'n_classes': output_classes,
