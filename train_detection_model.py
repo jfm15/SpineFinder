@@ -1,5 +1,5 @@
 import numpy as np
-from perform_learning import perform_learning
+from learning_functions.perform_learning import perform_learning
 from keras_models.detection import detection_unet
 
 # inputs to the model
