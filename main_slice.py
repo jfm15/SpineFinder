@@ -1,5 +1,5 @@
 from perform_learning import perform_learning
-from models.identification import simple_identification, unet_slices
+from keras_models.identification import identification_unet
 
 # inputs to the model
 model_params = {'kernel_size': (3, 3),
@@ -13,7 +13,7 @@ perform_learning(training_sample_dir="samples/slices/training",
                  categorise=False,
                  output_classes=1,
                  shuffle=True,
-                 model_func=unet_slices,
+                 model_func=identification_unet,
                  model_params=model_params,
                  epochs=35,
                  model_path="slices_model.h5",
