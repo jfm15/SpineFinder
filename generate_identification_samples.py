@@ -2,7 +2,7 @@ import glob
 import numpy as np
 import elasticdeform
 from utility_functions import opening_files
-from utility_functions.sampling_helper_functions import densely_label, pre_compute_disks, spherical_densely_label
+from utility_functions.sampling_helper_functions import densely_label, pre_compute_disks
 
 
 def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), spacing=(2.0, 2.0, 2.0),

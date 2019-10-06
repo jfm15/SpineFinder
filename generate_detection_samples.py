@@ -1,7 +1,7 @@
 import glob
-from utility_functions import opening_files
 import numpy as np
-from utility_functions.sampling_helper_functions import densely_label, spherical_densely_label, pre_compute_disks
+from utility_functions import opening_files
+from utility_functions.sampling_helper_functions import densely_label, pre_compute_disks
 
 
 def generate_samples(dataset_dir, sample_dir,

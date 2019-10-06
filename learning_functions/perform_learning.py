@@ -1,5 +1,5 @@
-from create_partition import create_partition_and_labels
-from data_generator import DataGenerator
+from learning_functions.create_partition import create_partition_and_labels
+from learning_functions.data_generator import DataGenerator
 from keras.callbacks import ModelCheckpoint, TensorBoard
 import datetime
 import os

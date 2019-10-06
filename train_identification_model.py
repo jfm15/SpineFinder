@@ -1,4 +1,4 @@
-from perform_learning import perform_learning
+from learning_functions.perform_learning import perform_learning
 from keras_models.identification import identification_unet
 
 # inputs to the model
