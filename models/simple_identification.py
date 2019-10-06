@@ -70,7 +70,7 @@ def vertebrae_classification_rate(y_true, y_pred):
 
 def unet_slices(kernel_size, filters, learning_rate):
 
-    main_input = Input(shape=(None, None, 1))
+    main_input = Input(shape=(None, None, 8))
 
     # 80 x 320
     # 204 1340

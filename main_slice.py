@@ -3,13 +3,13 @@ from models.simple_identification import simple_identification, unet_slices
 
 # inputs to the model
 model_params = {'kernel_size': (3, 3),
-                'filters': 16,
+                'filters': 32,
                 'learning_rate': 0.001}
 
 perform_learning(training_sample_dir="samples/slices/training",
                  val_sample_dir="samples/slices/testing",
                  batch_size=32,
-                 sample_channels=1,
+                 sample_channels=8,
                  categorise=False,
                  output_classes=1,
                  shuffle=True,

@@ -55,10 +55,10 @@ class DataGenerator(keras.utils.Sequence):
         first_sample = np.load(self.samples_dir + '/' + first_id + '-sample.npy')
 
         # Initialization
-        #X = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_channels))
-        #y = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_classes), dtype=int)
-        X = np.empty((self.batch_size, *first_sample.shape, self.n_channels))
-        y = np.empty((self.batch_size, *first_sample.shape, self.n_classes), dtype=int)
+        X = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_channels))
+        y = np.empty((self.batch_size, *first_sample.shape[-2:], self.n_classes), dtype=int)
+        #X = np.empty((self.batch_size, *first_sample.shape, self.n_channels))
+        #y = np.empty((self.batch_size, *first_sample.shape, self.n_classes), dtype=int)
 
         # Generate data
         for i, ID in enumerate(ids_in_set_temp):
@@ -69,8 +69,8 @@ class DataGenerator(keras.utils.Sequence):
             label_id = self.labels[ID]
             labelling = np.load(self.samples_dir + '/' + label_id + '.npy')
 
-            X[i, ] = np.expand_dims(sample, axis=-1)
-            # X[i, ] = np.transpose(sample, (1, 2, 0))
+            # X[i, ] = np.expand_dims(sample, axis=-1)
+            X[i, ] = np.transpose(sample, (1, 2, 0))
 
             if self.categorise:
                 categorical_labelling = keras.utils.to_categorical(labelling, self.n_classes)

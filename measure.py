@@ -10,7 +10,6 @@ from losses_and_metrics.dsc import dice_coef_label
 from utility_functions.labels import LABELS_NO_L6, VERTEBRAE_SIZES
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-from sklearn.cluster import MeanShift
 
 
 def apply_detection_model(volume, model, X_size, y_size):
@@ -340,10 +339,7 @@ def get_stats(scans_dir, detection_model_path, identification_model_path, spacin
 
     differences_per_vertebrae = {}
 
-    scan_indices = [8, 11, 18, 20, 22, 25, 26]
-
-    for i, idx in enumerate(scan_indices):
-        scan_path = scan_paths[idx]
+    for i, scan_path in enumerate(scan_paths):
         print(i, scan_path)
         scan_path_without_ext = scan_path[:-len(".nii.gz")]
         centroid_path = scan_path_without_ext + ".lml"
@@ -538,8 +534,8 @@ get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
           'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
 '''
 
-
-
+get_stats('spine-test-data', 'saved_models/two_class_model.better.h5',
+          'saved_models/slices_model.3rd.h5', spacing=(1.0, 1.0, 1.0))
 
 '''
 get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
@@ -551,10 +547,10 @@ get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
 single_detection("spine-test-data/4595338.nii.gz",
                  'saved_current_models/detec-20:06.h5', 'plots')
 '''
-
+'''
 single_detection("spine-test-data/4595338.nii.gz",
                  'saved_current_models/detec-20:06.h5', 'plots')
-
+'''
 '''
 single_identification("spine-test-data/4595338.nii.gz", 'saved_current_models/detec-20:06.h5',
                  'saved_current_models/ident-18:19.h5', 'plots')

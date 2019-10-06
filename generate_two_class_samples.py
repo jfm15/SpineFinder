@@ -92,7 +92,7 @@ def generate_samples(dataset_dir, sample_dir,
                 np.save(labelling_path, labelling)
 
 
-generate_samples(dataset_dir="datasets/spine-1",
+generate_samples(dataset_dir="datasets",
                  sample_dir="samples/two_class/training",
                  spacing=(1.0, 1.0, 1.0),
                  sample_size=(64.0, 64.0, 80.0),
