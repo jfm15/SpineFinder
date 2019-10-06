@@ -1,6 +1,6 @@
 import numpy as np
 from perform_learning import perform_learning
-from models.simple_detection import detection_unet
+from models.detection import detection_unet
 
 # inputs to the model
 model_params = {'kernel_size': (3, 3, 3),

@@ -1,5 +1,5 @@
 from perform_learning import perform_learning
-from models.simple_identification import simple_identification, unet_slices
+from models.identification import simple_identification, unet_slices
 
 # inputs to the model
 model_params = {'kernel_size': (3, 3),
