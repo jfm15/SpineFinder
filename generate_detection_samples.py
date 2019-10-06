@@ -16,6 +16,8 @@ def generate_samples(dataset_dir, sample_dir,
 
     paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
 
+    np.random.seed(1)
+
     for i, data_path in enumerate(paths):
         print(str(i) + "/" + str(len(paths)))
         # get path to corresponding metadata

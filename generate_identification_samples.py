@@ -12,6 +12,8 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), s
 
     paths = glob.glob(dataset_dir + "/**/*" + file_ext, recursive=True)
 
+    np.random.seed(1)
+
     for cnt, data_path in enumerate(paths):
 
         print(str(cnt) + " / " + str(len(paths)))
