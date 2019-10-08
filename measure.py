@@ -1,6 +1,6 @@
 # The aim of this script is to provide measurements for any part of the pipeline
 import numpy as np
-import os, glob
+import sys, os, glob
 import keras_metrics as km
 from utility_functions import opening_files, sampling_helper_functions
 from keras.models import load_model
@@ -516,44 +516,6 @@ def single_identification(scan_path, detection_model_path, identification_model_
     fig.savefig(plot_path + '/single_identification.png')
 
 
-
-# test_multiple_scans("datasets_test")
-# compete_detection_picture('datasets_test', 'saved_current_models', 'plots')
-
-
-'''
-for i in range(0, 57, 3):
-    complete_identification_picture('spine-test-data', 'saved_current_models/detec-20:06.h5',
-                                    'saved_current_models/ident-18:19.h5', 'plots', i, i + 3,
-                                    spacing=(1.0, 1.0, 1.0))
-'''
-
-
-'''
-get_stats('spine-test-data', 'saved_current_models/detec-20:06.h5',
-          'saved_current_models/ident-18:19.h5', spacing=(1.0, 1.0, 1.0))
-'''
-
-get_stats('spine-test-data', 'saved_models/two_class_model.better.h5',
-          'saved_models/slices_model.3rd.h5', spacing=(1.0, 1.0, 1.0))
-
-'''
-get_stats('spine-test-data', 'final_models/detec-unet-better-samples.h5',
-          'final_models/ident-LK.h5', spacing=(1.0, 1.0, 1.0))
-'''
-
-
-'''
-single_detection("spine-test-data/4595338.nii.gz",
-                 'saved_current_models/detec-20:06.h5', 'plots')
-'''
-'''
-single_detection("spine-test-data/4595338.nii.gz",
-                 'saved_current_models/detec-20:06.h5', 'plots')
-'''
-'''
-single_identification("spine-test-data/4595338.nii.gz", 'saved_current_models/detec-20:06.h5',
-                 'saved_current_models/ident-18:19.h5', 'plots')
-'''
+get_stats(sys.argv[1], sys.argv[2], sys.argv[3], spacing=(1.0, 1.0, 1.0))
 
 
