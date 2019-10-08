@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 from learning_functions.perform_learning import perform_learning
 from keras_models.detection import detection_unet
@@ -8,8 +9,8 @@ model_params = {'kernel_size': (3, 3, 3),
                 'weights': np.array([0.1, 0.9]),
                 'learning_rate': 0.001}
 
-perform_learning(training_sample_dir="samples/two_class/training",
-                 val_sample_dir="samples/two_class/testing",
+perform_learning(training_sample_dir=sys.argv[0],
+                 val_sample_dir=sys.argv[1],
                  batch_size=16,
                  three_d=True,
                  sample_channels=1,
@@ -18,9 +19,7 @@ perform_learning(training_sample_dir="samples/two_class/training",
                  model_func=detection_unet,
                  model_params=model_params,
                  epochs=50,
-                 model_path="two_class_model.h5",
+                 model_path=sys.argv[2],
                  checkpoint_path="checkpoints/two_class_model/two_class_model.{epoch:02d}.h5",
                  log_name="detection",
-                 log_description="Using 20 Samples with 2 all zero samples with NO ROTATE and NORMALIZE, using ADAM compiler, "
-               "using ReLu and softmax activation, batch norm with mom=0.1",
                  shuffle=True)
