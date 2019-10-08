@@ -1,11 +1,12 @@
 # The aim of this script is to provide measurements for any part of the pipeline
+import sys
+import glob
 import numpy as np
-import sys, os, glob
 import keras_metrics as km
-from utility_functions import opening_files, sampling_helper_functions
+from utility_functions import opening_files
 from keras.models import load_model
 from losses_and_metrics.keras_weighted_categorical_crossentropy import weighted_categorical_crossentropy
-from keras_models.simple_identification import ignore_background_loss, vertebrae_classification_rate
+from keras_models.identification import ignore_background_loss, vertebrae_classification_rate
 from losses_and_metrics.dsc import dice_coef_label
 from utility_functions.labels import LABELS_NO_L6, VERTEBRAE_SIZES
 import matplotlib.pyplot as plt
