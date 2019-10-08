@@ -23,7 +23,7 @@ def generate_samples(dataset_dir, sample_dir,
     print("Generating " + str(no_of_samples * len(paths)) + " detection samples of size " + str(sample_size_np[0]) +
           " x " + str(sample_size_np[1]) + " x " + str(sample_size_np[2]) + " for " + str(len(paths)) + " scans")
 
-    for i, data_path in enumerate(paths):
+    for cnt, data_path in enumerate(paths):
         # get path to corresponding metadata
         data_path_without_ext = data_path[:-ext_len]
         metadata_path = data_path_without_ext + ".lml"
@@ -97,7 +97,7 @@ def generate_samples(dataset_dir, sample_dir,
                 np.save(sample_path, sample)
                 np.save(labelling_path, labelling)
 
-        print(str(i + 1) + " / " + str(len(paths)))
+        print(str(cnt + 1) + " / " + str(len(paths)))
 
 
 generate_samples(dataset_dir=sys.argv[1],
