@@ -20,6 +20,6 @@ perform_learning(training_sample_dir=sys.argv[1],
                  model_params=model_params,
                  epochs=50,
                  model_path=sys.argv[3],
-                 checkpoint_path="checkpoints/two_class_model/two_class_model.{epoch:02d}.h5",
+                 checkpoint_path="checkpoints/detection_model/detection_model.{epoch:02d}.h5",
                  log_name="detection",
                  shuffle=True)
