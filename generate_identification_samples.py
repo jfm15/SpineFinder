@@ -1,4 +1,5 @@
 import glob
+import sys
 import numpy as np
 import elasticdeform
 from utility_functions import opening_files
@@ -143,8 +144,8 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), s
             np.save(labelling_path, cropped_sample_labels_slice)
 
 
-generate_slice_samples(dataset_dir="datasets",
-                       sample_dir="samples/slices/training",
+generate_slice_samples(dataset_dir=sys.argv[1],
+                       sample_dir=sys.argv[2],
                        sample_size=(80, 320),
                        no_of_samples=100,
                        spacing=(1.0, 1.0, 1.0),

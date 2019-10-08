@@ -1,4 +1,5 @@
 import glob
+import sys
 import numpy as np
 from utility_functions import opening_files
 from utility_functions.sampling_helper_functions import densely_label, pre_compute_disks
@@ -94,8 +95,8 @@ def generate_samples(dataset_dir, sample_dir,
                 np.save(labelling_path, labelling)
 
 
-generate_samples(dataset_dir="datasets",
-                 sample_dir="samples/two_class/training",
+generate_samples(dataset_dir=sys.argv[1],
+                 sample_dir=sys.argv[2],
                  spacing=(1.0, 1.0, 1.0),
                  sample_size=(64.0, 64.0, 80.0),
                  no_of_samples=5,
