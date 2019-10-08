@@ -27,8 +27,9 @@ def perform_learning(training_sample_dir, val_sample_dir,
     validation_generator = DataGenerator(partition['validation'], labels, val_sample_dir, **params)
 
     # create checkpoint path
-    if not os.path.exists(checkpoint_path):
-        os.makedirs(checkpoint_path)
+    cropped_path = checkpoint_path[:checkpoint_path.rfind('/')]
+    if not os.path.exists(cropped_path):
+        os.makedirs(cropped_path)
 
     # set checkpoint
     checkpoint = ModelCheckpoint(checkpoint_path, period=3)
