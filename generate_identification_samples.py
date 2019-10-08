@@ -6,7 +6,7 @@ from utility_functions import opening_files
 from utility_functions.sampling_helper_functions import densely_label, pre_compute_disks
 
 
-def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), spacing=(2.0, 2.0, 2.0),
+def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160), spacing=(2.0, 2.0, 2.0),
                            no_of_samples=5, no_of_vertebrae_in_each=2, file_ext=".nii.gz"):
     sample_size = np.array(sample_size)
     ext_len = len(file_ext)
@@ -15,9 +15,12 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), s
 
     np.random.seed(1)
 
+    sample_size_np = np.array(sample_size, int)
+    print("Generating " + str(no_of_samples * len(paths)) + " identification samples of size 8 x "
+          + str(sample_size_np[0]) + " x " + str(sample_size_np[1]) + " for " + str(len(paths)) + " scans")
+
     for cnt, data_path in enumerate(paths):
 
-        print(str(cnt) + " / " + str(len(paths)))
         # get path to corresponding metadata
         data_path_without_ext = data_path[:-ext_len]
         metadata_path = data_path_without_ext + ".lml"
@@ -142,6 +145,7 @@ def generate_slice_samples(dataset_dir, sample_dir, sample_size=(40, 160, 16), s
             labelling_path = path + "-labelling"
             np.save(sample_path, cropped_combines_slice)
             np.save(labelling_path, cropped_sample_labels_slice)
+        print(str(cnt + 1) + " / " + str(len(paths)))
 
 
 generate_slice_samples(dataset_dir=sys.argv[1],
