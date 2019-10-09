@@ -25,4 +25,11 @@ and rename it 'testing_dataset'.
 1. You must then generate samples to train and test the detection network. 
 `python generate_detection_samples.py 'training_dataset' 'samples/detection/training'`
 `python generate_detection_samples.py 'testing_dataset' 'samples/detection/testing'`
-1. Now train a detection network: `python train_detection_model.py 'samples/detection/training' 'samples/detection/testing' 'saved_models/detection.h5'`
+1. Now train the detection network: `python train_detection_model.py 'samples/detection/training' 'samples/detection/testing' 'saved_models/detection.h5'`
+1. You must then generate samples to train and test the identification network. 
+`python generate_identification_samples.py 'training_dataset' 'samples/identification/training'`
+`python generate_identification_samples.py 'testing_dataset' 'samples/identification/testing'`
+1. Now train the identification network: `python train_identification_model.py 'samples/identification/training' 'samples/identification/testing' 'saved_models/identification.h5'`
+1. You can now run the full algorithm on the test data. It should be noted that due to the randomness of sample generation
+and the stochastic nature of training a network the results may not be exactly as stated in the paper (could be higher or lower).
+To get results for the same metrics run `python measure.py 'testing_dataset' ''saved_models/detection.h5' 'saved_models/identification.h5'` 
