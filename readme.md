@@ -12,6 +12,8 @@ results.
 
 ## Setup
 
+Note: Shortly this setup guide will be replaced with a setup.py
+
 The experiments for the paper were run on a microsoft azure vm (https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/microsoft-dsvm.linux-data-science-vm-ubuntu) with NC6 Promo.
 Once 'ssh'ed into the vm the following tasks were performed:
 
@@ -26,8 +28,6 @@ Once 'ssh'ed into the vm the following tasks were performed:
 `conda install pip`<br>
 `pip install keras-metrics`<br>
 `pip install elasticdeform`<br>
-
-Note: Shortly this setup guide will be replaced with a setup.py
 
 ## Usage
 To reproduce the results of the paper follow these instructions:
