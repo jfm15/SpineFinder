@@ -12,8 +12,22 @@ results.
 
 ## Setup
 
+The experiments for the paper were run on a microsoft azure vm (https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/microsoft-dsvm.linux-data-science-vm-ubuntu) with NC6 Promo.
+Once 'ssh'ed into the vm the following tasks were performed:
+
 1. Clone this repository
-1. Conda 
+1. We used conda to install the packages required for this project:<br>
+`conda create -n spine-env`<br>
+`source activate spine-env`<br>
+`conda install tensorflow-gpu==1.12.0`<br>
+`conda install keras`<br>
+`conda install matplotlib`<br>
+`conda install -c https://conda.anaconda.org/simpleitk SimpleITK`<br>
+`conda install pip`<br>
+`pip install keras-metrics`<br>
+`pip install elasticdeform`<br>
+
+Note: Shortly this setup guide will be replaced with a setup.py
 
 ## Usage
 To reproduce the results of the paper follow these instructions:
@@ -33,3 +47,14 @@ and rename it 'testing_dataset'.
 1. You can now run the full algorithm on the test data. It should be noted that due to the randomness of sample generation
 and the stochastic nature of training a network the results may not be exactly as stated in the paper (could be higher or lower).
 To get results for the same metrics run `python measure.py 'testing_dataset' 'saved_models/detection.h5' 'saved_models/identification.h5'` 
+
+## Citation
+If you find this repository useful for your own research please consider citing our paper:
+```
+@article{mccouat2019vertebrae,
+    title={Vertebrae Detection and Localization in CT with Two-Stage CNNs and Dense Annotations},
+    author={James McCouat and Ben Glocker},
+    journal={arXiv preprint arXiv:1910.05911}
+    year={2019}
+}
+```
