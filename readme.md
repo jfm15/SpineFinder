@@ -1,15 +1,5 @@
 ## Introduction
 
-This repo contains the code I used to produce results for my masters project
-at Imperial College London which uses deep learning to detect and localise
-vertebrae centroids from CT scans.
-
-A paper was subsequently written presenting my results and was accepted into
-the MICCAI 2019 conference in the MSKI workshop.
-
-The purpose of this repository is so that other researchers can reproduce the
-results.
-
 ## Setup
 
 Note: Shortly this setup guide will be replaced with a setup.py
@@ -47,14 +37,3 @@ and rename it 'testing_dataset'.
 1. You can now run the full algorithm on the test data. It should be noted that due to the randomness of sample generation
 and the stochastic nature of training a network the results may not be exactly as stated in the paper (could be higher or lower).
 To get results for the same metrics run `python measure.py 'testing_dataset' 'saved_models/detection.h5' 'saved_models/identification.h5'` 
-
-## Citation
-If you find this repository useful for your own research please consider citing our paper:
-```
-@article{mccouat2019vertebrae,
-    title={Vertebrae Detection and Localization in CT with Two-Stage CNNs and Dense Annotations},
-    author={James McCouat and Ben Glocker},
-    journal={arXiv preprint arXiv:1910.05911}
-    year={2019}
-}
-```
